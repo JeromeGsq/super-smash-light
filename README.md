@@ -1,6 +1,8 @@
 # Super Smash Light
 
-Hi! I'm your first Markdown file in **StackEdit**. If you want to learn about StackEdit, you can read me. If you want to play with Markdown, you can edit me. Once you have finished with me, you can create new files by opening the **file explorer** on the left corner of the navigation bar.
+Super Smash Light est un jeu d'action sportif à la troisième personne dans lequel le joueur contrôle une petite créature.
+Représentés par quatre créatures maximum, séparé en deux équipes, les joueurs devront récupérer une balle et se la passer entre coéquipier pour augmenter sa puissance. 
+Une fois cette balle chargée, le joueur ayant la balle pourra effectuer un "Super Shoot" sur un de ses adversaires, le détruire, et ainsi marquer un point pour son équipe.
 
 
 ## Liens

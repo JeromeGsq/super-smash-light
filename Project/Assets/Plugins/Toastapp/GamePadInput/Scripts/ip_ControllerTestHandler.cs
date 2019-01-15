@@ -22,7 +22,7 @@ public class ip_ControllerTestHandler : MonoBehaviour
 	private static float StickMultiply = 20.0f;
 
 	private Color mainColor;
-	private ip_GamePad.Index controllerIndex;
+	private ip_GamePad.Index controllerIndex = ip_GamePad.Index.Any;
 
 	private GamepadState gamepadState;
 
@@ -88,7 +88,10 @@ public class ip_ControllerTestHandler : MonoBehaviour
 		set
 		{
 			this.controllerIndex = value;
-			this.UnderLabel.text = "Controller : " + this.controllerIndex;
+			if(this.UnderLabel != null)
+			{
+				this.UnderLabel.text = "Controller : " + this.controllerIndex;
+			}
 			this.UpdateColor();
 		}
 	}

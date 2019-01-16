@@ -353,6 +353,7 @@ public static class Opti
 	#endregion
 
 	#region JumpTo
+	/*
 	[MenuItem("Opti/Jump to _work %w")]
 	static void JumpToWork()
 	{
@@ -382,6 +383,7 @@ public static class Opti
 		EditorSceneManager.OpenScene("./Assets/Project/Scenes/Main.unity");
 		Debug.Log("Load Main");
 	}
+	*/
 	#endregion
 
 	#region Open Explorer 

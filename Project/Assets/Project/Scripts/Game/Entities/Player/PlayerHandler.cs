@@ -37,7 +37,6 @@ public class PlayerHandler : MonoBehaviour
 	[SerializeField]
 	private int maxJumps = 2;
 
-
 	private void Awake()
 	{
 		this.controller = GetComponent<CharacterController2D>();

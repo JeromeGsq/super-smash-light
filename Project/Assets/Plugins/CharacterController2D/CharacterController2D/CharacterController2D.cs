@@ -6,7 +6,7 @@ using System.Collections.Generic;
 
 namespace Prime31 {
 
-[RequireComponent( typeof( BoxCollider2D ), typeof( Rigidbody2D ) )]
+[RequireComponent( typeof( Collider2D ), typeof( Rigidbody2D ) )]
 public class CharacterController2D : MonoBehaviour
 {
 	#region internal types
@@ -137,7 +137,7 @@ public class CharacterController2D : MonoBehaviour
 	[HideInInspector][NonSerialized]
 	public new Transform transform;
 	[HideInInspector][NonSerialized]
-	public BoxCollider2D boxCollider;
+	public Collider2D boxCollider;
 	[HideInInspector][NonSerialized]
 	public Rigidbody2D rigidBody2D;
 
@@ -186,7 +186,7 @@ public class CharacterController2D : MonoBehaviour
 
 		// cache some components
 		transform = GetComponent<Transform>();
-		boxCollider = GetComponent<BoxCollider2D>();
+		boxCollider = GetComponent<Collider2D>();
 		rigidBody2D = GetComponent<Rigidbody2D>();
 
 		// here, we trigger our properties that have setters with bodies
@@ -310,6 +310,7 @@ public class CharacterController2D : MonoBehaviour
 	/// </summary>
 	public void recalculateDistanceBetweenRays()
 	{
+		/*
 		// figure out the distance between our rays in both directions
 		// horizontal
 		var colliderUseableHeight = boxCollider.size.y * Mathf.Abs( transform.localScale.y ) - ( 2f * _skinWidth );
@@ -318,6 +319,7 @@ public class CharacterController2D : MonoBehaviour
 		// vertical
 		var colliderUseableWidth = boxCollider.size.x * Mathf.Abs( transform.localScale.x ) - ( 2f * _skinWidth );
 		_horizontalDistanceBetweenRays = colliderUseableWidth / ( totalVerticalRays - 1 );
+		*/
 	}
 
 	#endregion

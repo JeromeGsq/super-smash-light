@@ -1,29 +1,64 @@
-﻿using Prime31;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System;
+using Prime31;
+using Root.DesignPatterns;
 using UnityEngine;
+using static GamepadInput.ip_GamePad;
 
-[RequireComponent(typeof(CharacterController2D))]
-public class BallHandler : MonoBehaviour
+[RequireComponent(typeof(Collider2D))]
+[RequireComponent(typeof(Rigidbody2D))]
+public class BallHandler : SceneSingleton<BallHandler>
 {
-	private CharacterController2D controller;
+	private Rigidbody2D rigidbody;
+	private Collider2D collider;
 
-	private Vector3 velocity;
-	private float normalizedHorizontalSpeed;
+	private bool isGrabbed = false;
+	private Index index = Index.Any;
 
-	[SerializeField]
-	private float gravity = -25f;
+	public Index Index
+	{
+		get
+		{
+			return this.index;
+		}
+	}
 
 	private void Awake()
 	{
-		this.controller = this.GetComponent<CharacterController2D>();
+		this.rigidbody = this.GetComponent<Rigidbody2D>();
+		this.collider = this.GetComponent<Collider2D>();
 	}
 
 	private void Update()
 	{
-		this.velocity.x = Mathf.Lerp(this.velocity.x, normalizedHorizontalSpeed, Time.deltaTime);
-		this.velocity.y += this.gravity * Time.deltaTime;
+		this.rigidbody.bodyType = this.isGrabbed ? RigidbodyType2D.Static : RigidbodyType2D.Dynamic;
+	}
 
-		this.controller.move(this.velocity * Time.deltaTime);
+	public void SetGrabbed(Transform ballAnchor, Index index)
+	{
+		this.index = index;
+		this.transform.SetParent(ballAnchor);
+		this.transform.localPosition = Vector3.zero;
+		this.isGrabbed = true;
+	}
+
+	public void Shoot(Transform target, float power)
+	{
+		this.collider.enabled = false;
+		this.transform.SetParent(null);
+		Vector3 dir = (target.position - this.transform.position).normalized;
+
+		Debug.DrawLine(this.transform.position, this.transform.position + dir * 10, Color.red, Mathf.Infinity);
+		Debug.Log($"BallHandler : {dir}");
+
+		this.isGrabbed = false;
+		this.index = Index.Any;
+
+		this.rigidbody.bodyType = RigidbodyType2D.Dynamic;
+		this.rigidbody.AddForce(dir * power, ForceMode2D.Impulse);
+
+		StartCoroutine(CoroutineUtils.DelaySeconds(() =>
+		{
+			this.collider.enabled = true;
+		}, 0.1f));
 	}
 }

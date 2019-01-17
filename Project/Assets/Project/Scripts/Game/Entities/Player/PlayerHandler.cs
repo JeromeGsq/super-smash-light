@@ -1,135 +1,67 @@
 ﻿using UnityEngine;
-using Prime31;
-using GamepadInput;
 
-[RequireComponent(typeof(CharacterController2D))]
+[RequireComponent(typeof(Collider2D))]
+[RequireComponent(typeof(PlayerMovementHandler))]
 public class PlayerHandler : MonoBehaviour
 {
-	private CharacterController2D controller;
-	private Vector3 velocity;
+	private const string BallTag = "Ball";
 
-	private int jumpsCount;
-	private float normalizedHorizontalSpeed;
-
-	private GamepadState gamepadState;
+	private PlayerMovementHandler playerMovementHandler;
 
 	[SerializeField]
-	private ip_GamePad.Index ControllerIndex = ip_GamePad.Index.One;
+	private Collider2D trigger2D;
 
 	[Space(20)]
 
 	[SerializeField]
-	private float gravity = -25f;
-	[SerializeField]
-	private float runSpeed = 8f;
-
-	[Space(20)]
-
-	[SerializeField]
-	private float groundDamping = 20f;
-	[SerializeField]
-	private float inAirDamping = 5f;
-
-	[Space(20)]
-
-	[SerializeField]
-	private float jumpHeight = 3f;
-	[SerializeField]
-	private int maxJumps = 2;
+	private Transform ballAnchor;
 
 	private void Awake()
 	{
-		this.controller = GetComponent<CharacterController2D>();
+		this.playerMovementHandler = this.GetComponent<PlayerMovementHandler>();
 
-		this.gamepadState = new GamepadState();
-
-		this.controller.onControllerCollidedEvent += this.OnControllerCollider;
-		this.controller.onTriggerEnterEvent += this.OnTriggerEnterEvent;
-		this.controller.onTriggerExitEvent += this.OnTriggerExitEvent;
-	}
-
-	private void OnDestroy()
-	{
-		this.controller.onControllerCollidedEvent -= this.OnControllerCollider;
-		this.controller.onTriggerEnterEvent -= this.OnTriggerEnterEvent;
-		this.controller.onTriggerExitEvent -= this.OnTriggerExitEvent;
-	}
-
-	#region Event Listeners Methods
-	private void OnControllerCollider(RaycastHit2D hit)
-	{
-		// bail out on plain old ground hits cause they arent very interesting
-		if(hit.normal.y == 1f)
+		if(this.trigger2D == null)
 		{
-			return;
+			this.trigger2D = this.GetComponent<Collider2D>();
+			Debug.Log("PlayerHandler : Awake() : trigger2D is null, try to GetComponent<Collider2D>() on it");
 		}
 
-		// logs any collider hits if uncommented. it gets noisy so it is commented out for the demo
-		//Debug.Log( "flags: " + _controller.collisionState + ", hit.normal: " + hit.normal );
+		this.trigger2D.isTrigger = true;
 	}
 
-	private void OnTriggerEnterEvent(Collider2D col)
+	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		Debug.Log("onTriggerEnterEvent: " + col.gameObject.name);
+		if(collision.CompareTag(BallTag))
+		{
+			Debug.Log($"PlayerHandler : OnTriggerEnter2D() : {collision.name}");
+			collision.GetComponent<BallHandler>()?.SetGrabbed(this.ballAnchor, this.playerMovementHandler.Index);
+		}
 	}
 
-	private void OnTriggerExitEvent(Collider2D col)
+	private void OnTriggerExit2D(Collider2D collision)
 	{
-		Debug.Log("onTriggerExitEvent: " + col.gameObject.name);
+		// Debug.Log($"PlayerHandler : OnTriggerExit2D() : {collision.name}");
 	}
-	#endregion
 
 	private void Update()
 	{
-		ip_GamePad.GetState(ref this.gamepadState, this.ControllerIndex);
-
-		if(this.controller.isGrounded)
+		// Pass control
+		if(this.playerMovementHandler.GamepadState.APressed &&
+			BallHandler.Instance.Index == this.playerMovementHandler.Index)
 		{
-			this.jumpsCount = 0;
-			this.velocity.y = 0;
+			BallHandler.Instance.Shoot(this.playerMovementHandler.FriendTransform, 30);
 		}
 
-		if(this.gamepadState.Right || this.gamepadState.LeftStickAxis.x > 0)
+		// Shoot control
+		if(this.playerMovementHandler.GamepadState.BPressed)
 		{
-			this.normalizedHorizontalSpeed = 1;
-			if(this.transform.localScale.x < 0f)
-			{
-				this.transform.localScale = new Vector3(-this.transform.localScale.x, this.transform.localScale.y, this.transform.localScale.z);
-			}
-		}
-		else if(this.gamepadState.Left || this.gamepadState.LeftStickAxis.x < 0)
-		{
-			this.normalizedHorizontalSpeed = -1;
-			if(this.transform.localScale.x > 0f)
-			{
-				this.transform.localScale = new Vector3(-this.transform.localScale.x, this.transform.localScale.y, this.transform.localScale.z);
-			}
-		}
-		else
-		{
-			this.normalizedHorizontalSpeed = 0;
+
 		}
 
-		if( (this.controller.isGrounded || this.jumpsCount < this.maxJumps)
-			&& this.gamepadState.APressed)
+		// Hit control
+		if(this.playerMovementHandler.GamepadState.XPressed)
 		{
-			this.jumpsCount++;
-			this.velocity.y = Mathf.Sqrt(2f * this.jumpHeight * -this.gravity);
+
 		}
-
-		var smoothedMovementFactor = this.controller.isGrounded ? this.groundDamping : this.inAirDamping;
-		this.velocity.x = Mathf.Lerp(this.velocity.x, normalizedHorizontalSpeed * this.runSpeed, Time.deltaTime * smoothedMovementFactor);
-
-		this.velocity.y += this.gravity * Time.deltaTime;
-
-		if(this.controller.isGrounded && Input.GetKey(KeyCode.DownArrow))
-		{
-			this.velocity.y *= 3f;
-			this.controller.ignoreOneWayPlatformsThisFrame = true;
-		}
-
-		this.controller.move(this.velocity * Time.deltaTime);
-
-		this.velocity = this.controller.velocity;
 	}
 }

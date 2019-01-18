@@ -10,8 +10,14 @@ public class PlayerHandler : MonoBehaviour
 
 	private bool canGrab = true;
 
+
 	[SerializeField]
 	private Collider2D trigger2D;
+
+	[Space(20)]
+
+	[SerializeField]
+	private float deltaTimeGrab = 0.2f;
 
 	[Space(20)]
 
@@ -71,6 +77,12 @@ public class PlayerHandler : MonoBehaviour
 				{
 					BallHandler.Instance.Shoot(this.playerMovementHandler.FriendTransform, this.passPower, ShootType.Pass);
 				}
+
+				this.canGrab = false;
+				StartCoroutine(CoroutineUtils.DelaySeconds(() =>
+				{
+					this.canGrab = true;
+				}, this.deltaTimeGrab));
 			}
 
 			// Shoot control
@@ -80,13 +92,13 @@ public class PlayerHandler : MonoBehaviour
 				{
 					BallHandler.Instance.Shoot(this.playerMovementHandler.Sight, this.shootPower, ShootType.Shoot);
 				}
-			}
 
-			this.canGrab = false;
-			StartCoroutine(CoroutineUtils.DelaySeconds(() =>
-			{
-				this.canGrab = true;
-			}, 0.1f));
+				this.canGrab = false;
+				StartCoroutine(CoroutineUtils.DelaySeconds(() =>
+				{
+					this.canGrab = true;
+				}, this.deltaTimeGrab));
+			}
 		}
 
 		// Hit control

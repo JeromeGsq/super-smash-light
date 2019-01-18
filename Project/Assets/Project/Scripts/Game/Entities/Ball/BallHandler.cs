@@ -14,6 +14,8 @@ public class BallHandler : SceneSingleton<BallHandler>
 	private bool isGrabbed = false;
 	private Index index = Index.Any;
 
+	[Space(20)]
+
 	[SerializeField]
 	private TrailRenderer trail;
 
@@ -26,6 +28,10 @@ public class BallHandler : SceneSingleton<BallHandler>
 	[SerializeField]
 	private Material white;
 
+	[Space(20)]
+
+	[SerializeField]
+	private float passYCorrectionAmount = 0.2f;
 
 	public Index Index
 	{
@@ -60,27 +66,27 @@ public class BallHandler : SceneSingleton<BallHandler>
 		this.transform.SetParent(null);
 		Vector3 dir = (target.position - this.transform.position).normalized;
 
-		Debug.DrawLine(this.transform.position, this.transform.position + dir * 10, Color.red, Mathf.Infinity);
-		Debug.Log($"BallHandler : {dir}");
-
-		this.rigidbody.bodyType = RigidbodyType2D.Dynamic;
-		this.rigidbody.AddForce(dir * power, ForceMode2D.Impulse);
-
 		switch(shootType)
 		{
 			case ShootType.Pass:
 				this.trail.material = (int)this.index%2 == 0 ? this.red : this.blue;
+				dir += Vector3.up * passYCorrectionAmount;
 				break;
 			case ShootType.Shoot:
 				this.trail.material = this.yellow;
-
 				break;
 			case ShootType.Loose:
 				this.trail.material = this.white;
 				break;
 		}
 
+		this.rigidbody.bodyType = RigidbodyType2D.Dynamic;
+		this.rigidbody.AddForce(dir * power, ForceMode2D.Impulse);
+
 		this.isGrabbed = false;
 		this.index = Index.Any;
+
+		// Debug.DrawLine(this.transform.position, this.transform.position + dir * 10, Color.red, Mathf.Infinity);
+		// Debug.Log($"BallHandler : {dir}");
 	}
 }

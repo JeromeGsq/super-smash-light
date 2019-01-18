@@ -8,8 +8,18 @@ public class PlayerHandler : MonoBehaviour
 
 	private PlayerMovementHandler playerMovementHandler;
 
+	private bool canGrab = true;
+
 	[SerializeField]
 	private Collider2D trigger2D;
+
+	[Space(20)]
+
+	[SerializeField]
+	private float passPower = 50f;
+
+	[SerializeField]
+	private float shootPower= 50f;
 
 	[Space(20)]
 
@@ -34,7 +44,10 @@ public class PlayerHandler : MonoBehaviour
 		if(collision.CompareTag(BallTag))
 		{
 			Debug.Log($"PlayerHandler : OnTriggerEnter2D() : {collision.name}");
-			collision.GetComponent<BallHandler>()?.SetGrabbed(this.ballAnchor, this.playerMovementHandler.Index);
+			if(this.canGrab)
+			{
+				collision.GetComponent<BallHandler>()?.SetGrabbed(this.ballAnchor, this.playerMovementHandler.Index);
+			}
 		}
 	}
 
@@ -46,10 +59,23 @@ public class PlayerHandler : MonoBehaviour
 	private void Update()
 	{
 		// Pass control
-		if(this.playerMovementHandler.GamepadState.APressed &&
-			BallHandler.Instance.Index == this.playerMovementHandler.Index)
+		if(BallHandler.Instance.Index == this.playerMovementHandler.Index && 
+			this.playerMovementHandler.GamepadState.APressed)
 		{
-			BallHandler.Instance.Shoot(this.playerMovementHandler.FriendTransform, 30);
+			if(this.playerMovementHandler.IsTargeting)
+			{
+				BallHandler.Instance.Shoot(this.playerMovementHandler.Sight, this.passPower);
+			}
+			else
+			{
+				BallHandler.Instance.Shoot(this.playerMovementHandler.FriendTransform, this.shootPower);
+			}
+
+			this.canGrab = false;
+			StartCoroutine(CoroutineUtils.DelaySeconds(() =>
+			{
+				this.canGrab = true;
+			}, 0.1f));
 		}
 
 		// Shoot control

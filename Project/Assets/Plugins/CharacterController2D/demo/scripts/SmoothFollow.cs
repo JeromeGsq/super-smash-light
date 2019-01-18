@@ -1,60 +1,26 @@
 using UnityEngine;
 using System.Collections;
 using Prime31;
-
+using System.Collections.Generic;
 
 public class SmoothFollow : MonoBehaviour
 {
-	public Transform target;
+	public List<Transform> targets;
+
 	public float smoothDampTime = 0.2f;
-	[HideInInspector]
-	public new Transform transform;
-	public Vector3 cameraOffset;
-	public bool useFixedUpdate = false;
-	
-	private CharacterController2D _playerController;
+
 	private Vector3 _smoothDampVelocity;
-	
-	
-	void Awake()
-	{
-		transform = gameObject.transform;
-		_playerController = target.GetComponent<CharacterController2D>();
-	}
-	
-	
-	void LateUpdate()
-	{
-		if( !useFixedUpdate )
-			updateCameraPosition();
-	}
+	private	Vector2 center = new Vector3();
 
-
-	void FixedUpdate()
+	private void FixedUpdate()
 	{
-		if( useFixedUpdate )
-			updateCameraPosition();
-	}
-
-
-	void updateCameraPosition()
-	{
-		if( _playerController == null )
+		center = Vector2.zero;
+		foreach(var target in targets)
 		{
-			transform.position = Vector3.SmoothDamp( transform.position, target.position - cameraOffset, ref _smoothDampVelocity, smoothDampTime );
-			return;
+			center += (Vector2)target.transform.position;
 		}
-		
-		if( _playerController.velocity.x > 0 )
-		{
-			transform.position = Vector3.SmoothDamp( transform.position, target.position - cameraOffset, ref _smoothDampVelocity, smoothDampTime );
-		}
-		else
-		{
-			var leftOffset = cameraOffset;
-			leftOffset.x *= -1;
-			transform.position = Vector3.SmoothDamp( transform.position, target.position - leftOffset, ref _smoothDampVelocity, smoothDampTime );
-		}
+		center = center / targets.Count;
+
+		transform.position = Vector3.SmoothDamp(transform.position - Vector3.forward, center, ref _smoothDampVelocity, smoothDampTime);
 	}
-	
 }

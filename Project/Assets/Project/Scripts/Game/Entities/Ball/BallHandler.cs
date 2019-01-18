@@ -43,7 +43,6 @@ public class BallHandler : SceneSingleton<BallHandler>
 
 	public void Shoot(Transform target, float power)
 	{
-		this.collider.enabled = false;
 		this.transform.SetParent(null);
 		Vector3 dir = (target.position - this.transform.position).normalized;
 
@@ -55,10 +54,5 @@ public class BallHandler : SceneSingleton<BallHandler>
 
 		this.rigidbody.bodyType = RigidbodyType2D.Dynamic;
 		this.rigidbody.AddForce(dir * power, ForceMode2D.Impulse);
-
-		StartCoroutine(CoroutineUtils.DelaySeconds(() =>
-		{
-			this.collider.enabled = true;
-		}, 0.1f));
 	}
 }

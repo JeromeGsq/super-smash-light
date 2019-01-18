@@ -28,6 +28,9 @@ public class PlayerMovementHandler : MonoBehaviour
 	[SerializeField]
 	private Transform sightAnchor;
 
+	[SerializeField]
+	private Transform sight;
+
 	[Space(20)]
 
 	[SerializeField]
@@ -64,7 +67,22 @@ public class PlayerMovementHandler : MonoBehaviour
 			return this.friendTransform;
 		}
 	}
-	
+
+	public Transform Sight
+	{
+		get
+		{
+			return this.sight;
+		}
+	}
+
+	public bool IsTargeting
+	{
+		get;
+		private set;
+	}
+
+
 	public Index Index
 	{
 		get
@@ -120,7 +138,9 @@ public class PlayerMovementHandler : MonoBehaviour
 		ip_GamePad.GetState(ref this.gamepadState, this.controllerIndex);
 
 		// Sight control
-		if(this.gamepadState.LeftStickAxis.sqrMagnitude != 0)
+		this.IsTargeting = this.gamepadState.LT > 0;
+
+		if(this.gamepadState.LeftStickAxis.sqrMagnitude != 0 && this.IsTargeting)
 		{
 			this.sightAnchor.gameObject.SetActive(true);
 			this.sightAnchor.eulerAngles = new Vector3(0, 0, Mathf.Atan2(this.gamepadState.LeftStickAxis.y, this.gamepadState.LeftStickAxis.x) * 180 / Mathf.PI);
@@ -129,7 +149,6 @@ public class PlayerMovementHandler : MonoBehaviour
 		{
 			this.sightAnchor.gameObject.SetActive(false);
 		}
-
 
 		// Movement control
 		if(this.controller.isGrounded)
@@ -171,9 +190,8 @@ public class PlayerMovementHandler : MonoBehaviour
 
 		this.velocity.y += this.gravity * Time.deltaTime;
 
-		if(this.controller.isGrounded && Input.GetKey(KeyCode.DownArrow))
+		if(this.controller.isGrounded && this.gamepadState.LeftStickAxis.y < 0)
 		{
-			this.velocity.y *= 3f;
 			this.controller.ignoreOneWayPlatformsThisFrame = true;
 		}
 

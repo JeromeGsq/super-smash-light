@@ -139,8 +139,9 @@ public class PlayerMovementHandler : MonoBehaviour
 
 		// Sight control
 		this.IsTargeting = this.gamepadState.LT > 0;
+		this.sight.transform.localPosition = (Vector3.right * this.gamepadState.LT) * 2.5f;
 
-		if(this.gamepadState.LeftStickAxis.sqrMagnitude != 0 && this.IsTargeting)
+		if(this.IsTargeting)
 		{
 			this.sightAnchor.gameObject.SetActive(true);
 			this.sightAnchor.eulerAngles = new Vector3(0, 0, Mathf.Atan2(this.gamepadState.LeftStickAxis.y, this.gamepadState.LeftStickAxis.x) * 180 / Mathf.PI);

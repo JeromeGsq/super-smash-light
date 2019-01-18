@@ -19,7 +19,7 @@ public class PlayerHandler : MonoBehaviour
 	private float passPower = 50f;
 
 	[SerializeField]
-	private float shootPower= 50f;
+	private float shootPower = 50f;
 
 	[Space(20)]
 
@@ -58,17 +58,28 @@ public class PlayerHandler : MonoBehaviour
 
 	private void Update()
 	{
-		// Pass control
-		if(BallHandler.Instance.Index == this.playerMovementHandler.Index && 
-			this.playerMovementHandler.GamepadState.APressed)
+		if(BallHandler.Instance.Index == this.playerMovementHandler.Index)
 		{
-			if(this.playerMovementHandler.IsTargeting)
+			// Pass control
+			if(this.playerMovementHandler.GamepadState.APressed)
 			{
-				BallHandler.Instance.Shoot(this.playerMovementHandler.Sight, this.passPower);
+				if(this.playerMovementHandler.IsTargeting)
+				{
+					BallHandler.Instance.Shoot(this.playerMovementHandler.Sight, this.passPower, ShootType.Pass);
+				}
+				else
+				{
+					BallHandler.Instance.Shoot(this.playerMovementHandler.FriendTransform, this.passPower, ShootType.Pass);
+				}
 			}
-			else
+
+			// Shoot control
+			if(this.playerMovementHandler.GamepadState.BPressed)
 			{
-				BallHandler.Instance.Shoot(this.playerMovementHandler.FriendTransform, this.shootPower);
+				if(this.playerMovementHandler.IsTargeting)
+				{
+					BallHandler.Instance.Shoot(this.playerMovementHandler.Sight, this.shootPower, ShootType.Shoot);
+				}
 			}
 
 			this.canGrab = false;
@@ -76,12 +87,6 @@ public class PlayerHandler : MonoBehaviour
 			{
 				this.canGrab = true;
 			}, 0.1f));
-		}
-
-		// Shoot control
-		if(this.playerMovementHandler.GamepadState.BPressed)
-		{
-
 		}
 
 		// Hit control

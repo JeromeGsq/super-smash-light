@@ -7,7 +7,7 @@ using System.Collections.Generic;
 namespace Prime31
 {
 
-	[RequireComponent(typeof(BoxCollider2D), typeof(Rigidbody2D))]
+	[RequireComponent(typeof(BoxCollider2D))]
 	public class CharacterController2D : MonoBehaviour
 	{
 		#region internal types
@@ -144,9 +144,6 @@ namespace Prime31
 		[HideInInspector]
 		[NonSerialized]
 		public BoxCollider2D boxCollider;
-		[HideInInspector]
-		[NonSerialized]
-		public Rigidbody2D rigidBody2D;
 
 		[HideInInspector]
 		[NonSerialized]
@@ -202,7 +199,6 @@ namespace Prime31
 			// cache some components
 			transform = GetComponent<Transform>();
 			boxCollider = GetComponent<BoxCollider2D>();
-			rigidBody2D = GetComponent<Rigidbody2D>();
 
 			// here, we trigger our properties that have setters with bodies
 			skinWidth = _skinWidth;
@@ -329,7 +325,7 @@ namespace Prime31
 		{
 			// figure out the distance between our rays in both directions
 			// horizontal
-			var colliderUseableHeight = boxCollider.size.y * Mathf.Abs(transform.localScale.y) - (2f * _skinWidth);
+			var colliderUseableHeight = boxCollider.size.y  * Mathf.Abs(transform.localScale.y) - (2f * _skinWidth);
 			_verticalDistanceBetweenRays = colliderUseableHeight / (totalHorizontalRays - 1);
 
 			// vertical
@@ -351,7 +347,7 @@ namespace Prime31
 		void primeRaycastOrigins()
 		{
 			// our raycasts need to be fired from the bounds inset by the skinWidth
-			var modifiedBounds = boxCollider.bounds;
+			var modifiedBounds = new Bounds(boxCollider.bounds.center, boxCollider.bounds.size * 1.05f);
 			modifiedBounds.Expand(-2f * _skinWidth);
 
 			_raycastOrigins.topLeft = new Vector2(modifiedBounds.min.x, modifiedBounds.max.y);

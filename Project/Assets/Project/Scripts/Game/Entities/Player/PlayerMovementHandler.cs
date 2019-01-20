@@ -13,7 +13,7 @@ public class PlayerMovementHandler : MonoBehaviour
 	private PlayerStatus status = PlayerStatus.Idle;
 
 	private int jumpsCount;
-	private bool canDash = true;
+	private bool isDashing;
 	private float savedGravity;
 	private float normalizedHorizontalSpeed;
 
@@ -136,9 +136,9 @@ public class PlayerMovementHandler : MonoBehaviour
 				BallHandler.Instance.SetGrabbed(this.ballAnchor, this.index);
 			}
 		}
-		else if(collision.CompareTag(Tags.Player2))
+		else if(collision.CompareTag(Tags.Player2) && this.isDashing)
 		{
-
+			BallHandler.Instance.SetGrabbed(this.ballAnchor, this.index);
 		}
 	}
 
@@ -146,7 +146,6 @@ public class PlayerMovementHandler : MonoBehaviour
 	{
 		// Debug.Log($"PlayerHandler : OnTriggerExit2D() : {collision.name}");
 	}
-
 
 	private void Update()
 	{
@@ -241,10 +240,10 @@ public class PlayerMovementHandler : MonoBehaviour
 
 		// Dash control
 		if(BallHandler.Instance.Index != this.index
-			&& this.canDash
+			&& this.isDashing == false
 			&& this.gamepadState.RightStickAxis.magnitude > 0.5f)
 		{
-			this.canDash = false;
+			this.isDashing = true;
 
 			var direction = new Vector2(this.gamepadState.RightStickAxis.x, this.gamepadState.RightStickAxis.y);
 			this.velocity = (direction.normalized * this.dashDirectionOverdrive) * this.dashSpeed;
@@ -261,7 +260,7 @@ public class PlayerMovementHandler : MonoBehaviour
 			StartCoroutine(CoroutineUtils.DelaySeconds(() =>
 			{
 				// Allow to do a dash
-				this.canDash = true;
+				this.isDashing = false;
 			}, this.dashCoolDown));
 		}
 

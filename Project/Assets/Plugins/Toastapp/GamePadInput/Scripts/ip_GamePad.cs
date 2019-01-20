@@ -356,8 +356,8 @@ namespace GamepadInput
 			state.Right = state.Right == false ? GetButton(KeyCode.RightArrow, controlIndex) : true;
 			state.Up = state.Up == false ? GetButton(KeyCode.UpArrow, controlIndex) : true;
 
-			state.LT = state.LT == 0 ? GetButton(KeyCode.W, controlIndex) ? 1 : 0 : 1;
-			state.RT = state.RT == 0 ? GetButton(KeyCode.X, controlIndex) ? 1 : 0 : 1;
+			state.LT = state.LT == 0 ? GetButton(KeyCode.W, controlIndex) ? 1 : 0 : state.LT;
+			state.RT = state.RT == 0 ? GetButton(KeyCode.X, controlIndex) ? 1 : 0 : state.RT;
 
 			// Old pad pressed
 			state.APressed = state.A;

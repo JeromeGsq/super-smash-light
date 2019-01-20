@@ -10,6 +10,7 @@ public class PlayerMovementHandler : MonoBehaviour
 	private Vector3 velocity;
 
 	private int jumpsCount;
+	private bool canDash = true;
 	private float normalizedHorizontalSpeed;
 
 	private GamepadState gamepadState;
@@ -34,21 +35,25 @@ public class PlayerMovementHandler : MonoBehaviour
 	[Space(20)]
 
 	[SerializeField]
-	private float gravity = -25f;
+	private float gravity = -60f;
 	[SerializeField]
-	private float runSpeed = 8f;
+	private float runSpeed = 13f;
+	[SerializeField]
+	private float dashSpeed = 16f;
+	[SerializeField]
+	private float dashCoolDown = 1f;
 
 	[Space(20)]
 
 	[SerializeField]
-	private float groundDamping = 20f;
+	private float groundDamping = 10f;
 	[SerializeField]
-	private float inAirDamping = 5f;
+	private float inAirDamping = 6f;
 
 	[Space(20)]
 
 	[SerializeField]
-	private float jumpHeight = 3f;
+	private float jumpHeight = 4f;
 	[SerializeField]
 	private int maxJumps = 2;
 
@@ -151,7 +156,7 @@ public class PlayerMovementHandler : MonoBehaviour
 			this.sightAnchor.gameObject.SetActive(false);
 		}
 
-		// Movement control
+		// Movement & Jump control
 		if(this.controller.isGrounded)
 		{
 			this.jumpsCount = 0;
@@ -179,6 +184,7 @@ public class PlayerMovementHandler : MonoBehaviour
 			this.normalizedHorizontalSpeed = 0;
 		}
 
+		// Jump control
 		if((this.controller.isGrounded || this.jumpsCount < this.maxJumps)
 			&& this.gamepadState.YPressed)
 		{
@@ -190,6 +196,19 @@ public class PlayerMovementHandler : MonoBehaviour
 		this.velocity.x = Mathf.Lerp(this.velocity.x, normalizedHorizontalSpeed * this.runSpeed, Time.deltaTime * smoothedMovementFactor);
 
 		this.velocity.y += this.gravity * Time.deltaTime;
+
+		// Dash control
+		if(this.gamepadState.XPressed && this.canDash == true)
+		{
+			this.canDash = false;
+			var direction = new Vector2(this.gamepadState.LeftStickAxis.x, this.gamepadState.LeftStickAxis.y + this.gravity);
+			// Fully override velocity
+			this.velocity = direction * this.dashSpeed;
+			StartCoroutine(CoroutineUtils.DelaySeconds(() =>
+			{
+				this.canDash = true;
+			}, this.dashCoolDown));
+		}
 
 		if(this.controller.isGrounded && this.gamepadState.LeftStickAxis.y < 0)
 		{

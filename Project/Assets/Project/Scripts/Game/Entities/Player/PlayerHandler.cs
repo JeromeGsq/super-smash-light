@@ -4,8 +4,6 @@
 [RequireComponent(typeof(PlayerMovementHandler))]
 public class PlayerHandler : MonoBehaviour
 {
-	private const string BallTag = "Ball";
-
 	private PlayerMovementHandler playerMovementHandler;
 
 	private bool canGrab = true;
@@ -47,7 +45,7 @@ public class PlayerHandler : MonoBehaviour
 
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
-		if(collision.CompareTag(BallTag))
+		if(collision.CompareTag(Tags.Ball))
 		{
 			if(this.canGrab)
 			{
@@ -98,12 +96,6 @@ public class PlayerHandler : MonoBehaviour
 					this.canGrab = true;
 				}, this.deltaTimeGrab));
 			}
-		}
-
-		// Hit control
-		if(this.playerMovementHandler.GamepadState.XPressed)
-		{
-
 		}
 	}
 }

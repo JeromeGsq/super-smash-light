@@ -2,18 +2,28 @@
 using Prime31;
 using GamepadInput;
 using static GamepadInput.ip_GamePad;
+using System;
+using DG.Tweening;
 
 [RequireComponent(typeof(CharacterController2D))]
 public class PlayerMovementHandler : MonoBehaviour
 {
 	private CharacterController2D controller;
+
 	private Vector3 velocity;
 
 	private bool canGrab = true;
-	private PlayerStatus status = PlayerStatus.Idle;
 
 	private int jumpsCount;
+
+	private bool isPushed;
+	private float pushPower;
+	private Transform pushSender;
+
+	private Coroutine dashCoroutine;
 	private bool isDashing;
+	private bool canDash = true;
+
 	private float savedGravity;
 	private float normalizedHorizontalSpeed;
 
@@ -107,6 +117,16 @@ public class PlayerMovementHandler : MonoBehaviour
 	[SerializeField]
 	private float shootPower = 50f;
 
+	[Space(20)]
+
+	[Tooltip("Puissance appliquée quand on pousse un joueur sur le joueur")]
+	[SerializeField]
+	private float pushPowerOnEnemy = 50f;
+
+	[Tooltip("Puissance appliquée quand on pousse un joueur sur nous")]
+	[SerializeField]
+	private float pushPowerOnMe = 50f;
+
 	public bool IsTargeting
 	{
 		get;
@@ -118,6 +138,13 @@ public class PlayerMovementHandler : MonoBehaviour
 		this.controller = GetComponent<CharacterController2D>();
 		this.gamepadState = new GamepadState();
 
+		this.savedGravity = this.gravity;
+
+		// listen to some events for illustration purposes
+		this.controller.onControllerCollidedEvent += this.OnControllerCollider;
+		this.controller.onTriggerEnterEvent += this.OnTriggerEnterEvent;
+		this.controller.onTriggerExitEvent += this.OnTriggerExitEvent;
+
 		if(this.trigger2D == null)
 		{
 			this.trigger2D = this.GetComponent<Collider2D>();
@@ -125,6 +152,35 @@ public class PlayerMovementHandler : MonoBehaviour
 		}
 
 		this.trigger2D.isTrigger = true;
+	}
+
+	private void OnControllerCollider(RaycastHit2D cast)
+	{
+		if(this.isDashing && this.isPushed == false && (cast.collider.CompareTag(Tags.Player2) || cast.collider.CompareTag(Tags.Player4)))
+		{
+			var enemy = cast.collider;
+			var enemyPlayerHandler = enemy.GetComponent<PlayerMovementHandler>();
+
+			// Get ball from enemy
+			if(BallHandler.Instance.Index == enemyPlayerHandler.index)
+			{
+				BallHandler.Instance.SetGrabbed(this.ballAnchor, this.index);
+			}
+
+			// Apply collision on enemy
+			enemyPlayerHandler.Collision(this.transform, this.pushPowerOnEnemy);
+
+			// Apply collision on ourselves
+			this.Collision(enemy.transform, this.pushPowerOnMe);
+		}
+	}
+
+	private void OnTriggerEnterEvent(Collider2D collider)
+	{
+	}
+
+	private void OnTriggerExitEvent(Collider2D collider)
+	{
 	}
 
 	private void OnTriggerEnter2D(Collider2D collision)
@@ -136,15 +192,20 @@ public class PlayerMovementHandler : MonoBehaviour
 				BallHandler.Instance.SetGrabbed(this.ballAnchor, this.index);
 			}
 		}
-		else if(collision.CompareTag(Tags.Player2) && this.isDashing)
-		{
-			BallHandler.Instance.SetGrabbed(this.ballAnchor, this.index);
-		}
 	}
 
-	private void OnTriggerExit2D(Collider2D collision)
+	// Messages
+	public void Collision(Transform sender, float power)
 	{
-		// Debug.Log($"PlayerHandler : OnTriggerExit2D() : {collision.name}");
+		if(this.isPushed == false)
+		{
+			Debug.Log($"PlayerMovementHandler : Push() : pushed by {sender.name}");
+
+			this.pushSender = sender;
+			this.pushPower = power;
+			this.isPushed = true;
+			this.gravity = this.savedGravity;
+		}
 	}
 
 	private void Update()
@@ -188,7 +249,7 @@ public class PlayerMovementHandler : MonoBehaviour
 			}
 		}
 
-		// sight control
+		// Sight control
 		this.IsTargeting = this.gamepadState.LT > 0;
 		this.sight.transform.localPosition = (Vector3.right * this.gamepadState.LT) * 2.5f;
 
@@ -209,7 +270,7 @@ public class PlayerMovementHandler : MonoBehaviour
 			this.velocity.y = 0;
 		}
 
-		if(this.gamepadState.Right || this.gamepadState.LeftStickAxis.x > 0)
+		if(this.gamepadState.Right || this.gamepadState.LeftStickAxis.x > 0.1f)
 		{
 			this.normalizedHorizontalSpeed = 1;
 			if(this.player.transform.localScale.x < 0f)
@@ -217,7 +278,7 @@ public class PlayerMovementHandler : MonoBehaviour
 				this.player.transform.localScale = new Vector3(-this.player.transform.localScale.x, this.player.transform.localScale.y, this.player.transform.localScale.z);
 			}
 		}
-		else if(this.gamepadState.Left || this.gamepadState.LeftStickAxis.x < 0)
+		else if(this.gamepadState.Left || this.gamepadState.LeftStickAxis.x < -0.1f)
 		{
 			this.normalizedHorizontalSpeed = -1;
 			if(this.player.transform.localScale.x > 0f)
@@ -241,8 +302,10 @@ public class PlayerMovementHandler : MonoBehaviour
 		// Dash control
 		if(BallHandler.Instance.Index != this.index
 			&& this.isDashing == false
-			&& this.gamepadState.RightStickAxis.magnitude > 0.5f)
+			&& this.gamepadState.RightStickAxis.magnitude > 0.5f
+			&& this.canDash)
 		{
+			this.canDash = false;
 			this.isDashing = true;
 
 			var direction = new Vector2(this.gamepadState.RightStickAxis.x, this.gamepadState.RightStickAxis.y);
@@ -251,17 +314,54 @@ public class PlayerMovementHandler : MonoBehaviour
 			this.savedGravity = this.gravity;
 			this.gravity = 0;
 
+			this.player.DOLocalRotate(new Vector3(0, 0, -Mathf.Sign(direction.x) * 360), this.dashDuration * 2, RotateMode.FastBeyond360);
+
 			StartCoroutine(CoroutineUtils.DelaySeconds(() =>
 			{
 				// Reset gravity and stop dashing
 				this.gravity = this.savedGravity;
+				this.isDashing = false;
 			}, this.dashDuration));
+
+			this.dashCoroutine = StartCoroutine(CoroutineUtils.DelaySeconds(() =>
+			{
+				if(this.gamepadState.RightStickAxis.magnitude == 0
+					&& this.canDash == false
+					&& this.isDashing == false)
+				{
+					// Allow to do a dash
+					this.canDash = true;
+				}
+				this.dashCoroutine = null;
+			}, this.dashCoolDown));
+		}
+
+		if(this.gamepadState.RightStickAxis.magnitude == 0
+			&& this.canDash == false
+			&& this.isDashing == false
+			&& this.dashCoroutine == null)
+		{
+			this.canDash = true;
+		}
+
+		// Is Pushed
+		if(this.isPushed == true && this.pushSender != null)
+		{
+			var direction = (this.transform.position - this.pushSender.position).normalized;
+
+			this.velocity.y = Mathf.Sqrt(2f * 2 * -this.gravity);
+			this.velocity.x = direction.x * this.pushPower;
+
+			this.pushPower = 0;
+			this.pushSender = null;
+
+			this.player.DOLocalRotate(new Vector3(0, 0, -Mathf.Sign(direction.x) * 360), this.dashDuration * 2, RotateMode.FastBeyond360);
 
 			StartCoroutine(CoroutineUtils.DelaySeconds(() =>
 			{
 				// Allow to do a dash
-				this.isDashing = false;
-			}, this.dashCoolDown));
+				this.isPushed = false;
+			}, 1f));
 		}
 
 		var smoothedMovementFactor = this.controller.isGrounded ? this.groundDamping : this.inAirDamping;

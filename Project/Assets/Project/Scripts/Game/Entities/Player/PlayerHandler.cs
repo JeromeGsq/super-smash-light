@@ -49,7 +49,6 @@ public class PlayerHandler : MonoBehaviour
 	{
 		if(collision.CompareTag(BallTag))
 		{
-			Debug.Log($"PlayerHandler : OnTriggerEnter2D() : {collision.name}");
 			if(this.canGrab)
 			{
 				collision.GetComponent<BallHandler>()?.SetGrabbed(this.ballAnchor, this.playerMovementHandler.Index);

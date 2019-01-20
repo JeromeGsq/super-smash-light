@@ -63,6 +63,12 @@ public class BallHandler : SceneSingleton<BallHandler>
 
 	public void Shoot(Transform target, float power, ShootType shootType)
 	{
+		if(target == null)
+		{
+			Debug.LogError("BallHandler : Shoot() : Unable to find target. Stop Shoot()");
+			return;
+		}
+
 		this.transform.SetParent(null);
 		Vector3 dir = (target.position - this.transform.position).normalized;
 
@@ -70,10 +76,15 @@ public class BallHandler : SceneSingleton<BallHandler>
 		{
 			case ShootType.Pass:
 				this.trail.material = (int)this.index%2 == 0 ? this.red : this.blue;
-				dir += Vector3.up * passYCorrectionAmount;
+				this.rigidbody.gravityScale = 0;
+
+				// Add a slightly Y impulse in order to pass ball between players without going directly to the floor in case of gravity
+				// dir += Vector3.up * passYCorrectionAmount;
 				break;
 			case ShootType.Shoot:
 				this.trail.material = this.yellow;
+				this.rigidbody.gravityScale = 0;
+
 				break;
 			case ShootType.Loose:
 				this.trail.material = this.white;
@@ -88,5 +99,13 @@ public class BallHandler : SceneSingleton<BallHandler>
 
 		// Debug.DrawLine(this.transform.position, this.transform.position + dir * 10, Color.red, Mathf.Infinity);
 		// Debug.Log($"BallHandler : {dir}");
+	}
+
+	private void OnCollisionEnter2D(Collision2D collision)
+	{
+		if(collision.collider.CompareTag(Tags.Wall))
+		{
+			this.rigidbody.gravityScale = 1;
+		}
 	}
 }

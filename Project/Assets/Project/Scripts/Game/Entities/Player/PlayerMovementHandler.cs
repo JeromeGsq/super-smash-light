@@ -39,6 +39,9 @@ public class PlayerMovementHandler : MonoBehaviour
 	[SerializeField]
 	private Transform player;
 
+	[SerializeField]
+	private Animator animator;
+
 	[Tooltip("Le collider du player (capsule)")]
 	[SerializeField]
 	private Collider2D trigger2D;
@@ -273,6 +276,10 @@ public class PlayerMovementHandler : MonoBehaviour
 		if(this.gamepadState.Right || this.gamepadState.LeftStickAxis.x > 0.1f)
 		{
 			this.normalizedHorizontalSpeed = 1;
+			if(this.controller.isGrounded)
+			{
+				this.animator.Play(Animator.StringToHash("Run"));
+			}
 			if(this.player.transform.localScale.x < 0f)
 			{
 				this.player.transform.localScale = new Vector3(-this.player.transform.localScale.x, this.player.transform.localScale.y, this.player.transform.localScale.z);
@@ -281,14 +288,23 @@ public class PlayerMovementHandler : MonoBehaviour
 		else if(this.gamepadState.Left || this.gamepadState.LeftStickAxis.x < -0.1f)
 		{
 			this.normalizedHorizontalSpeed = -1;
+			if(this.controller.isGrounded)
+			{
+				this.animator.Play(Animator.StringToHash("Run"));
+			}
 			if(this.player.transform.localScale.x > 0f)
 			{
 				this.player.transform.localScale = new Vector3(-this.player.transform.localScale.x, this.player.transform.localScale.y, this.player.transform.localScale.z);
+			
 			}
 		}
 		else
 		{
 			this.normalizedHorizontalSpeed = 0;
+			if(this.controller.isGrounded)
+			{
+				this.animator.Play(Animator.StringToHash("Idle"));
+			}
 		}
 
 		// Jump control
@@ -297,6 +313,7 @@ public class PlayerMovementHandler : MonoBehaviour
 		{
 			this.jumpsCount++;
 			this.velocity.y = Mathf.Sqrt(2f * this.jumpHeight * -this.gravity);
+			this.animator.Play(Animator.StringToHash("Jump"));
 		}
 
 		// Dash control

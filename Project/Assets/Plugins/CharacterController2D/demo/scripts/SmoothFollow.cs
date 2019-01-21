@@ -21,6 +21,11 @@ public class SmoothFollow : MonoBehaviour
 		}
 		center = center / targets.Count;
 
-		transform.position = Vector3.SmoothDamp(transform.position - Vector3.forward, center, ref _smoothDampVelocity, smoothDampTime);
+		float interpolation = smoothDampTime * Time.deltaTime;
+
+		Vector3 position = this.transform.position;
+		position.y = Mathf.Lerp(this.transform.position.y, center.y, interpolation);
+		position.x = Mathf.Lerp(this.transform.position.x, center.x, interpolation);
+		this.transform.position = position;
 	}
 }

@@ -54,6 +54,7 @@ public class BallHandler : SceneSingleton<BallHandler>
 
 	public void SetGrabbed(Transform ballAnchor, Index index)
 	{
+		this.collider.isTrigger = true;
 		this.index = index;
 		this.transform.SetParent(ballAnchor);
 		this.transform.localPosition = Vector3.zero;
@@ -90,6 +91,8 @@ public class BallHandler : SceneSingleton<BallHandler>
 				this.trail.material = this.white;
 				break;
 		}
+
+		this.collider.isTrigger = false;
 
 		this.rigidbody.bodyType = RigidbodyType2D.Dynamic;
 		this.rigidbody.AddForce(dir * power, ForceMode2D.Impulse);

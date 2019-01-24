@@ -3,11 +3,13 @@ using Prime31;
 using GamepadInput;
 using static GamepadInput.ip_GamePad;
 using DG.Tweening;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(CharacterController2D))]
 public class PlayerMovementHandler : MonoBehaviour
 {
 	private CharacterController2D controller;
+	private Vector3 mainPosition;
 
 	private Vector3 velocity;
 
@@ -26,7 +28,14 @@ public class PlayerMovementHandler : MonoBehaviour
 	private float savedGravity;
 	private float normalizedHorizontalSpeed;
 
+	private bool isDestroyed;
+
 	private GamepadState gamepadState;
+
+	[SerializeField]
+	private GameObject deathPrefab;
+
+	[Space(20)]
 
 	[Tooltip("Cet index permet de choisir via quelle manette ce joueur va être controllé")]
 	[SerializeField]
@@ -218,6 +227,11 @@ public class PlayerMovementHandler : MonoBehaviour
 
 	private void Update()
 	{
+		if(this.isDestroyed)
+		{
+			return;
+		}
+
 		ip_GamePad.GetState(ref this.gamepadState, this.index);
 
 		if(BallHandler.Get.Index == this.index)
@@ -278,7 +292,7 @@ public class PlayerMovementHandler : MonoBehaviour
 			this.velocity.y = 0;
 		}
 
-		if(this.gamepadState.Right || this.gamepadState.LeftStickAxis.x > 0.1f)
+		if(this.gamepadState.LeftStickAxis.x > 0.1f)
 		{
 			this.normalizedHorizontalSpeed = 1;
 			if(this.controller.isGrounded)
@@ -290,7 +304,7 @@ public class PlayerMovementHandler : MonoBehaviour
 				this.player.transform.localScale = new Vector3(-this.player.transform.localScale.x, this.player.transform.localScale.y, this.player.transform.localScale.z);
 			}
 		}
-		else if(this.gamepadState.Left || this.gamepadState.LeftStickAxis.x < -0.1f)
+		else if(this.gamepadState.LeftStickAxis.x < -0.1f)
 		{
 			this.normalizedHorizontalSpeed = -1;
 			if(this.controller.isGrounded)
@@ -408,18 +422,41 @@ public class PlayerMovementHandler : MonoBehaviour
 		this.controller.move(this.velocity * Time.deltaTime);
 
 		this.velocity = this.controller.velocity;
+
+		if(this.gamepadState.Start)
+		{
+			SceneManager.LoadScene(0);
+		}
 	}
 
 	private void SetDestroyed()
 	{
 		BallHandler.Get.EngageShoot = false;
+		this.isDestroyed = false;
 
 		CameraHandler.Get.Rumble();
 
 		// Add point to the other team
 		var otherTeamIndex = Mathf.Abs(((int)this.index % 2) - 1);
 		GameManager.Get.AddPoint(otherTeamIndex);
-		this.gameObject.SetActive(false);
-	}
 
+		var particles = Instantiate(this.deathPrefab);
+		particles.transform.position = this.transform.position;
+		particles.transform.SetParent(null);
+
+		StartCoroutine(CoroutineUtils.DelaySeconds(() =>
+		{
+			Destroy(particles);
+		}, 2f));
+
+		// Respawn
+		StartCoroutine(CoroutineUtils.DelaySeconds(() =>
+		{
+			this.transform.position = this.mainPosition;
+			this.player.gameObject.SetActive(true);
+			this.isDestroyed = false;
+		}, 1f));
+
+		this.player.gameObject.SetActive(false);
+	}
 }

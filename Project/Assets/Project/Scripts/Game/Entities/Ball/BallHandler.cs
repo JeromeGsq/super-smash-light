@@ -44,6 +44,12 @@ public class BallHandler : SceneSingleton<BallHandler>
 
 	public Index LastShooter => this.lastShooter;
 
+	public bool EngagePass
+	{
+		get => this.engagePass;
+		set => this.engagePass = value;
+	}
+
 	public bool EngageShoot
 	{
 		get => this.engageShoot;
@@ -104,7 +110,7 @@ public class BallHandler : SceneSingleton<BallHandler>
 			case ShootType.Pass:
 				this.trail.material = (int)this.index % 2 == 0 ? this.red : this.blue;
 				this.rigidbody.gravityScale = 0;
-
+				this.index = Index.Any;
 				this.engagePass = true;
 				break;
 

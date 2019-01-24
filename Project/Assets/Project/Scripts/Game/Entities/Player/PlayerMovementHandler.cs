@@ -239,7 +239,7 @@ public class PlayerMovementHandler : MonoBehaviour
 			// Shoot control
 			if(this.gamepadState.BPressed)
 			{
-				if(this.IsTargeting)
+				if(this.IsTargeting && GameManager.Get.CanShoot())
 				{
 					BallHandler.Instance.Shoot(this.sight, this.shootPower, ShootType.Shoot);
 				}

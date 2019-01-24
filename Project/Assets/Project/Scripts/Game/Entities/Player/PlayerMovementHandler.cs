@@ -2,7 +2,6 @@
 using Prime31;
 using GamepadInput;
 using static GamepadInput.ip_GamePad;
-using System;
 using DG.Tweening;
 
 [RequireComponent(typeof(CharacterController2D))]
@@ -165,9 +164,9 @@ public class PlayerMovementHandler : MonoBehaviour
 			var enemyPlayerHandler = enemy.GetComponent<PlayerMovementHandler>();
 
 			// Get ball from enemy
-			if(BallHandler.Instance.Index == enemyPlayerHandler.index)
+			if(BallHandler.Get.Index == enemyPlayerHandler.index)
 			{
-				BallHandler.Instance.SetGrabbed(this.ballAnchor, this.index);
+				BallHandler.Get.SetGrabbed(this.ballAnchor, this.index);
 			}
 
 			// Apply collision on enemy
@@ -190,9 +189,15 @@ public class PlayerMovementHandler : MonoBehaviour
 	{
 		if(collision.CompareTag(Tags.Ball))
 		{
-			if(this.canGrab && BallHandler.Instance.Index == Index.Any)
+			if(this.canGrab && BallHandler.Get.Index == Index.Any)
 			{
-				BallHandler.Instance.SetGrabbed(this.ballAnchor, this.index);
+				BallHandler.Get.SetGrabbed(this.ballAnchor, this.index);
+			}
+			else if((int)BallHandler.Get.LastShooter % 2 != (int)this.index &&
+					BallHandler.Get.EngageShoot == true)
+			{
+				// This ball is shooted by enemy
+				this.SetDestroyed();
 			}
 		}
 	}
@@ -215,18 +220,18 @@ public class PlayerMovementHandler : MonoBehaviour
 	{
 		ip_GamePad.GetState(ref this.gamepadState, this.index);
 
-		if(BallHandler.Instance.Index == this.index)
+		if(BallHandler.Get.Index == this.index)
 		{
 			// Pass control
 			if(this.gamepadState.APressed)
 			{
 				if(this.IsTargeting)
 				{
-					BallHandler.Instance.Shoot(this.sight, this.passPower, ShootType.Pass);
+					BallHandler.Get.Shoot(this.sight, this.passPower, ShootType.Pass);
 				}
 				else
 				{
-					BallHandler.Instance.Shoot(this.friendTransform, this.passPower, ShootType.Pass);
+					BallHandler.Get.Shoot(this.friendTransform, this.passPower, ShootType.Pass);
 				}
 
 				this.canGrab = false;
@@ -241,7 +246,7 @@ public class PlayerMovementHandler : MonoBehaviour
 			{
 				if(this.IsTargeting && GameManager.Get.CanShoot())
 				{
-					BallHandler.Instance.Shoot(this.sight, this.shootPower, ShootType.Shoot);
+					BallHandler.Get.Shoot(this.sight, this.shootPower, ShootType.Shoot);
 				}
 
 				this.canGrab = false;
@@ -295,7 +300,7 @@ public class PlayerMovementHandler : MonoBehaviour
 			if(this.player.transform.localScale.x > 0f)
 			{
 				this.player.transform.localScale = new Vector3(-this.player.transform.localScale.x, this.player.transform.localScale.y, this.player.transform.localScale.z);
-			
+
 			}
 		}
 		else
@@ -317,7 +322,7 @@ public class PlayerMovementHandler : MonoBehaviour
 		}
 
 		// Dash control
-		if(BallHandler.Instance.Index != this.index
+		if(BallHandler.Get.Index != this.index
 			&& this.isDashing == false
 			&& this.gamepadState.RightStickAxis.magnitude > 0.5f
 			&& this.canDash)
@@ -404,4 +409,17 @@ public class PlayerMovementHandler : MonoBehaviour
 
 		this.velocity = this.controller.velocity;
 	}
+
+	private void SetDestroyed()
+	{
+		BallHandler.Get.EngageShoot = false;
+
+		CameraHandler.Get.Rumble();
+
+		// Add point to the other team
+		var otherTeamIndex = Mathf.Abs(((int)this.index % 2) - 1);
+		GameManager.Get.AddPoint(otherTeamIndex);
+		this.gameObject.SetActive(false);
+	}
+
 }

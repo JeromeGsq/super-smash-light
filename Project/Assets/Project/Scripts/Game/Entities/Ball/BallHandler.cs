@@ -13,6 +13,7 @@ public class BallHandler : SceneSingleton<BallHandler>
 
 	private bool isGrabbed = false;
 	private bool engagePass = false;
+	private bool engageShoot = false;
 
 	private Vector3 lastKnownShootPosition;
 	private Index lastShooter = Index.Any;
@@ -35,18 +36,18 @@ public class BallHandler : SceneSingleton<BallHandler>
 
 	[Space(20)]
 
-	[Space(20)]
-
 	[Tooltip("Augmenter cette valeur pour gagner plus de % à chaque passes (defaut : 1)")]
 	[SerializeField]
 	private int barLevelAddScale = 1;
 
-	public Index Index
+	public Index Index => this.index;
+
+	public Index LastShooter => this.lastShooter;
+
+	public bool EngageShoot
 	{
-		get
-		{
-			return this.index;
-		}
+		get => this.engageShoot;
+		set => this.engageShoot = value;
 	}
 
 	private void Awake()
@@ -110,12 +111,14 @@ public class BallHandler : SceneSingleton<BallHandler>
 			case ShootType.Shoot:
 				this.trail.material = this.yellow;
 				this.rigidbody.gravityScale = 0;
-
 				GameManager.Get.ResetBarLevel();
+
+				this.engageShoot = true;
 				break;
 
 			case ShootType.Loose:
 				this.trail.material = this.white;
+				this.index = Index.Any;
 				break;
 		}
 
@@ -125,10 +128,6 @@ public class BallHandler : SceneSingleton<BallHandler>
 		this.rigidbody.AddForce(dir * power, ForceMode2D.Impulse);
 
 		this.isGrabbed = false;
-		this.index = Index.Any;
-
-		// Debug.DrawLine(this.transform.position, this.transform.position + dir * 10, Color.red, Mathf.Infinity);
-		// Debug.Log($"BallHandler : {dir}");
 	}
 
 	private void OnCollisionEnter2D(Collision2D collision)
@@ -137,6 +136,7 @@ public class BallHandler : SceneSingleton<BallHandler>
 		{
 			this.rigidbody.gravityScale = 1;
 			this.engagePass = false;
+			this.engageShoot = false;
 			this.index = Index.Any;
 			this.trail.material = this.white;
 		}

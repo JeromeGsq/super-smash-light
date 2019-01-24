@@ -14,6 +14,8 @@ Une fois cette balle chargée, le joueur ayant la balle pourra effectuer un "Sup
 
 **Dossier Drive :** https://drive.google.com/drive/folders/1wHW_J902ZkFmNlMMSk6DXNYyrsQrr9Ku
 
+**Trello :** https://trello.com/b/SQvuLkMz/dev
+
 ## Développement :
 
 **Convention de nommage :** https://docs.google.com/document/d/13m8SoWYJyfk6-ck0KJuF615U7VC812zl2sp48tGuzbs

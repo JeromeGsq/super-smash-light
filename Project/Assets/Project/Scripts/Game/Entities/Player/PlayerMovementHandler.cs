@@ -2,13 +2,14 @@
 using Prime31;
 using GamepadInput;
 using static GamepadInput.ip_GamePad;
-using System;
 using DG.Tweening;
+using UnityEngine.SceneManagement;
 
 [RequireComponent(typeof(CharacterController2D))]
 public class PlayerMovementHandler : MonoBehaviour
 {
 	private CharacterController2D controller;
+	private Vector3 mainPosition;
 
 	private Vector3 velocity;
 
@@ -27,7 +28,14 @@ public class PlayerMovementHandler : MonoBehaviour
 	private float savedGravity;
 	private float normalizedHorizontalSpeed;
 
+	private bool isDestroyed;
+
 	private GamepadState gamepadState;
+
+	[SerializeField]
+	private GameObject deathPrefab;
+
+	[Space(20)]
 
 	[Tooltip("Cet index permet de choisir via quelle manette ce joueur va être controllé")]
 	[SerializeField]
@@ -165,9 +173,9 @@ public class PlayerMovementHandler : MonoBehaviour
 			var enemyPlayerHandler = enemy.GetComponent<PlayerMovementHandler>();
 
 			// Get ball from enemy
-			if(BallHandler.Instance.Index == enemyPlayerHandler.index)
+			if(BallHandler.Get.Index == enemyPlayerHandler.index)
 			{
-				BallHandler.Instance.SetGrabbed(this.ballAnchor, this.index);
+				BallHandler.Get.SetGrabbed(this.ballAnchor, this.index);
 			}
 
 			// Apply collision on enemy
@@ -190,9 +198,15 @@ public class PlayerMovementHandler : MonoBehaviour
 	{
 		if(collision.CompareTag(Tags.Ball))
 		{
-			if(this.canGrab && BallHandler.Instance.Index == Index.Any)
+			if(this.canGrab && BallHandler.Get.Index == Index.Any)
 			{
-				BallHandler.Instance.SetGrabbed(this.ballAnchor, this.index);
+				BallHandler.Get.SetGrabbed(this.ballAnchor, this.index);
+			}
+			else if((int)BallHandler.Get.LastShooter % 2 != (int)this.index &&
+					BallHandler.Get.EngageShoot == true)
+			{
+				// This ball is shooted by enemy
+				this.SetDestroyed();
 			}
 		}
 	}
@@ -213,20 +227,25 @@ public class PlayerMovementHandler : MonoBehaviour
 
 	private void Update()
 	{
+		if(this.isDestroyed)
+		{
+			return;
+		}
+
 		ip_GamePad.GetState(ref this.gamepadState, this.index);
 
-		if(BallHandler.Instance.Index == this.index)
+		if(BallHandler.Get.Index == this.index)
 		{
 			// Pass control
 			if(this.gamepadState.APressed)
 			{
 				if(this.IsTargeting)
 				{
-					BallHandler.Instance.Shoot(this.sight, this.passPower, ShootType.Pass);
+					BallHandler.Get.Shoot(this.sight, this.passPower, ShootType.Pass);
 				}
 				else
 				{
-					BallHandler.Instance.Shoot(this.friendTransform, this.passPower, ShootType.Pass);
+					BallHandler.Get.Shoot(this.friendTransform, this.passPower, ShootType.Pass);
 				}
 
 				this.canGrab = false;
@@ -239,9 +258,9 @@ public class PlayerMovementHandler : MonoBehaviour
 			// Shoot control
 			if(this.gamepadState.BPressed)
 			{
-				if(this.IsTargeting)
+				if(this.IsTargeting && GameManager.Get.CanShoot())
 				{
-					BallHandler.Instance.Shoot(this.sight, this.shootPower, ShootType.Shoot);
+					BallHandler.Get.Shoot(this.sight, this.shootPower, ShootType.Shoot);
 				}
 
 				this.canGrab = false;
@@ -273,7 +292,7 @@ public class PlayerMovementHandler : MonoBehaviour
 			this.velocity.y = 0;
 		}
 
-		if(this.gamepadState.Right || this.gamepadState.LeftStickAxis.x > 0.1f)
+		if(this.gamepadState.LeftStickAxis.x > 0.1f)
 		{
 			this.normalizedHorizontalSpeed = 1;
 			if(this.controller.isGrounded)
@@ -285,7 +304,7 @@ public class PlayerMovementHandler : MonoBehaviour
 				this.player.transform.localScale = new Vector3(-this.player.transform.localScale.x, this.player.transform.localScale.y, this.player.transform.localScale.z);
 			}
 		}
-		else if(this.gamepadState.Left || this.gamepadState.LeftStickAxis.x < -0.1f)
+		else if(this.gamepadState.LeftStickAxis.x < -0.1f)
 		{
 			this.normalizedHorizontalSpeed = -1;
 			if(this.controller.isGrounded)
@@ -295,7 +314,7 @@ public class PlayerMovementHandler : MonoBehaviour
 			if(this.player.transform.localScale.x > 0f)
 			{
 				this.player.transform.localScale = new Vector3(-this.player.transform.localScale.x, this.player.transform.localScale.y, this.player.transform.localScale.z);
-			
+
 			}
 		}
 		else
@@ -317,7 +336,7 @@ public class PlayerMovementHandler : MonoBehaviour
 		}
 
 		// Dash control
-		if(BallHandler.Instance.Index != this.index
+		if(BallHandler.Get.Index != this.index
 			&& this.isDashing == false
 			&& this.gamepadState.RightStickAxis.magnitude > 0.5f
 			&& this.canDash)
@@ -403,5 +422,41 @@ public class PlayerMovementHandler : MonoBehaviour
 		this.controller.move(this.velocity * Time.deltaTime);
 
 		this.velocity = this.controller.velocity;
+
+		if(this.gamepadState.Start)
+		{
+			SceneManager.LoadScene(0);
+		}
+	}
+
+	private void SetDestroyed()
+	{
+		BallHandler.Get.EngageShoot = false;
+		this.isDestroyed = false;
+
+		CameraHandler.Get.Rumble();
+
+		// Add point to the other team
+		var otherTeamIndex = Mathf.Abs(((int)this.index % 2) - 1);
+		GameManager.Get.AddPoint(otherTeamIndex);
+
+		var particles = Instantiate(this.deathPrefab);
+		particles.transform.position = this.transform.position;
+		particles.transform.SetParent(null);
+
+		StartCoroutine(CoroutineUtils.DelaySeconds(() =>
+		{
+			Destroy(particles);
+		}, 2f));
+
+		// Respawn
+		StartCoroutine(CoroutineUtils.DelaySeconds(() =>
+		{
+			this.transform.position = this.mainPosition;
+			this.player.gameObject.SetActive(true);
+			this.isDestroyed = false;
+		}, 1f));
+
+		this.player.gameObject.SetActive(false);
 	}
 }

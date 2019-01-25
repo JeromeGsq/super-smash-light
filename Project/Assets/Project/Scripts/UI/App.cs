@@ -9,6 +9,6 @@ public class App : MonoBehaviour {
 		Thread.CurrentThread.CurrentCulture = ci;
 		Thread.CurrentThread.CurrentUICulture = ci;
 
-		NavigationService.Instance.ShowViewModel(typeof(SplashscreenViewModel));
+		NavigationService.Get.ShowViewModel(typeof(SplashscreenViewModel));
 	}
 }

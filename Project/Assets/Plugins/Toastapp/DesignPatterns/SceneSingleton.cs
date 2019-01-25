@@ -7,7 +7,7 @@ namespace Root.DesignPatterns {
         
         private static T mInstance;
 
-        public static T Instance {
+        public static T Get {
             get {
                 if(mInstance == null) {
                     mInstance = GameObject.FindObjectOfType<T>();                    

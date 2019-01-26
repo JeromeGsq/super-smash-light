@@ -21,8 +21,8 @@ public class GameManager : BaseViewModel
 	}
 	#endregion
 
-	private Team team1 = new Team();
-	private Team team2 = new Team();
+	private Team team1;
+	private Team team2;
 
 	private float barLevel;
 
@@ -46,24 +46,42 @@ public class GameManager : BaseViewModel
 	[Binding]
 	public string Team1Score
 	{
-		get => $"Team bleu : {this.team1.Score}";
+		get => $"Team bleu : {this.Team1.Score}";
 	}
 
 	[Binding]
 	public string Team2Score
 	{
-		get => $"Team rouge : {this.team2.Score}";
+		get => $"Team rouge : {this.Team2.Score}";
 	}
 
-	private void Start()
+	public Team Team1
 	{
-		this.team1.TeamIndex = 1;
-		this.team1.FirstPlayerIndex = GamepadInput.ip_GamePad.Index.One;
-		this.team1.SecondPlayerIndex = GamepadInput.ip_GamePad.Index.Three;
+		get => this.team1;
+		set => this.Set(ref this.team1, value, nameof(this.Team1));
+	}
 
-		this.team2.TeamIndex = 2;
-		this.team2.FirstPlayerIndex = GamepadInput.ip_GamePad.Index.Two;
-		this.team2.SecondPlayerIndex = GamepadInput.ip_GamePad.Index.Four;
+	public Team Team2
+	{
+		get => this.team2;
+		set => this.Set(ref this.team2, value, nameof(this.Team2));
+	}
+
+	private void Awake()
+	{
+		this.Team1 = new Team()
+		{
+			TeamIndex = 1,
+			FirstPlayerIndex = GamepadInput.ip_GamePad.Index.One,
+			SecondPlayerIndex = GamepadInput.ip_GamePad.Index.Three,
+		};
+
+		this.Team2 = new Team()
+		{
+			TeamIndex = 2,
+			FirstPlayerIndex = GamepadInput.ip_GamePad.Index.Two,
+			SecondPlayerIndex = GamepadInput.ip_GamePad.Index.Four,
+		};
 
 		this.BarLevel = 1f;
 	}
@@ -87,11 +105,11 @@ public class GameManager : BaseViewModel
 		switch(teamIndex)
 		{
 			case 1:
-				this.team1.Score++;
+				this.Team1.Score++;
 				break;
 
 			case 2:
-				this.team2.Score++;
+				this.Team2.Score++;
 				break;
 		}
 

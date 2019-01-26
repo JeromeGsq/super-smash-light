@@ -4,6 +4,7 @@ using GamepadInput;
 using static GamepadInput.ip_GamePad;
 using DG.Tweening;
 using UnityEngine.SceneManagement;
+using System;
 
 [RequireComponent(typeof(CharacterController2D))]
 public class PlayerMovementHandler : MonoBehaviour
@@ -144,6 +145,28 @@ public class PlayerMovementHandler : MonoBehaviour
 		private set;
 	}
 
+	public Index Index
+	{
+		get => this.index;
+		set
+		{
+			this.index = value;
+			this.SetColors();
+		}
+	}
+
+	public Transform FriendTransform
+	{
+		get => this.friendTransform;
+		set => this.friendTransform = value;
+	}
+
+	public Vector3 MainPosition
+	{
+		get => this.mainPosition;
+		set => this.mainPosition = value;
+	}
+
 	private void Awake()
 	{
 		this.controller = GetComponent<CharacterController2D>();
@@ -165,9 +188,18 @@ public class PlayerMovementHandler : MonoBehaviour
 		this.trigger2D.isTrigger = true;
 	}
 
+	private void OnEnable()
+	{
+		this.mainPosition = this.transform.position;
+	}
+
 	private void OnControllerCollider(RaycastHit2D cast)
 	{
-		if(this.isDashing && this.isPushed == false && (cast.collider.CompareTag(Tags.Player2) || cast.collider.CompareTag(Tags.Player4)))
+		if(this.isDashing && this.isPushed == false && 
+			((int)this.index%2 == 0 ? 
+				(cast.collider.CompareTag(Tags.Player1) || cast.collider.CompareTag(Tags.Player3)) :
+				(cast.collider.CompareTag(Tags.Player2) || cast.collider.CompareTag(Tags.Player4)))
+		   )
 		{
 			var enemy = cast.collider;
 			var enemyPlayerHandler = enemy.GetComponent<PlayerMovementHandler>();
@@ -245,7 +277,7 @@ public class PlayerMovementHandler : MonoBehaviour
 				}
 				else
 				{
-					BallHandler.Get.Shoot(this.friendTransform, this.passPower, ShootType.Pass);
+					BallHandler.Get.Shoot(this.FriendTransform, this.passPower, ShootType.Pass);
 				}
 
 				this.canGrab = false;
@@ -272,8 +304,16 @@ public class PlayerMovementHandler : MonoBehaviour
 		}
 
 		// Sight control
-		this.IsTargeting = this.gamepadState.LT > 0;
-		this.sight.transform.localPosition = (Vector3.right * this.gamepadState.LT) * 2.5f;
+		this.IsTargeting = this.gamepadState.LT > 0 || this.gamepadState.LB;
+
+		if(this.gamepadState.LB)
+		{
+			this.sight.transform.localPosition = (this.gamepadState.LB ? Vector3.right * 2.5f : Vector3.zero);
+		}
+		else
+		{
+			this.sight.transform.localPosition = (Vector3.right * this.gamepadState.LT) * 2.5f;
+		}
 
 		if(this.IsTargeting)
 		{
@@ -292,7 +332,7 @@ public class PlayerMovementHandler : MonoBehaviour
 			this.velocity.y = 0;
 		}
 
-		if(this.gamepadState.LeftStickAxis.x > 0.1f)
+		if(this.gamepadState.LeftStickAxis.x > 0.1f && this.gamepadState.LB == false)
 		{
 			this.normalizedHorizontalSpeed = 1;
 			if(this.controller.isGrounded)
@@ -304,7 +344,7 @@ public class PlayerMovementHandler : MonoBehaviour
 				this.player.transform.localScale = new Vector3(-this.player.transform.localScale.x, this.player.transform.localScale.y, this.player.transform.localScale.z);
 			}
 		}
-		else if(this.gamepadState.LeftStickAxis.x < -0.1f)
+		else if(this.gamepadState.LeftStickAxis.x < -0.1f && this.gamepadState.LB == false)
 		{
 			this.normalizedHorizontalSpeed = -1;
 			if(this.controller.isGrounded)
@@ -314,7 +354,6 @@ public class PlayerMovementHandler : MonoBehaviour
 			if(this.player.transform.localScale.x > 0f)
 			{
 				this.player.transform.localScale = new Vector3(-this.player.transform.localScale.x, this.player.transform.localScale.y, this.player.transform.localScale.z);
-
 			}
 		}
 		else
@@ -429,6 +468,28 @@ public class PlayerMovementHandler : MonoBehaviour
 		}
 	}
 
+	private void SetColors()
+	{
+		var color = new Color();
+		switch(this.Index)
+		{
+			case Index.One:
+				color = new Color(0, 0, 1);
+				break;
+			case Index.Two:
+				color = new Color(1, 0, 0);
+				break;
+			case Index.Three:
+				color = new Color(0, 1, 1);
+				break;
+			case Index.Four:
+				color = new Color(1, 1, 0);
+				break;
+		}
+
+		this.player.GetComponent<SpriteRenderer>().color = color;
+	}
+
 	private void SetDestroyed()
 	{
 		BallHandler.Get.EngageShoot = false;
@@ -455,8 +516,12 @@ public class PlayerMovementHandler : MonoBehaviour
 			this.transform.position = this.mainPosition;
 			this.player.gameObject.SetActive(true);
 			this.isDestroyed = false;
+			this.trigger2D.enabled = true;
+			this.controller.boxCollider.enabled = true;
 		}, 1f));
 
 		this.player.gameObject.SetActive(false);
+		this.trigger2D.enabled = false;
+		this.controller.boxCollider.enabled = false;
 	}
 }

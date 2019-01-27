@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
+using GamepadInput;
 using UnityEngine;
+using UnityEngine.UI;
 using static GamepadInput.ip_GamePad;
 
 [RequireComponent(typeof(CanvasGroup))]
@@ -38,6 +41,11 @@ public class GameManagerView : BaseView<GameManager>
 	[SerializeField]
 	private Transform spanwnPlayer4Anchor;
 
+	[Space(20)]
+
+	[SerializeField]
+	private Image ballImage;
+
 	private List<GameObject> players;
 
 	public override void Awake()
@@ -53,8 +61,8 @@ public class GameManagerView : BaseView<GameManager>
 
 		this.InitBall();
 
-		this.InitTeam(this.ViewModel?.Team1);
-		this.InitTeam(this.ViewModel?.Team2);
+		this.InitTeam(this.ViewModel?.Team1, 1);
+		this.InitTeam(this.ViewModel?.Team2, 2);
 	}
 
 	public override void OnPropertyChanged(object sender, PropertyChangedEventArgs property)
@@ -63,14 +71,18 @@ public class GameManagerView : BaseView<GameManager>
 
 		if(property.PropertyName.Equals(nameof(this.ViewModel.Team1)))
 		{
-			this.InitTeam(this.ViewModel?.Team1);
+			this.InitTeam(this.ViewModel?.Team1, 1);
 		}
 		else if(property.PropertyName.Equals(nameof(this.ViewModel.Team2)))
 		{
-			this.InitTeam(this.ViewModel?.Team2);
+			this.InitTeam(this.ViewModel?.Team2, 2);
+		}
+		else if(property.PropertyName.Equals(nameof(this.ViewModel.BallIndex)))
+		{
+			this.UpdateBallColor(this.ViewModel.BallIndex);
 		}
 	}
-
+	
 	private void InitBall()
 	{
 		var ball = Instantiate(this.ballPrefab);
@@ -79,7 +91,7 @@ public class GameManagerView : BaseView<GameManager>
 		SmoothFollow.Get.Targets.Add(ball.transform);
 	}
 
-	private void InitTeam(Team team)
+	private void InitTeam(Team team, int index)
 	{
 		if(team == null)
 		{
@@ -87,7 +99,7 @@ public class GameManagerView : BaseView<GameManager>
 			return;
 		}
 
-		if(team.TeamIndex == 1)
+		if(index == 1)
 		{
 			var player1 = InitPlayer(this.spanwnPlayer1Anchor, team.FirstPlayerIndex, Tags.Player1);
 			var player3 = InitPlayer(this.spanwnPlayer3Anchor, team.SecondPlayerIndex, Tags.Player3);
@@ -99,7 +111,7 @@ public class GameManagerView : BaseView<GameManager>
 			this.players.Add(player3.gameObject);
 		}
 
-		if(team.TeamIndex == 2)
+		if(index == 2)
 		{
 			var player2 = InitPlayer(this.spanwnPlayer2Anchor, team.FirstPlayerIndex, Tags.Player2);
 			var player4 = InitPlayer(this.spanwnPlayer4Anchor, team.SecondPlayerIndex, Tags.Player4);
@@ -126,5 +138,18 @@ public class GameManagerView : BaseView<GameManager>
 		SmoothFollow.Get.Targets.Add(player.transform);
 
 		return playerHandler;
+	}
+
+	private void UpdateBallColor(Index ballIndex)
+	{
+		var teamIndex = Team.GetTeam(ballIndex);
+		var color = Color.white;
+
+		if(ballIndex != Index.Any)
+		{
+			color = teamIndex == 1 ? Color.blue : Color.red;
+		}
+
+		this.ballImage.color = color;
 	}
 }

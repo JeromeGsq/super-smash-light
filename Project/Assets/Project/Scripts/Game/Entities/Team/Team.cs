@@ -1,17 +1,15 @@
-﻿using UnityWeld.Binding;
+﻿using UnityEngine;
+using UnityWeld.Binding;
 using static GamepadInput.ip_GamePad;
 
-[Binding]
 public class Team
 {
-	public int TeamIndex
-	{
-		get;
-		set;
+	public int Score {
+		get; set;
 	}
 
-	[Binding]
-	public int Score {
+	public float BarLevel
+	{
 		get; set;
 	}
 
@@ -24,5 +22,21 @@ public class Team
 	{
 		get;
 		set;
+	}
+
+	public static int GetTeam(Index index)
+	{
+		var teamIndex = (int)index % 2;
+
+		if(teamIndex == 1)
+		{
+			Debug.Log(1);
+			return 1;
+		}
+		else
+		{
+			Debug.Log(2);
+			return 2;
+		}
 	}
 }

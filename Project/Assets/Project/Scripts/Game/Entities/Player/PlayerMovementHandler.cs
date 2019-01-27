@@ -361,7 +361,7 @@ public class PlayerMovementHandler : MonoBehaviour
 			this.normalizedHorizontalSpeed = 0;
 			if(this.controller.isGrounded)
 			{
-				this.animator.Play(Animator.StringToHash("Idle"));
+				//this.animator.Play(Animator.StringToHash("Idle"));
 			}
 		}
 
@@ -389,7 +389,7 @@ public class PlayerMovementHandler : MonoBehaviour
 			this.savedGravity = this.gravity;
 			this.gravity = 0;
 
-			this.player.DOLocalRotate(new Vector3(0, 0, -Mathf.Sign(direction.x) * 360), this.dashDuration * 2, RotateMode.FastBeyond360);
+			this.animator.Play(Animator.StringToHash("Dash"));
 
 			StartCoroutine(CoroutineUtils.DelaySeconds(() =>
 			{

@@ -30,12 +30,10 @@ public class Team
 
 		if(teamIndex == 1)
 		{
-			Debug.Log(1);
 			return 1;
 		}
 		else
 		{
-			Debug.Log(2);
 			return 2;
 		}
 	}

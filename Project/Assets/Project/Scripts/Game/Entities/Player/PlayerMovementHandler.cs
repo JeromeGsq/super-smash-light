@@ -196,9 +196,9 @@ public class PlayerMovementHandler : MonoBehaviour
 	private void OnControllerCollider(RaycastHit2D cast)
 	{
 		if(this.isDashing && this.isPushed == false && 
-			((int)this.index%2 == 0 ? 
-				(cast.collider.CompareTag(Tags.Player1) || cast.collider.CompareTag(Tags.Player3)) :
-				(cast.collider.CompareTag(Tags.Player2) || cast.collider.CompareTag(Tags.Player4)))
+			(Team.GetTeam(this.index) == 1 ?
+				(cast.collider.CompareTag(Tags.Player2) || cast.collider.CompareTag(Tags.Player4)) :
+				(cast.collider.CompareTag(Tags.Player1) || cast.collider.CompareTag(Tags.Player3)))
 		   )
 		{
 			var enemy = cast.collider;
@@ -230,11 +230,11 @@ public class PlayerMovementHandler : MonoBehaviour
 	{
 		if(collision.CompareTag(Tags.Ball))
 		{
-			if(this.canGrab && BallHandler.Get.Index == Index.Any)
+			if(this.canGrab && BallHandler.Get.IsGrabbed == false)
 			{
 				BallHandler.Get.SetGrabbed(this.ballAnchor, this.index);
 			}
-			else if((int)BallHandler.Get.LastShooter % 2 != (int)this.index &&
+			else if(Team.GetTeam(BallHandler.Get.LastShooter) != Team.GetTeam(this.index) &&
 					BallHandler.Get.EngageShoot == true)
 			{
 				// This ball is shooted by enemy
@@ -290,7 +290,7 @@ public class PlayerMovementHandler : MonoBehaviour
 			// Shoot control
 			if(this.gamepadState.BPressed)
 			{
-				if(this.IsTargeting && GameManager.Get.CanShoot())
+				if(this.IsTargeting && GameManager.Get.CanShoot(Team.GetTeam(this.index)))
 				{
 					BallHandler.Get.Shoot(this.sight, this.shootPower, ShootType.Shoot);
 				}
@@ -498,7 +498,7 @@ public class PlayerMovementHandler : MonoBehaviour
 		CameraHandler.Get.Rumble();
 
 		// Add point to the other team
-		var otherTeamIndex = Mathf.Abs(((int)this.index % 2) - 1);
+		var otherTeamIndex = Mathf.Abs(Team.GetTeam(this.index) - 1);
 		GameManager.Get.AddPoint(otherTeamIndex);
 
 		var particles = Instantiate(this.deathPrefab);

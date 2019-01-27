@@ -1,4 +1,5 @@
-﻿using Root.DesignPatterns;
+﻿using System;
+using Root.DesignPatterns;
 using UnityEngine;
 using static GamepadInput.ip_GamePad;
 
@@ -40,9 +41,14 @@ public class BallHandler : SceneSingleton<BallHandler>
 	[SerializeField]
 	private int barLevelAddScale = 1;
 
-	public Index Index => this.index;
-
-	public Index LastShooter => this.lastShooter;
+	public Index Index
+	{
+		get => this.index;
+		set {
+			this.index = value;
+			this.UpdateGameManagerBallIndex();
+		}
+	}
 
 	public bool EngagePass
 	{
@@ -55,6 +61,10 @@ public class BallHandler : SceneSingleton<BallHandler>
 		get => this.engageShoot;
 		set => this.engageShoot = value;
 	}
+
+	public Index LastShooter => this.lastShooter;
+
+	public bool IsGrabbed => this.isGrabbed;
 
 	private void Awake()
 	{
@@ -72,18 +82,19 @@ public class BallHandler : SceneSingleton<BallHandler>
 	public void SetGrabbed(Transform ballAnchor, Index index)
 	{
 		this.collider.isTrigger = true;
-		this.index = index;
+		this.Index = index;
 		this.transform.SetParent(ballAnchor);
 		this.transform.localPosition = Vector3.zero;
 		this.isGrabbed = true;
-		this.trail.material = (int)this.index % 2 == 0 ? this.red : this.blue;
+		this.trail.material = Team.GetTeam(this.Index) == 1 ? this.blue : this.red;
 
 		// if the last shooter is my teammate
-		if((int)this.index % 2 == (int)this.lastShooter % 2
+		if(Team.GetTeam(this.Index) == Team.GetTeam(this.lastShooter)
 			&& this.engagePass == true)
 		{
 			GameManager.Get.AddBarLevel(
-				Mathf.Abs(Vector3.Distance(this.lastKnownShootPosition, ballAnchor.position)) * ((float)this.barLevelAddScale / 100)
+				Mathf.Abs(Vector3.Distance(this.lastKnownShootPosition, ballAnchor.position)) * ((float)this.barLevelAddScale / 100),
+				Team.GetTeam(this.Index)
 			);
 
 			this.engagePass = false;
@@ -108,23 +119,23 @@ public class BallHandler : SceneSingleton<BallHandler>
 		switch(shootType)
 		{
 			case ShootType.Pass:
-				this.trail.material = (int)this.index % 2 == 0 ? this.red : this.blue;
+				this.trail.material = Team.GetTeam(this.Index) == 1 ? this.blue : this.red;
 				this.rigidbody.gravityScale = 0;
-				this.index = Index.Any;
+				// this.Index = Index.Any;
 				this.engagePass = true;
 				break;
 
 			case ShootType.Shoot:
 				this.trail.material = this.yellow;
 				this.rigidbody.gravityScale = 0;
-				GameManager.Get.ResetBarLevel();
+				GameManager.Get.ResetBarLevel(Team.GetTeam(this.Index));
 
 				this.engageShoot = true;
 				break;
 
 			case ShootType.Loose:
 				this.trail.material = this.white;
-				this.index = Index.Any;
+				this.Index = Index.Any;
 				break;
 		}
 
@@ -143,8 +154,13 @@ public class BallHandler : SceneSingleton<BallHandler>
 			this.rigidbody.gravityScale = 1;
 			this.engagePass = false;
 			this.engageShoot = false;
-			this.index = Index.Any;
+			this.Index = Index.Any;
 			this.trail.material = this.white;
 		}
+	}
+
+	private void UpdateGameManagerBallIndex()
+	{
+		GameManager.Get.SetBallIndex(this.Index);
 	}
 }

@@ -129,6 +129,8 @@ public class GameManagerView : BaseView<GameManager>
 		GameObject player = Instantiate(this.playerPrefab, null);
 		player.transform.position = anchor.position;
 
+        player.name = $"Player - {index}";
+
 		var playerHandler = player.GetComponent<PlayerMovementHandler>();
 		playerHandler.Index = index;
 		player.tag = tag;

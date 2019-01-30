@@ -230,7 +230,7 @@ public class PlayerMovementHandler : MonoBehaviour
     {
         if (collision.CompareTag(Tags.Ball))
         {
-            if (BallHandler.Get.EngageShoot == true)
+            if (BallHandler.Get.EngageShoot == true && BallHandler.Get.LastShooter != this.index)
             {
                 this.SetDestroyed();
             }

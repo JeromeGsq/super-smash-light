@@ -361,7 +361,7 @@ public class PlayerMovementHandler : MonoBehaviour
 			this.normalizedHorizontalSpeed = 0;
 			if(this.controller.isGrounded)
 			{
-				//this.animator.Play(Animator.StringToHash("Idle"));
+				this.animator.Play(Animator.StringToHash("Idle"));
 			}
 		}
 

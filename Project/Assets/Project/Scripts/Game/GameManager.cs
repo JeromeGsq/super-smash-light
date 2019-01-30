@@ -92,7 +92,13 @@ public class GameManager : BaseViewModel
 		this.RaisePropertyChanged(nameof(this.Team2BarLevel));
 	}
 
-	public void AddBarLevel(float amount, int teamIndex)
+    private void Update()
+    {
+        this.team1.BarLevel = 1;
+        this.team2.BarLevel = 1;
+    }
+
+    public void AddBarLevel(float amount, int teamIndex)
 	{
 		amount = (float)Math.Round(amount, 2);
 		Debug.Log($"GameManager : AddBarLevel() : {amount})");

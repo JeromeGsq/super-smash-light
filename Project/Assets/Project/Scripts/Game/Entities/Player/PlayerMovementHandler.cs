@@ -230,10 +230,8 @@ public class PlayerMovementHandler : MonoBehaviour
     {
         if (collision.CompareTag(Tags.Ball))
         {
-            if (Team.GetTeam(BallHandler.Get.LastShooter) != Team.GetTeam(this.index) &&
-                   BallHandler.Get.EngageShoot == true)
+            if (BallHandler.Get.EngageShoot == true)
             {
-                // This ball is shooted by enemy
                 this.SetDestroyed();
             }
             else if (this.canGrab && BallHandler.Get.IsGrabbed == false)
@@ -498,8 +496,11 @@ public class PlayerMovementHandler : MonoBehaviour
         CameraHandler.Get.Rumble();
 
         // Add point to the other team
-        var otherTeamIndex = Mathf.Abs(Team.GetTeam(this.index) - 1);
-        GameManager.Get.AddPoint(otherTeamIndex);
+        if(Team.GetTeam(BallHandler.Get.LastShooter) != Team.GetTeam(this.index))
+        {
+            var otherTeamIndex = Mathf.Abs(Team.GetTeam(this.index) - 1);
+            GameManager.Get.AddPoint(otherTeamIndex);
+        }
 
         var particles = Instantiate(this.deathPrefab);
         particles.transform.position = this.transform.position;

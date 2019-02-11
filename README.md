@@ -6,7 +6,9 @@ Une fois cette balle chargée, le joueur ayant la balle pourra effectuer un "Sup
 
 
 ## Liens
-**GDD :** https://docs.google.com/document/d/1cZkYwaXt4C4GATB5QpfUjmTXFTj4Z9gdmgvFyjMke_A
+**GDD 1st :** https://docs.google.com/document/d/1cZkYwaXt4C4GATB5QpfUjmTXFTj4Z9gdmgvFyjMke_A
+
+**GDD 2nd :**https://docs.google.com/document/d/1VMJHy3LynDVWdBR8WOdie5gWoOoxYRG1QpaLyIjFrb0/
 
 **FlowChart :** https://docs.google.com/drawings/d/1QHfI1SCunRNbwvmiRGpUzbqpGwI6rmFfyhgMvz_P2fI
 

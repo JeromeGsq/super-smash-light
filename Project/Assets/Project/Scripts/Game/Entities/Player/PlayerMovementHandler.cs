@@ -151,7 +151,7 @@ public class PlayerMovementHandler : MonoBehaviour
         set
         {
             this.index = value;
-            this.SetColors();
+            //this.SetColors();
         }
     }
 

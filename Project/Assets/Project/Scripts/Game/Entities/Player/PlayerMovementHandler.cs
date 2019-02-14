@@ -139,6 +139,11 @@ public class PlayerMovementHandler : MonoBehaviour
     [SerializeField]
     private float pushPowerOnMe = 50f;
 
+    public RuntimeAnimatorController ColorBlue;
+    public RuntimeAnimatorController ColorOrange;
+    public RuntimeAnimatorController ColorYellow;
+    public RuntimeAnimatorController ColorGreen;
+
     public bool IsTargeting
     {
         get;
@@ -151,7 +156,7 @@ public class PlayerMovementHandler : MonoBehaviour
         set
         {
             this.index = value;
-            //this.SetColors();
+            this.SetColors();
         }
     }
 
@@ -168,7 +173,13 @@ public class PlayerMovementHandler : MonoBehaviour
     }
 
     private void Awake()
+        
     {
+        ColorBlue = Resources.Load<RuntimeAnimatorController>("Animations/PlayerBlue");
+        ColorOrange = Resources.Load<RuntimeAnimatorController>("Animations/PlayerOrange");
+        ColorYellow = Resources.Load<RuntimeAnimatorController>("Animations/PlayerYellow");
+        ColorGreen = Resources.Load<RuntimeAnimatorController>("Animations/PlayerGreen");
+
         this.controller = GetComponent<CharacterController2D>();
         this.gamepadState = new GamepadState();
 
@@ -189,7 +200,9 @@ public class PlayerMovementHandler : MonoBehaviour
     }
 
     private void OnEnable()
+
     {
+
         this.mainPosition = this.transform.position;
     }
 
@@ -468,24 +481,24 @@ public class PlayerMovementHandler : MonoBehaviour
 
     private void SetColors()
     {
-        var color = new Color();
+        var color = this.player.GetComponent<Animator>().runtimeAnimatorController;
         switch (this.Index)
         {
             case Index.One:
-                color = new Color(0, 0, 1);
+                color = ColorBlue;
                 break;
             case Index.Two:
-                color = new Color(1, 0, 0);
+                color = ColorOrange;
                 break;
             case Index.Three:
-                color = new Color(0, 1, 1);
+                color = ColorGreen;
                 break;
             case Index.Four:
-                color = new Color(1, 1, 0);
+                color = ColorYellow;
                 break;
         }
 
-        this.player.GetComponent<SpriteRenderer>().color = color;
+        this.player.GetComponent<Animator>().runtimeAnimatorController = color;
     }
 
     private void SetDestroyed()

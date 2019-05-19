@@ -150,6 +150,6 @@ public class GameManagerView : BaseView<GameManager>
 			color = teamIndex == 1 ? Color.blue : Color.red;
 		}
 
-		this.ballImage.color = color;
+		//this.ballImage.color = color;
 	}
 }

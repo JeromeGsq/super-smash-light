@@ -29,6 +29,6 @@ public class SmoothFollow : SceneSingleton<SmoothFollow>
 		Vector3 position = this.transform.position;
 		position.y = Mathf.Lerp(this.transform.position.y, this.center.y, interpolation);
 		position.x = Mathf.Lerp(this.transform.position.x, this.center.x, interpolation);
-		this.transform.position = position;
+		this.transform.position = position + new Vector3(0,0.25f,0);
     }
 }

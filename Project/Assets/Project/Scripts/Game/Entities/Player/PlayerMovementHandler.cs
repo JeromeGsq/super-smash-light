@@ -31,6 +31,16 @@ public class PlayerMovementHandler : MonoBehaviour
 
     private bool isDestroyed;
 
+    public bool gamepadLBhold = false;
+    public bool gamepadLBRelease = false;
+    public bool gamepadLThold = false;
+    public bool gamepadLTRelease = false;
+
+    public bool gamepadRBhold = false;
+    public bool gamepadRBRelease = false;
+    public bool gamepadRThold = false;
+    public bool gamepadRTRelease = false;
+
     private GamepadState gamepadState;
 
     [SerializeField]
@@ -274,13 +284,60 @@ public class PlayerMovementHandler : MonoBehaviour
         {
             return;
         }
+        //LB release handler
+        if(this.gamepadState.LB == true & this.gamepadLBhold == false) 
+        {
+            this.gamepadLBhold = true;
+        }
+        if(this.gamepadLBhold & this.gamepadState.LB == false) {
+            this.gamepadLBRelease = true;
+            StartCoroutine(CoroutineUtils.DelaySeconds(() =>
+            {
+                this.gamepadLBRelease = false;
+                this.gamepadLBhold = false;
+            }, 0.1f));
+    }
+        //LT release handler
+        if(this.gamepadState.LT > 0 & this.gamepadLThold == false) {
+            this.gamepadLThold = true;
+        }
+        if(this.gamepadLThold & this.gamepadState.LT == 0) {
+            this.gamepadLTRelease = true;
+            StartCoroutine(CoroutineUtils.DelaySeconds(() => {
+                this.gamepadLTRelease = false;
+                this.gamepadLThold = false;
+            }, 0.1f));
+        }
+        //RB release handler
+        if(this.gamepadState.RB == true & this.gamepadRBhold == false) {
+            this.gamepadRBhold = true;
+        }
+        if(this.gamepadRBhold & this.gamepadState.RB == false) {
+            this.gamepadRBRelease = true;
+            StartCoroutine(CoroutineUtils.DelaySeconds(() => {
+                this.gamepadRBRelease = false;
+                this.gamepadRBhold = false;
+            }, 0.1f));
+        }
+        //RT release handler
+        if(this.gamepadState.RT > 0 & this.gamepadRThold == false) {
+            this.gamepadRBhold = true;
+        }
+        if(this.gamepadRThold & this.gamepadState.RT == 0) {
+            this.gamepadRTRelease = true;
+            StartCoroutine(CoroutineUtils.DelaySeconds(() => {
+                this.gamepadRTRelease = false;
+                this.gamepadRThold = false;
+            }, 0.1f));
+        }
+
 
         ip_GamePad.GetState(ref this.gamepadState, this.index);
 
         if (BallHandler.Get.Index == this.index)
         {
             // Pass control
-            if (this.gamepadState.APressed)
+            if (this.gamepadRTRelease || this.gamepadRBRelease)
             {
                 if (this.IsTargeting)
                 {
@@ -299,9 +356,9 @@ public class PlayerMovementHandler : MonoBehaviour
             }
 
             // Shoot control
-            if (this.gamepadState.BPressed)
+            if (this.gamepadLTRelease || this.gamepadLBRelease)
             {
-                if (this.IsTargeting && GameManager.Get.CanShoot(Team.GetTeam(this.index)))
+                if (GameManager.Get.CanShoot(Team.GetTeam(this.index)))
                 {
                     BallHandler.Get.Shoot(this.sight, this.shootPower, ShootType.Shoot);
                 }
@@ -315,26 +372,34 @@ public class PlayerMovementHandler : MonoBehaviour
         }
 
         // Sight control
-        this.IsTargeting = this.gamepadState.LT > 0 || this.gamepadState.LB;
+        this.IsTargeting = this.gamepadState.LT > 0 || this.gamepadState.LB|| this.gamepadState.RT > 0 || this.gamepadState.RB;
 
-        if (this.gamepadState.LB)
+
+        if (this.IsTargeting)
         {
-            this.sight.transform.localPosition = (this.gamepadState.LB ? Vector3.right * 2.5f : Vector3.zero);
+            this.sight.transform.localPosition = Vector3.right * 2.5f;
         }
         else
         {
-            this.sight.transform.localPosition = (Vector3.right * this.gamepadState.LT) * 2.5f;
+            StartCoroutine(CoroutineUtils.DelaySeconds(() => 
+            {
+                this.sight.transform.localPosition = Vector3.right  * 2.5f;
+            }, this.deltaTimeGrab));
         }
 
         if (this.IsTargeting)
         {
             this.sightAnchor.gameObject.SetActive(true);
-            this.sightAnchor.eulerAngles = new Vector3(0, 0, Mathf.Atan2(this.gamepadState.LeftStickAxis.y, this.gamepadState.LeftStickAxis.x) * 180 / Mathf.PI);
+                this.sightAnchor.eulerAngles = new Vector3(0, 0, Mathf.Atan2(this.gamepadState.RightStickAxis.y, this.gamepadState.RightStickAxis.x) * 180 / Mathf.PI); 
         }
-        else
+        else 
         {
-            this.sightAnchor.gameObject.SetActive(false);
+            StartCoroutine(CoroutineUtils.DelaySeconds(() =>
+            {
+                this.sightAnchor.gameObject.SetActive(false);
+            }, this.deltaTimeGrab));
         }
+
 
         // Movement & Jump control
         if (this.controller.isGrounded)
@@ -378,7 +443,7 @@ public class PlayerMovementHandler : MonoBehaviour
 
         // Jump control
         if ((this.controller.isGrounded || this.jumpsCount < this.maxJumps)
-            && this.gamepadState.YPressed)
+            && this.gamepadState.APressed || this.gamepadState.XPressed)
         {
             this.jumpsCount++;
             this.velocity.y = Mathf.Sqrt(2f * this.jumpHeight * -this.gravity);

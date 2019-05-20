@@ -38,6 +38,8 @@ public class PlayerMovementHandler : MonoBehaviour
 
     public bool LBhold = false;
     public bool LThold = false;
+    public float LBtime = 0;
+    public float LTtime = 0;
 
     public bool RBreleased = false;
     public bool RTreleased = false;
@@ -287,6 +289,7 @@ public class PlayerMovementHandler : MonoBehaviour
         if(this.gamepadState.LB) 
         {
             this.LBhold = true;
+            this.LBtime += 0.1f;
         }
         if(this.LBhold & !this.gamepadState.LB) 
         {
@@ -295,12 +298,14 @@ public class PlayerMovementHandler : MonoBehaviour
             {
                 this.LBhold =  false;
                 this.LBreleased = false;
+                this.LBtime = 0;
             }, 0.00001f));
         }
 
         if(this.gamepadState.LT >0) 
         {
             this.LThold = true;
+            this.LTtime += 0.1f;
         }
         if(this.LThold & this.gamepadState.LT == 0) {
             this.LTreleased = true;
@@ -308,6 +313,7 @@ public class PlayerMovementHandler : MonoBehaviour
             {
                 this.LThold = false;
                 this.LTreleased = false;
+                this.LTtime = 0;
             }, 0.00001f));
         }
         if(this.gamepadState.RB)
@@ -328,6 +334,7 @@ public class PlayerMovementHandler : MonoBehaviour
         if(this.gamepadState.RT > 0) 
         {
             this.RThold = true;
+            this.RTtime += 0.1f;
         }
         if(this.RThold & this.gamepadState.RT==0) 
         {
@@ -336,6 +343,7 @@ public class PlayerMovementHandler : MonoBehaviour
             {
                 this.RThold = false;
                 this.RTreleased = false;
+                this.RTtime = 0;
             }, 0.00001f));
         }
         if(this.isDestroyed)
@@ -387,7 +395,13 @@ public class PlayerMovementHandler : MonoBehaviour
 
         if (this.IsTargeting)
         {
-            this.sight.transform.localPosition = Vector3.right * 2.5f;
+            if(LBtime <1.2f && this.player.transform.localScale.x < 0f) {
+                this.sight.transform.localPosition = Vector3.left * 2.5f;
+            }
+            else
+            {
+                this.sight.transform.localPosition = Vector3.right * 2.5f;
+            }
         }
 
 

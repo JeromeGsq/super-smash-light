@@ -132,13 +132,17 @@ public class GameManager : BaseViewModel
 	{
 		switch(teamIndex)
 		{
+            
 			case 1:
 				this.Team1.Score++;
-				break;
+                Debug.Log("Teamadd1");
+
+                break;
 
 			case 2:
 				this.Team2.Score++;
-				break;
+                Debug.Log("Teamadd1");
+                break;
 		}
 
 		this.RaisePropertyChanged(nameof(this.Team1Score));

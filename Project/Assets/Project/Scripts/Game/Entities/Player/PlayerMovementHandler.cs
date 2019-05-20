@@ -395,12 +395,29 @@ public class PlayerMovementHandler : MonoBehaviour
 
         if (this.IsTargeting)
         {
-            if(LBtime <1.2f && this.player.transform.localScale.x < 0f) {
-                this.sight.transform.localPosition = Vector3.left * 2.5f;
+            if(this.gamepadState.LB) 
+                {
+
+                if(LBtime < 1.2f && this.player.transform.localScale.x < 0f) 
+                {
+                    this.sight.transform.localPosition = Vector3.left * 2.5f;
+                }
+                else 
+                {
+                    this.sight.transform.localPosition = Vector3.right * 2.5f;
+                }
             }
-            else
-            {
-                this.sight.transform.localPosition = Vector3.right * 2.5f;
+            if(this.gamepadState.LT>0) 
+                {
+
+                if(LTtime < 1.2f && this.player.transform.localScale.x < 0f) 
+                {
+                    this.sight.transform.localPosition = Vector3.left * 2.5f;
+                } 
+                else
+                {
+                    this.sight.transform.localPosition = Vector3.right * 2.5f;
+                }
             }
         }
 
@@ -594,7 +611,8 @@ public class PlayerMovementHandler : MonoBehaviour
         // Add point to the other team
         if(Team.GetTeam(BallHandler.Get.LastShooter) != Team.GetTeam(this.index))
         {
-            var otherTeamIndex = Mathf.Abs(Team.GetTeam(this.index) - 1);
+            var otherTeamIndex = Team.GetTeam(this.index);
+            Debug.Log("Teamadd1");
             GameManager.Get.AddPoint(otherTeamIndex);
         }
 

@@ -12,7 +12,11 @@ public class GameManagerView : BaseView<GameManager>
 {
 	[Space(20)]
 
-	[SerializeField]
+    [SerializeField]
+    private GameObject countdownPrefab;
+
+    [Space(10)]
+    [SerializeField]
 	private GameObject ballPrefab;
 
 	[Space(10)]
@@ -58,11 +62,16 @@ public class GameManagerView : BaseView<GameManager>
 	public override void Start()
 	{
 		base.Start();
+        this.InitBall();
+        GameObject countdown = Instantiate(this.countdownPrefab);
+        StartCoroutine(CoroutineUtils.DelaySeconds(() =>
+        {
 
-		this.InitBall();
-
-		this.InitTeam(this.ViewModel?.Team1, 1);
-		this.InitTeam(this.ViewModel?.Team2, 2);
+            this.InitTeam(this.ViewModel?.Team1, 1);
+            this.InitTeam(this.ViewModel?.Team2, 2);
+            Destroy(countdown);
+        }, 4));
+        
 	}
 
 	public override void OnPropertyChanged(object sender, PropertyChangedEventArgs property)

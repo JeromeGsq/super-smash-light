@@ -47,6 +47,9 @@ public class PlayerMovementHandler : MonoBehaviour
     public bool LBreleased = false;
     public bool LTreleased = false;
 
+    public float stickY;
+    public float stickX;
+
     private GamepadState gamepadState;
 
     [SerializeField]
@@ -393,7 +396,7 @@ public class PlayerMovementHandler : MonoBehaviour
         // Sight control
         this.IsTargeting = this.gamepadState.LT > 0 || this.gamepadState.LB || this.gamepadState.RT > 0 || this.gamepadState.RB;
 
-        if (this.IsTargeting)
+        if (this.IsTargeting )
         {
             if(this.gamepadState.LB) 
                 {
@@ -425,10 +428,17 @@ public class PlayerMovementHandler : MonoBehaviour
         if (this.IsTargeting)
         {
             this.sightAnchor.gameObject.SetActive(true);
-            this.sightAnchor.eulerAngles = new Vector3(0, 0, Mathf.Atan2(this.gamepadState.RightStickAxis.y, this.gamepadState.RightStickAxis.x) * 180 / Mathf.PI);
+            if((Mathf.Atan2(this.gamepadState.RightStickAxis.y, this.gamepadState.RightStickAxis.x) > 0) || (Mathf.Atan2(this.gamepadState.RightStickAxis.y, this.gamepadState.RightStickAxis.x) < 0)) {
+
+                stickY = this.gamepadState.RightStickAxis.y;
+                stickX = this.gamepadState.RightStickAxis.x;
+            }
+            this.sightAnchor.eulerAngles = new Vector3(0, 0, Mathf.Atan2(stickY, stickX) * 180 / Mathf.PI);
         }
         else
         {
+            stickY = 0;
+            stickX = 0;
             StartCoroutine(CoroutineUtils.DelaySeconds(() =>
             {
                 this.sightAnchor.gameObject.SetActive(false);

@@ -15,6 +15,9 @@ public class GameMenuManager : MonoBehaviour {
     public Sprite illuPartie;
     public Sprite illuOption;
 
+    public GameObject BoutonPartie;
+    public GameObject BoutonOption;
+
     public GameObject paternHolder;
     public Sprite paternPartie;
     public Sprite paternOption;
@@ -45,6 +48,9 @@ public class GameMenuManager : MonoBehaviour {
             GameObject.Find("patern2").GetComponent<SpriteRenderer>().sprite = paternPartie;
             GameObject.Find("patern3").GetComponent<SpriteRenderer>().sprite = paternPartie;
             GameObject.Find("patern4").GetComponent<SpriteRenderer>().sprite = paternPartie;
+            if(this.gamepadState.APressed) {
+                BoutonPartie.GetComponent<Animator>().Play(Animator.StringToHash("PartieRapideMenu"));
+            }
             
         } else {
             selecteur.GetComponent<Transform>().position = new Vector3(6.18f, -5.43f, -0.61f);
@@ -54,6 +60,9 @@ public class GameMenuManager : MonoBehaviour {
             GameObject.Find("patern2").GetComponent<SpriteRenderer>().sprite = paternOption;
             GameObject.Find("patern3").GetComponent<SpriteRenderer>().sprite = paternOption;
             GameObject.Find("patern4").GetComponent<SpriteRenderer>().sprite = paternOption;
+            if(this.gamepadState.APressed) {
+                BoutonOption.GetComponent<Animator>().Play(Animator.StringToHash("OptionMenu"));
+            }
         }
 
         if(positions == 1 && this.gamepadState.Down) {

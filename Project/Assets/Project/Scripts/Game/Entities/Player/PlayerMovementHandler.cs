@@ -376,6 +376,23 @@ public class PlayerMovementHandler : MonoBehaviour
                     this.canGrab = true;
                 }, this.deltaTimeGrab));
             }
+            if(this.RTreleased) 
+            {
+                if(RTtime > 1f) 
+                {
+                    BallHandler.Get.Shoot(this.sight, this.passPower, ShootType.Pass);
+                } 
+                else 
+                {
+                    BallHandler.Get.Shoot(this.FriendTransform, this.passPower, ShootType.Pass);
+                }
+
+                this.canGrab = false;
+                StartCoroutine(CoroutineUtils.DelaySeconds(() => 
+                {
+                    this.canGrab = true;
+                }, this.deltaTimeGrab));
+            }
 
             // Shoot control
             if (this.LBreleased || this.LTreleased)

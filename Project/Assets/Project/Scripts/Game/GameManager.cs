@@ -21,9 +21,21 @@ public class GameManager : BaseViewModel
 			return instance;
 		}
 	}
-	#endregion
+    #endregion
 
-	private Team team1;
+    [Space(10)]
+    [SerializeField]
+    private float timer;
+
+    private float minutes;
+    private float seconds;
+
+    [Space(10)]
+    [SerializeField]
+    public bool timerStart;
+
+
+    private Team team1;
 	private Team team2;
 
 	private Index ballIndex;
@@ -70,8 +82,12 @@ public class GameManager : BaseViewModel
 	{
 		get => $"Team rouge : {this.Team2.Score}";
 	}
+    [Binding]
+    public string theTime {
+        get => $" {this.minutes}: {this.seconds}";
+    }
 
-	private void Awake()
+    private void Awake()
 	{
 		this.Team1 = new Team()
 		{
@@ -94,8 +110,17 @@ public class GameManager : BaseViewModel
 
     private void Update()
     {
+
         this.team1.BarLevel = 1;
         this.team2.BarLevel = 1;
+        if(timerStart) {
+
+            timer -= Time.deltaTime;
+        }
+        this.RaisePropertyChanged(nameof(this.theTime));
+
+        minutes = Mathf.Floor(timer / 60);
+        seconds = Mathf.Floor(timer % 60);
     }
 
     public void AddBarLevel(float amount, int teamIndex)

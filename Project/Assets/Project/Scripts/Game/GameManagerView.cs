@@ -4,16 +4,23 @@ using System.ComponentModel;
 using GamepadInput;
 using UnityEngine;
 using UnityEngine.UI;
+using UnityWeld.Binding;
 using static GamepadInput.ip_GamePad;
+
+[Binding]
 
 [RequireComponent(typeof(CanvasGroup))]
 [RequireComponent(typeof(GameManager))]
 public class GameManagerView : BaseView<GameManager>
 {
-	[Space(20)]
+    [Space(20)]
+    [SerializeField]
+    private GameManager gamemanager;
 
+	[Space(20)]
     [SerializeField]
     private GameObject countdownPrefab;
+
 
     [Space(10)]
     [SerializeField]
@@ -52,7 +59,8 @@ public class GameManagerView : BaseView<GameManager>
 
 	private List<GameObject> players;
 
-	public override void Awake()
+
+    public override void Awake()
 	{
 		base.Awake();
 
@@ -61,20 +69,20 @@ public class GameManagerView : BaseView<GameManager>
 
 	public override void Start()
 	{
+        
 		base.Start();
         this.InitBall();
         GameObject countdown = Instantiate(this.countdownPrefab);
         StartCoroutine(CoroutineUtils.DelaySeconds(() =>
         {
-
+            gamemanager.timerStart = true;
             this.InitTeam(this.ViewModel?.Team1, 1);
             this.InitTeam(this.ViewModel?.Team2, 2);
             Destroy(countdown);
         }, 4));
         
 	}
-
-	public override void OnPropertyChanged(object sender, PropertyChangedEventArgs property)
+    public override void OnPropertyChanged(object sender, PropertyChangedEventArgs property)
 	{
 		base.OnPropertyChanged(sender, property);
 

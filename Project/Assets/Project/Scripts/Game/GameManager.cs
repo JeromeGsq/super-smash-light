@@ -74,17 +74,17 @@ public class GameManager : BaseViewModel
 	[Binding]
 	public string Team1Score
 	{
-		get => $"Team bleu : {this.Team1.Score}";
+		get => $"team bleu : {this.Team1.Score}";
 	}
 
 	[Binding]
 	public string Team2Score
 	{
-		get => $"Team rouge : {this.Team2.Score}";
+		get => $"team rouge : {this.Team2.Score}";
 	}
     [Binding]
     public string theTime {
-        get => $" {this.minutes}: {this.seconds}";
+        get => $" {this.minutes} : {this.seconds}";
     }
 
     private void Awake()

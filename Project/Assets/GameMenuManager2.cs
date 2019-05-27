@@ -67,7 +67,7 @@ public class GameMenuManager2 : MonoBehaviour {
         ip_GamePad.GetState(ref this.gamepadState4, ip_GamePad.Index.Four);
 
 
-        if(this.gamepadState1.RightPressed && gamepad1team == 1) {
+        if(this.gamepadState1.RightPressed ) {
             gamepad1team = 2;
             if(gamepad1color >= 20) 
             {
@@ -75,7 +75,7 @@ public class GameMenuManager2 : MonoBehaviour {
             }
             gamepad1.GetComponent<Transform>().localPosition = new Vector3(8.33f, 0, -2.3f);
         }
-        if(this.gamepadState1.LeftPressed && gamepad1team == 2) {
+        if(this.gamepadState1.LeftPressed ) {
             gamepad1team = 1;
             if(gamepad1color <=21) {
                 gamepad1color += 20;
@@ -84,7 +84,7 @@ public class GameMenuManager2 : MonoBehaviour {
         }
 
 
-        if(this.gamepadState2.RightPressed && gamepad2team == 1) {
+        if(this.gamepadState2.RightPressed ) {
             gamepad2team = 2;
             if(gamepad2color >= 20) 
             {
@@ -92,7 +92,7 @@ public class GameMenuManager2 : MonoBehaviour {
             }
             gamepad2.GetComponent<Transform>().localPosition = new Vector3(8.33f, -2.5f, -2.3f);
         }
-        if(this.gamepadState2.LeftPressed && gamepad2team == 2) {
+        if(this.gamepadState2.LeftPressed ) {
             gamepad2team = 1;
             if(gamepad2color <= 21) {
                 gamepad2color += 20;
@@ -101,14 +101,14 @@ public class GameMenuManager2 : MonoBehaviour {
         }
 
 
-        if(this.gamepadState3.RightPressed && gamepad3team == 1) {
+        if(this.gamepadState3.RightPressed) {
             gamepad3team = 2;
             if(gamepad3color >= 20) {
                 gamepad3color -= 20;
             }
             gamepad3.GetComponent<Transform>().localPosition = new Vector3(8.33f, -5f, -2.3f);
         }
-        if(this.gamepadState3.LeftPressed && gamepad3team == 2) {
+        if(this.gamepadState3.LeftPressed) {
             gamepad3team = 1;
             if(gamepad3color <= 21) {
                 gamepad3color += 20;
@@ -118,14 +118,14 @@ public class GameMenuManager2 : MonoBehaviour {
 
 
 
-        if(this.gamepadState4.RightPressed && gamepad4team == 1) {
+        if(this.gamepadState4.RightPressed) {
             gamepad4team = 2;
             if(gamepad4color >= 20) {
                 gamepad4color -= 20;
             }
             gamepad4.GetComponent<Transform>().localPosition = new Vector3(8.33f, -7.5f, -2.3f);
         }
-        if(this.gamepadState4.LeftPressed && gamepad4team == 2) {
+        if(this.gamepadState4.LeftPressed) {
             gamepad4team = 1;
             if(gamepad4color <= 21) {
                 gamepad4color += 20;
@@ -169,28 +169,28 @@ public class GameMenuManager2 : MonoBehaviour {
             }
 
             if(gamepad3color == 1) {
-                GameObject.Find("gamepadColor3").GetComponent<SpriteRenderer>().color = new Color(255, 0, 0);
+                GameObject.Find("gamepadColor3").GetComponent<SpriteRenderer>().color = new Color(1, 0, 0);
             }
             if(gamepad3color == 2) {
-                GameObject.Find("gamepadColor3").GetComponent<SpriteRenderer>().color = new Color(0, 255, 0);
+                GameObject.Find("gamepadColor3").GetComponent<SpriteRenderer>().color = new Color(0, 1, 0);
             }
             if(gamepad3color == 3) {
-                GameObject.Find("gamepadColor3").GetComponent<SpriteRenderer>().color = new Color(0, 0, 255);
+                GameObject.Find("gamepadColor3").GetComponent<SpriteRenderer>().color = new Color(0, 0, 1);
             }
             if(gamepad3color == 4) {
-                GameObject.Find("gamepadColor3").GetComponent<SpriteRenderer>().color = new Color(100f, 100f, 255f);
+                GameObject.Find("gamepadColor3").GetComponent<SpriteRenderer>().color = new Color(0.5f, 0.2f, 0.7f);
             }
             if(gamepad3color == 21) {
-                GameObject.Find("gamepadColor3").GetComponent<SpriteRenderer>().color = new Color(200, 200, 0);
+                GameObject.Find("gamepadColor3").GetComponent<SpriteRenderer>().color = new Color(0.8f, 0.8f, 0);
             }
             if(gamepad3color == 22) {
-                GameObject.Find("gamepadColor3").GetComponent<SpriteRenderer>().color = new Color(0, 200, 200);
+                GameObject.Find("gamepadColor3").GetComponent<SpriteRenderer>().color = new Color(0, 0.8f, 0.8f);
             }
             if(gamepad3color == 23) {
-                GameObject.Find("gamepadColor3").GetComponent<SpriteRenderer>().color = new Color(200, 0, 200);
+                GameObject.Find("gamepadColor3").GetComponent<SpriteRenderer>().color = new Color(0.8f, 0, 0.8f);
             }
             if(gamepad3color == 24) {
-                GameObject.Find("gamepadColor3").GetComponent<SpriteRenderer>().color = new Color(200f, 50f, 200f);
+                GameObject.Find("gamepadColor3").GetComponent<SpriteRenderer>().color = new Color(0.5f, 0.1f, 0.4f);
             }
 
         }
@@ -230,28 +230,28 @@ public class GameMenuManager2 : MonoBehaviour {
                     }
             
             if(gamepad4color == 1) {
-                GameObject.Find("gamepadColor4").GetComponent<SpriteRenderer>().color = new Color(255, 0, 0);
+                GameObject.Find("gamepadColor4").GetComponent<SpriteRenderer>().color = new Color(1, 0, 0);
             }
             if(gamepad4color == 2) {
-                GameObject.Find("gamepadColor4").GetComponent<SpriteRenderer>().color = new Color(0, 255, 0);
+                GameObject.Find("gamepadColor4").GetComponent<SpriteRenderer>().color = new Color(0, 1, 0);
             }
             if(gamepad4color == 3) {
-                GameObject.Find("gamepadColor4").GetComponent<SpriteRenderer>().color = new Color(0, 0, 255);
+                GameObject.Find("gamepadColor4").GetComponent<SpriteRenderer>().color = new Color(0, 0, 1);
             }
             if(gamepad4color == 4) {
-                GameObject.Find("gamepadColor4").GetComponent<SpriteRenderer>().color = new Color(100, 100, 255);
+                GameObject.Find("gamepadColor4").GetComponent<SpriteRenderer>().color = new Color(0.5f, 0.2f, 0.7f);
             }
             if(gamepad4color == 21) {
-                GameObject.Find("gamepadColor4").GetComponent<SpriteRenderer>().color = new Color(200, 200, 0);
+                GameObject.Find("gamepadColor4").GetComponent<SpriteRenderer>().color = new Color(0.8f, 0.8f, 0);
             }
             if(gamepad4color == 22) {
-                GameObject.Find("gamepadColor4").GetComponent<SpriteRenderer>().color = new Color(0, 200, 200);
+                GameObject.Find("gamepadColor4").GetComponent<SpriteRenderer>().color = new Color(0, 0.8f, 0.8f);
             }
             if(gamepad4color == 23) {
-                GameObject.Find("gamepadColor4").GetComponent<SpriteRenderer>().color = new Color(200, 0, 200);
+                GameObject.Find("gamepadColor4").GetComponent<SpriteRenderer>().color = new Color(0.8f, 0, 0.8f);
             }
             if(gamepad4color == 24) {
-                GameObject.Find("gamepadColor4").GetComponent<SpriteRenderer>().color = new Color(200, 50, 200);
+                GameObject.Find("gamepadColor4").GetComponent<SpriteRenderer>().color = new Color(0.5f, 0.1f, 0.4f);
             }
         }
         if(gamepad2team != 0) {
@@ -293,28 +293,28 @@ public class GameMenuManager2 : MonoBehaviour {
                     }
 
             if(gamepad2color == 1) {
-                GameObject.Find("gamepadColor2").GetComponent<SpriteRenderer>().color = new Color(255, 0, 0);
+                GameObject.Find("gamepadColor2").GetComponent<SpriteRenderer>().color = new Color(1, 0, 0);
             }
             if(gamepad2color == 2) {
-                GameObject.Find("gamepadColor2").GetComponent<SpriteRenderer>().color = new Color(0, 255, 0);
+                GameObject.Find("gamepadColor2").GetComponent<SpriteRenderer>().color = new Color(0, 1, 0);
             }
             if(gamepad2color == 3) {
-                GameObject.Find("gamepadColor2").GetComponent<SpriteRenderer>().color = new Color(0, 0, 255);
+                GameObject.Find("gamepadColor2").GetComponent<SpriteRenderer>().color = new Color(0, 0, 1);
             }
             if(gamepad2color == 4) {
-                GameObject.Find("gamepadColor2").GetComponent<SpriteRenderer>().color = new Color(100, 100, 255);
+                GameObject.Find("gamepadColor2").GetComponent<SpriteRenderer>().color = new Color(0.5f, 0.2f, 0.7f);
             }
             if(gamepad2color == 21) {
-                GameObject.Find("gamepadColor2").GetComponent<SpriteRenderer>().color = new Color(200, 200, 0);
+                GameObject.Find("gamepadColor2").GetComponent<SpriteRenderer>().color = new Color(0.8f, 0.8f, 0);
             }
             if(gamepad2color == 22) {
-                GameObject.Find("gamepadColor2").GetComponent<SpriteRenderer>().color = new Color(0, 200, 200);
+                GameObject.Find("gamepadColor2").GetComponent<SpriteRenderer>().color = new Color(0, 0.8f, 0.8f);
             }
             if(gamepad2color == 23) {
-                GameObject.Find("gamepadColor2").GetComponent<SpriteRenderer>().color = new Color(200, 0, 200);
+                GameObject.Find("gamepadColor2").GetComponent<SpriteRenderer>().color = new Color(0.8f, 0, 0.8f);
             }
             if(gamepad2color == 24) {
-                GameObject.Find("gamepadColor2").GetComponent<SpriteRenderer>().color = new Color(200, 50, 200);
+                GameObject.Find("gamepadColor2").GetComponent<SpriteRenderer>().color = new Color(0.5f, 0.1f, 0.4f);
             }
         }
         if(gamepad1team != 0) {
@@ -351,28 +351,28 @@ public class GameMenuManager2 : MonoBehaviour {
                     }
 
             if(gamepad1color == 1) {
-                GameObject.Find("gamepadColor1").GetComponent<SpriteRenderer>().color = new Color(255, 0, 0);
+                GameObject.Find("gamepadColor1").GetComponent<SpriteRenderer>().color = new Color(1, 0, 0);
             }
             if(gamepad1color == 2) {
-                GameObject.Find("gamepadColor1").GetComponent<SpriteRenderer>().color = new Color(0, 255, 0);
+                GameObject.Find("gamepadColor1").GetComponent<SpriteRenderer>().color = new Color(0, 1, 0);
             }
             if(gamepad1color == 3) {
-                GameObject.Find("gamepadColor1").GetComponent<SpriteRenderer>().color = new Color(0, 0, 255);
+                GameObject.Find("gamepadColor1").GetComponent<SpriteRenderer>().color = new Color(0, 0, 1);
             }
             if(gamepad1color == 4) {
-                GameObject.Find("gamepadColor1").GetComponent<SpriteRenderer>().color = new Color(100f, 100f, 255f);
+                GameObject.Find("gamepadColor1").GetComponent<SpriteRenderer>().color = new Color(0.5f, 0.2f, 0.7f);
             }
             if(gamepad1color == 21) {
-                GameObject.Find("gamepadColor1").GetComponent<SpriteRenderer>().color = new Color(200, 200, 0);
+                GameObject.Find("gamepadColor1").GetComponent<SpriteRenderer>().color = new Color(0.8f, 0.8f, 0);
             }
             if(gamepad1color == 22) {
-                GameObject.Find("gamepadColor1").GetComponent<SpriteRenderer>().color = new Color(0, 200, 200);
+                GameObject.Find("gamepadColor1").GetComponent<SpriteRenderer>().color = new Color(0, 0.8f, 0.8f);
             }
             if(gamepad1color == 23) {
-                GameObject.Find("gamepadColor1").GetComponent<SpriteRenderer>().color = new Color(200, 0, 200);
+                GameObject.Find("gamepadColor1").GetComponent<SpriteRenderer>().color = new Color(0.8f, 0, 0.8f);
             }
             if(gamepad1color == 24) {
-                GameObject.Find("gamepadColor1").GetComponent<SpriteRenderer>().color = new Color(200f, 50, 200f);
+                GameObject.Find("gamepadColor1").GetComponent<SpriteRenderer>().color = new Color(0.5f, 0.1f, 0.4f);
             }
         }
     }

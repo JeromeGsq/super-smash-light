@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 68194fc2c7ea1a14694ec3ab51c28532
+guid: e4515a19327ac664c96a4374e2a8a7c4
 TrueTypeFontImporter:
   externalObjects: {}
   serializedVersion: 4
@@ -11,7 +11,8 @@ TrueTypeFontImporter:
   fontName: Pixmine
   fontNames:
   - Pixmine
-  fallbackFontReferences: []
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 68194fc2c7ea1a14694ec3ab51c28532, type: 3}
   customCharacters: 
   fontRenderingMode: 0
   ascentCalculationMode: 1

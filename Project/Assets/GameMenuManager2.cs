@@ -9,15 +9,24 @@ using System.Collections.Generic;
 public class GameMenuManager2 : MonoBehaviour {
 
 
-    public int gamepad1team;
-    public int gamepad2team;
-    public int gamepad3team;
-    public int gamepad4team;
+    private int gamepad1team;
+    private int gamepad2team;
+    private int gamepad3team;
+    private int gamepad4team;
 
-    public int gamepad1color;
-    public int gamepad2color;
-    public int gamepad3color;
-    public int gamepad4color;
+    private int gamepad1color;
+    private int gamepad2color;
+    private int gamepad3color;
+    private int gamepad4color;
+
+    private Color Blue1 = new Color(0.133f, 0.517f, 0.949f);
+    private Color Blue2 = new Color(0.082f, 0.211f, 0.745f);
+    private Color Violet = new Color(0.317f, 0.133f, 0.831f);
+    private Color Green = new Color(0.047f, 0.694f, 0.239f);
+    private Color Purple = new Color(0.753f, 0.192f, 0.588f);
+    private Color Yellow = new Color(0.949f, 0.701f, 0.113f);
+    private Color Orange = new Color(0.976f, 0.325f, 0.270f);
+    private Color Red = new Color(0.854f, 0.137f, 0.152f);
 
     [Space(10)]
     [SerializeField]
@@ -37,6 +46,8 @@ public class GameMenuManager2 : MonoBehaviour {
     private GamepadState gamepadState3;
     private GamepadState gamepadState4;
 
+    public GameObject AnimatedBandeau;
+
 
     // Start is called before the first frame update
     void Start() {
@@ -55,6 +66,10 @@ public class GameMenuManager2 : MonoBehaviour {
         this.gamepadState2 = new GamepadState();
         this.gamepadState3 = new GamepadState();
         this.gamepadState4 = new GamepadState();
+        StartCoroutine(CoroutineUtils.DelaySeconds(() => {
+            AnimatedBandeau.SetActive(false);
+        }, 0.7f));
+        
 
     }
 
@@ -169,28 +184,28 @@ public class GameMenuManager2 : MonoBehaviour {
             }
 
             if(gamepad3color == 1) {
-                GameObject.Find("gamepadColor3").GetComponent<SpriteRenderer>().color = new Color(1, 0, 0);
+                GameObject.Find("gamepadColor3").GetComponent<SpriteRenderer>().color = Red;
             }
             if(gamepad3color == 2) {
-                GameObject.Find("gamepadColor3").GetComponent<SpriteRenderer>().color = new Color(0, 1, 0);
+                GameObject.Find("gamepadColor3").GetComponent<SpriteRenderer>().color = Orange;
             }
             if(gamepad3color == 3) {
-                GameObject.Find("gamepadColor3").GetComponent<SpriteRenderer>().color = new Color(0, 0, 1);
+                GameObject.Find("gamepadColor3").GetComponent<SpriteRenderer>().color = Yellow;
             }
             if(gamepad3color == 4) {
-                GameObject.Find("gamepadColor3").GetComponent<SpriteRenderer>().color = new Color(0.5f, 0.2f, 0.7f);
+                GameObject.Find("gamepadColor3").GetComponent<SpriteRenderer>().color = Purple;
             }
             if(gamepad3color == 21) {
-                GameObject.Find("gamepadColor3").GetComponent<SpriteRenderer>().color = new Color(0.8f, 0.8f, 0);
+                GameObject.Find("gamepadColor3").GetComponent<SpriteRenderer>().color = Blue1;
             }
             if(gamepad3color == 22) {
-                GameObject.Find("gamepadColor3").GetComponent<SpriteRenderer>().color = new Color(0, 0.8f, 0.8f);
+                GameObject.Find("gamepadColor3").GetComponent<SpriteRenderer>().color = Blue2;
             }
             if(gamepad3color == 23) {
-                GameObject.Find("gamepadColor3").GetComponent<SpriteRenderer>().color = new Color(0.8f, 0, 0.8f);
+                GameObject.Find("gamepadColor3").GetComponent<SpriteRenderer>().color = Green;
             }
             if(gamepad3color == 24) {
-                GameObject.Find("gamepadColor3").GetComponent<SpriteRenderer>().color = new Color(0.5f, 0.1f, 0.4f);
+                GameObject.Find("gamepadColor3").GetComponent<SpriteRenderer>().color = Violet;
             }
 
         }
@@ -230,28 +245,28 @@ public class GameMenuManager2 : MonoBehaviour {
                     }
             
             if(gamepad4color == 1) {
-                GameObject.Find("gamepadColor4").GetComponent<SpriteRenderer>().color = new Color(1, 0, 0);
+                GameObject.Find("gamepadColor4").GetComponent<SpriteRenderer>().color = Red;
             }
             if(gamepad4color == 2) {
-                GameObject.Find("gamepadColor4").GetComponent<SpriteRenderer>().color = new Color(0, 1, 0);
+                GameObject.Find("gamepadColor4").GetComponent<SpriteRenderer>().color = Orange;
             }
             if(gamepad4color == 3) {
-                GameObject.Find("gamepadColor4").GetComponent<SpriteRenderer>().color = new Color(0, 0, 1);
+                GameObject.Find("gamepadColor4").GetComponent<SpriteRenderer>().color = Yellow;
             }
             if(gamepad4color == 4) {
-                GameObject.Find("gamepadColor4").GetComponent<SpriteRenderer>().color = new Color(0.5f, 0.2f, 0.7f);
+                GameObject.Find("gamepadColor4").GetComponent<SpriteRenderer>().color = Purple;
             }
             if(gamepad4color == 21) {
-                GameObject.Find("gamepadColor4").GetComponent<SpriteRenderer>().color = new Color(0.8f, 0.8f, 0);
+                GameObject.Find("gamepadColor4").GetComponent<SpriteRenderer>().color = Blue1;
             }
             if(gamepad4color == 22) {
-                GameObject.Find("gamepadColor4").GetComponent<SpriteRenderer>().color = new Color(0, 0.8f, 0.8f);
+                GameObject.Find("gamepadColor4").GetComponent<SpriteRenderer>().color = Blue2;
             }
             if(gamepad4color == 23) {
-                GameObject.Find("gamepadColor4").GetComponent<SpriteRenderer>().color = new Color(0.8f, 0, 0.8f);
+                GameObject.Find("gamepadColor4").GetComponent<SpriteRenderer>().color = Green;
             }
             if(gamepad4color == 24) {
-                GameObject.Find("gamepadColor4").GetComponent<SpriteRenderer>().color = new Color(0.5f, 0.1f, 0.4f);
+                GameObject.Find("gamepadColor4").GetComponent<SpriteRenderer>().color = Violet;
             }
         }
         if(gamepad2team != 0) {
@@ -293,28 +308,28 @@ public class GameMenuManager2 : MonoBehaviour {
                     }
 
             if(gamepad2color == 1) {
-                GameObject.Find("gamepadColor2").GetComponent<SpriteRenderer>().color = new Color(1, 0, 0);
+                GameObject.Find("gamepadColor2").GetComponent<SpriteRenderer>().color = Red;
             }
             if(gamepad2color == 2) {
-                GameObject.Find("gamepadColor2").GetComponent<SpriteRenderer>().color = new Color(0, 1, 0);
+                GameObject.Find("gamepadColor2").GetComponent<SpriteRenderer>().color = Orange;
             }
             if(gamepad2color == 3) {
-                GameObject.Find("gamepadColor2").GetComponent<SpriteRenderer>().color = new Color(0, 0, 1);
+                GameObject.Find("gamepadColor2").GetComponent<SpriteRenderer>().color = Yellow;
             }
             if(gamepad2color == 4) {
-                GameObject.Find("gamepadColor2").GetComponent<SpriteRenderer>().color = new Color(0.5f, 0.2f, 0.7f);
+                GameObject.Find("gamepadColor2").GetComponent<SpriteRenderer>().color = Purple;
             }
             if(gamepad2color == 21) {
-                GameObject.Find("gamepadColor2").GetComponent<SpriteRenderer>().color = new Color(0.8f, 0.8f, 0);
+                GameObject.Find("gamepadColor2").GetComponent<SpriteRenderer>().color = Blue1;
             }
             if(gamepad2color == 22) {
-                GameObject.Find("gamepadColor2").GetComponent<SpriteRenderer>().color = new Color(0, 0.8f, 0.8f);
+                GameObject.Find("gamepadColor2").GetComponent<SpriteRenderer>().color = Blue2;
             }
             if(gamepad2color == 23) {
-                GameObject.Find("gamepadColor2").GetComponent<SpriteRenderer>().color = new Color(0.8f, 0, 0.8f);
+                GameObject.Find("gamepadColor2").GetComponent<SpriteRenderer>().color = Green;
             }
             if(gamepad2color == 24) {
-                GameObject.Find("gamepadColor2").GetComponent<SpriteRenderer>().color = new Color(0.5f, 0.1f, 0.4f);
+                GameObject.Find("gamepadColor2").GetComponent<SpriteRenderer>().color = Violet;
             }
         }
         if(gamepad1team != 0) {
@@ -351,28 +366,28 @@ public class GameMenuManager2 : MonoBehaviour {
                     }
 
             if(gamepad1color == 1) {
-                GameObject.Find("gamepadColor1").GetComponent<SpriteRenderer>().color = new Color(1, 0, 0);
+                GameObject.Find("gamepadColor1").GetComponent<SpriteRenderer>().color = Red;
             }
             if(gamepad1color == 2) {
-                GameObject.Find("gamepadColor1").GetComponent<SpriteRenderer>().color = new Color(0, 1, 0);
+                GameObject.Find("gamepadColor1").GetComponent<SpriteRenderer>().color = Orange;
             }
             if(gamepad1color == 3) {
-                GameObject.Find("gamepadColor1").GetComponent<SpriteRenderer>().color = new Color(0, 0, 1);
+                GameObject.Find("gamepadColor1").GetComponent<SpriteRenderer>().color = Yellow;
             }
             if(gamepad1color == 4) {
-                GameObject.Find("gamepadColor1").GetComponent<SpriteRenderer>().color = new Color(0.5f, 0.2f, 0.7f);
+                GameObject.Find("gamepadColor1").GetComponent<SpriteRenderer>().color = Purple;
             }
             if(gamepad1color == 21) {
-                GameObject.Find("gamepadColor1").GetComponent<SpriteRenderer>().color = new Color(0.8f, 0.8f, 0);
+                GameObject.Find("gamepadColor1").GetComponent<SpriteRenderer>().color = Blue1;
             }
             if(gamepad1color == 22) {
-                GameObject.Find("gamepadColor1").GetComponent<SpriteRenderer>().color = new Color(0, 0.8f, 0.8f);
+                GameObject.Find("gamepadColor1").GetComponent<SpriteRenderer>().color = Blue2;
             }
             if(gamepad1color == 23) {
-                GameObject.Find("gamepadColor1").GetComponent<SpriteRenderer>().color = new Color(0.8f, 0, 0.8f);
+                GameObject.Find("gamepadColor1").GetComponent<SpriteRenderer>().color = Green;
             }
             if(gamepad1color == 24) {
-                GameObject.Find("gamepadColor1").GetComponent<SpriteRenderer>().color = new Color(0.5f, 0.1f, 0.4f);
+                GameObject.Find("gamepadColor1").GetComponent<SpriteRenderer>().color = Violet;
             }
         }
     }

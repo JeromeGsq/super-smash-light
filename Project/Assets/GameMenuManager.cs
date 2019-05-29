@@ -33,6 +33,10 @@ public class GameMenuManager : MonoBehaviour {
 
     private GamepadState gamepadState;
 
+    public GameObject MenuPrincipal;
+    public GameObject SelectPlayerMenu;
+    public GameObject AnimatedBandeau;
+
 
     // Start is called before the first frame update
     void Awake() {
@@ -48,7 +52,7 @@ public class GameMenuManager : MonoBehaviour {
 
     ip_GamePad.GetState(ref this.gamepadState, ip_GamePad.Index.Any);
         if(positions == 1) {
-            selecteur.GetComponent<Transform>().position = new Vector3(6.18f, -2.23f, -0.61f);
+            selecteur.GetComponent<Transform>().position = new Vector3(6.18f, -2.23f, selecteur.GetComponent<Transform>().position.z);
             fond.GetComponent<SpriteRenderer>().sprite = fondPartie;
             illu.GetComponent<SpriteRenderer>().sprite = illuPartie;
             illu1.GetComponent<SpriteRenderer>().sprite = illuPartie1;
@@ -60,10 +64,19 @@ public class GameMenuManager : MonoBehaviour {
             GameObject.Find("patern4").GetComponent<SpriteRenderer>().sprite = paternPartie;
             if(this.gamepadState.APressed) {
                 BoutonPartie.GetComponent<Animator>().Play(Animator.StringToHash("PartieRapideMenu"));
+                StartCoroutine(CoroutineUtils.DelaySeconds(() => {
+                    AnimatedBandeau.SetActive(true);
+                }, 0.3f));
+
+                StartCoroutine(CoroutineUtils.DelaySeconds(() => {
+                    SelectPlayerMenu.SetActive(true);
+                    MenuPrincipal.SetActive(false);
+                }, 0.7f));
+
             }
-            
-        } else {
-            selecteur.GetComponent<Transform>().position = new Vector3(6.18f, -5.43f, -0.61f);
+
+    } else {
+            selecteur.GetComponent<Transform>().position = new Vector3(6.18f, -5.43f, selecteur.GetComponent<Transform>().position.z);
             fond.GetComponent<SpriteRenderer>().sprite = fondOption;
             illu.GetComponent<SpriteRenderer>().sprite = illuOption;
             illu1.GetComponent<SpriteRenderer>().sprite = null;

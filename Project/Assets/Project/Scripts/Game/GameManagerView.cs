@@ -13,6 +13,11 @@ using static GamepadInput.ip_GamePad;
 [RequireComponent(typeof(GameManager))]
 public class GameManagerView : BaseView<GameManager>
 {
+    public GameObject player1;
+    public GameObject player2;
+    public GameObject player3;
+    public GameObject player4;
+
     [Space(20)]
     [SerializeField]
     private GameManager gamemanager;
@@ -126,7 +131,9 @@ public class GameManagerView : BaseView<GameManager>
 
 			this.players.Add(player1.gameObject);
 			this.players.Add(player3.gameObject);
-		}
+            this.player1 = player1.gameObject;
+            this.player3 = player3.gameObject;
+        }
 
 		if(index == 2)
 		{
@@ -138,7 +145,10 @@ public class GameManagerView : BaseView<GameManager>
 
 			this.players.Add(player2.gameObject);
 			this.players.Add(player4.gameObject);
-		}
+            this.player2 = player2.gameObject;
+            this.player4 = player4.gameObject;
+        }
+        
 	}
 
 	private PlayerMovementHandler InitPlayer(Transform anchor, Index index, string tag)

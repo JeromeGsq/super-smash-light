@@ -22,6 +22,12 @@ public class GameManager : BaseViewModel
 		}
 	}
     #endregion
+    [Space(20)]
+    [SerializeField]
+    private GameObject endPanel;
+    [Space(20)]
+    [SerializeField]
+    private GameManagerView gamemanagerview;
 
     [Space(10)]
     [SerializeField]
@@ -113,7 +119,7 @@ public class GameManager : BaseViewModel
 
         //this.team1.BarLevel = 1;
         //this.team2.BarLevel = 1;
-        if(timerStart) {
+        if(timerStart && timer > 1) {
 
             timer -= Time.deltaTime;
         }
@@ -121,6 +127,14 @@ public class GameManager : BaseViewModel
 
         minutes = Mathf.Floor(timer / 60);
         seconds = Mathf.Floor(timer % 60);
+
+        if(timer <= 1) {
+            endPanel.SetActive(true);
+            gamemanagerview.player1.SetActive(false);
+            gamemanagerview.player2.SetActive(false);
+            gamemanagerview.player3.SetActive(false);
+            gamemanagerview.player4.SetActive(false);
+        }
     }
 
     public void AddBarLevel(float amount, int teamIndex)

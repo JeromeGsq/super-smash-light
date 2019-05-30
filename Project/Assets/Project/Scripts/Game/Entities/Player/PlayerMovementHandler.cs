@@ -588,10 +588,7 @@ public class PlayerMovementHandler : MonoBehaviour
 
         this.velocity = this.controller.velocity;
 
-        if (this.gamepadState.Start)
-        {
-            SceneManager.LoadScene(0);
-        }
+
     }
 
     private void SetColors()

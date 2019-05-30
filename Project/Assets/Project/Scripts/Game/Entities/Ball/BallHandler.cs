@@ -36,6 +36,10 @@ public class BallHandler : SceneSingleton<BallHandler>
     private Material white;
 
     [Space(20)]
+    [SerializeField]
+    private int rebond;
+
+    [Space(20)]
 
     [Tooltip("Augmenter cette valeur pour gagner plus de % à chaque passes (defaut : 1)")]
     [SerializeField]
@@ -82,6 +86,7 @@ public class BallHandler : SceneSingleton<BallHandler>
 
     public void SetGrabbed(Transform ballAnchor, Index index)
     {
+        this.rebond = 0;
         this.collider.isTrigger = true;
         this.Index = index;
         this.transform.SetParent(ballAnchor);
@@ -145,13 +150,16 @@ public class BallHandler : SceneSingleton<BallHandler>
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.collider.CompareTag(Tags.Wall) && this.IsGrabbed == false)
+        this.rebond += 1;
+
+        if (rebond >=2 && collision.collider.CompareTag(Tags.Wall) && this.IsGrabbed == false)
         {
             this.rigidbody.gravityScale = 1;
             this.engagePass = false;
             this.engageShoot = false;
             this.Index = Index.Any;
             this.trail.material = this.white;
+            this.rebond = 0;
         }
     }
 

@@ -359,9 +359,13 @@ public class PlayerMovementHandler : MonoBehaviour
         if (BallHandler.Get.Index == this.index)
         {
             // Pass control
-            if (this.RBreleased)
+            if (this.RBreleased || this.RTreleased)
             {
-                if (RBtime > 1f)
+                if (this.RBreleased && RBtime > 1.5f)
+                {
+                    BallHandler.Get.Shoot(this.sight, this.passPower, ShootType.Pass);
+                } 
+                else if(this.RTreleased && RTtime > 1.5f) 
                 {
                     BallHandler.Get.Shoot(this.sight, this.passPower, ShootType.Pass);
                 }
@@ -376,23 +380,7 @@ public class PlayerMovementHandler : MonoBehaviour
                     this.canGrab = true;
                 }, this.deltaTimeGrab));
             }
-            if(this.RTreleased) 
-            {
-                if(RTtime > 1f) 
-                {
-                    BallHandler.Get.Shoot(this.sight, this.passPower, ShootType.Pass);
-                } 
-                else 
-                {
-                    BallHandler.Get.Shoot(this.FriendTransform, this.passPower, ShootType.Pass);
-                }
-
-                this.canGrab = false;
-                StartCoroutine(CoroutineUtils.DelaySeconds(() => 
-                {
-                    this.canGrab = true;
-                }, this.deltaTimeGrab));
-            }
+            
 
             // Shoot control
             if (this.LBreleased || this.LTreleased)
@@ -663,6 +651,7 @@ public class PlayerMovementHandler : MonoBehaviour
             this.canGrab = true;
         }, 1f));
 
+        GameManager.Get.ResetBarLevel(Team.GetTeam(this.Index));
         this.player.gameObject.SetActive(false);
         this.trigger2D.enabled = false;
         this.controller.boxCollider.enabled = false;

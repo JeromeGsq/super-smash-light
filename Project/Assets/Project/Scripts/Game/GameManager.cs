@@ -74,13 +74,13 @@ public class GameManager : BaseViewModel
 	[Binding]
 	public string Team1Score
 	{
-		get => $"team bleu : {this.Team1.Score}";
+		get => $"Team bleu : {this.Team1.Score}";
 	}
 
 	[Binding]
 	public string Team2Score
 	{
-		get => $"team rouge : {this.Team2.Score}";
+		get => $"Team rouge : {this.Team2.Score}";
 	}
     [Binding]
     public string theTime {
@@ -111,8 +111,8 @@ public class GameManager : BaseViewModel
     private void Update()
     {
 
-        this.team1.BarLevel = 1;
-        this.team2.BarLevel = 1;
+        //this.team1.BarLevel = 1;
+        //this.team2.BarLevel = 1;
         if(timerStart) {
 
             timer -= Time.deltaTime;

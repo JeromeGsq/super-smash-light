@@ -38,39 +38,56 @@ public class GameMenuManager3 : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        position = 1;
         this.gamepadState = new GamepadState();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if(position == 1) 
+        ip_GamePad.GetState(ref this.gamepadState, ip_GamePad.Index.Any);
+
+
+        if(this.position == 4) 
             {
-            if(gamepadState.RightPressed) 
+            if(this.gamepadState.Right) 
             {
-                position = 2;
+                this.position = 1;
             }
         }
-        if(position == 2)
+        if(this.position == 3)
         {
-            if(gamepadState.RightPressed)
+            if(this.gamepadState.Right)
             {
-                position = 3;
+                this.position = 4;
             }
         }
-        if(position == 3) 
+        if(this.position == 2) 
         {
-            if(gamepadState.RightPressed) 
+            if(this.gamepadState.Right) 
             {
-                position = 4;
+                this.position = 3;
             }
         }
-        if(position == 4) 
+        if(this.position == 1) 
         {
-            if(gamepadState.RightPressed) 
+            if(this.gamepadState.Right) 
             {
-                position = 1;
+                this.position = 2;
             }
+        }
+
+        if(this.position == 1) {
+            cursor.GetComponent<Transform>().position = pos1;
+        }
+        if(this.position == 2) {
+            cursor.GetComponent<Transform>().position = pos2;
+        }
+        if(this.position == 3) {
+            cursor.GetComponent<Transform>().position = pos3;
+        }
+        if(this.position == 4) {
+            cursor.GetComponent<Transform>().position = pos4;
         }
     }
 }

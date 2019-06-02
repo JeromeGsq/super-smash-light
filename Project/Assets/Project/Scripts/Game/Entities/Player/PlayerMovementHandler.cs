@@ -159,7 +159,9 @@ public class PlayerMovementHandler : MonoBehaviour
     private float pushPowerOnMe = 50f;
 
     public RuntimeAnimatorController ColorBlue;
+    public RuntimeAnimatorController ColorViolet;
     public RuntimeAnimatorController ColorOrange;
+    public RuntimeAnimatorController ColorRed;
     public RuntimeAnimatorController ColorYellow;
     public RuntimeAnimatorController ColorGreen;
 
@@ -195,7 +197,9 @@ public class PlayerMovementHandler : MonoBehaviour
         
     {
         ColorBlue = Resources.Load<RuntimeAnimatorController>("Animations/PlayerBlue");
+        ColorViolet = Resources.Load<RuntimeAnimatorController>("Animations/PlayerViolet");
         ColorOrange = Resources.Load<RuntimeAnimatorController>("Animations/PlayerOrange");
+        ColorRed = Resources.Load<RuntimeAnimatorController>("Animations/PlayerRed");
         ColorYellow = Resources.Load<RuntimeAnimatorController>("Animations/PlayerYellow");
         ColorGreen = Resources.Load<RuntimeAnimatorController>("Animations/PlayerGreen");
 

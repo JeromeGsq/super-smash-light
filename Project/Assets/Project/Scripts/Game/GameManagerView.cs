@@ -123,44 +123,47 @@ public class GameManagerView : BaseView<GameManager>
 
 		if(index == 1)
 		{
-			var player1 = InitPlayer(this.spanwnPlayer1Anchor, team.FirstPlayerIndex, Tags.Player1);
-			var player3 = InitPlayer(this.spanwnPlayer3Anchor, team.SecondPlayerIndex, Tags.Player3);
+			var player1 = InitPlayer(this.spanwnPlayer1Anchor, team.FirstPlayerIndex, Tags.Player1,1);
+			var player2 = InitPlayer(this.spanwnPlayer2Anchor, team.SecondPlayerIndex, Tags.Player2,1);
 
-			player1.FriendTransform = player3.gameObject.transform;
-			player3.FriendTransform = player1.gameObject.transform;
+			player1.FriendTransform = player2.gameObject.transform;
+			player2.FriendTransform = player1.gameObject.transform;
 
 			this.players.Add(player1.gameObject);
-			this.players.Add(player3.gameObject);
+			this.players.Add(player2.gameObject);
             this.player1 = player1.gameObject;
-            this.player3 = player3.gameObject;
+            this.player2 = player2.gameObject;
         }
 
 		if(index == 2)
 		{
-			var player2 = InitPlayer(this.spanwnPlayer2Anchor, team.FirstPlayerIndex, Tags.Player2);
-			var player4 = InitPlayer(this.spanwnPlayer4Anchor, team.SecondPlayerIndex, Tags.Player4);
+			var player3 = InitPlayer(this.spanwnPlayer3Anchor, team.FirstPlayerIndex, Tags.Player3,2);
+			var player4 = InitPlayer(this.spanwnPlayer4Anchor, team.SecondPlayerIndex, Tags.Player4,2);
 
-			player2.FriendTransform = player4.gameObject.transform;
-			player4.FriendTransform = player2.gameObject.transform;
+			player3.FriendTransform = player4.gameObject.transform;
+			player4.FriendTransform = player3.gameObject.transform;
 
-			this.players.Add(player2.gameObject);
+			this.players.Add(player3.gameObject);
 			this.players.Add(player4.gameObject);
-            this.player2 = player2.gameObject;
+            this.player3 = player3.gameObject;
             this.player4 = player4.gameObject;
         }
         
 	}
 
-	private PlayerMovementHandler InitPlayer(Transform anchor, Index index, string tag)
+	private PlayerMovementHandler InitPlayer(Transform anchor, Index index, string tag,int team)
 	{
 		GameObject player = Instantiate(this.playerPrefab, null);
 		player.transform.position = anchor.position;
 
 		var playerHandler = player.GetComponent<PlayerMovementHandler>();
 		playerHandler.Index = index;
-		player.tag = tag;
+        playerHandler.myteam = team;
+        player.tag = tag;
+        
 
-		playerHandler.MainPosition = player.transform.position;
+
+        playerHandler.MainPosition = player.transform.position;
 
 		SmoothFollow.Get.Targets.Add(player.transform);
 

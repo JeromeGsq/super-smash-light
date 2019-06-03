@@ -18,6 +18,7 @@ public class BallHandler : SceneSingleton<BallHandler>
 
     private Vector3 lastKnownShootPosition;
     private Index lastShooter = Index.Any;
+    public int lastShooterTeam = 2;
 
     [Space(20)]
 
@@ -44,6 +45,8 @@ public class BallHandler : SceneSingleton<BallHandler>
     [Tooltip("Augmenter cette valeur pour gagner plus de % à chaque passes (defaut : 1)")]
     [SerializeField]
     private int barLevelAddScale = 1;
+
+    public int myteam;
 
     public Index Index
     {
@@ -81,10 +84,11 @@ public class BallHandler : SceneSingleton<BallHandler>
 
     private void Update()
     {
+        //this.myteam = Team.GetTeam(this.Index);
         this.rigidbody.bodyType = this.isGrabbed ? RigidbodyType2D.Static : RigidbodyType2D.Dynamic;
     }
 
-    public void SetGrabbed(Transform ballAnchor, Index index)
+    public void SetGrabbed(Transform ballAnchor, Index index, int team)
     {
         this.rebond = 0;
         this.collider.isTrigger = true;
@@ -92,21 +96,23 @@ public class BallHandler : SceneSingleton<BallHandler>
         this.transform.SetParent(ballAnchor);
         this.transform.localPosition = Vector3.zero;
         this.isGrabbed = true;
+        this.myteam = team;
         this.trail.material = Team.GetTeam(this.Index) == 1 ? this.blue : this.red;
 
         // if the last shooter is my teammate
-        if (Team.GetTeam(this.Index) == Team.GetTeam(this.lastShooter)
+        if ((myteam == lastShooterTeam)
             && this.engagePass == true)
         {
             GameManager.Get.AddBarLevel(
                 Mathf.Abs(Vector3.Distance(this.lastKnownShootPosition, ballAnchor.position)) * ((float)this.barLevelAddScale / 100),
-                Team.GetTeam(this.Index)
+                myteam
             );
 
             this.engagePass = false;
         }
 
         this.lastShooter = index;
+        this.lastShooterTeam = team;
     }
 
     public void Shoot(Transform target, float power, ShootType shootType)
@@ -125,7 +131,7 @@ public class BallHandler : SceneSingleton<BallHandler>
         switch (shootType)
         {
             case ShootType.Pass:
-                this.trail.material = Team.GetTeam(this.Index) == 1 ? this.blue : this.red;
+                this.trail.material = myteam == 1 ? this.blue : this.red;
                 this.rigidbody.gravityScale = 0;
                 // this.Index = Index.Any;
                 this.engagePass = true;
@@ -134,7 +140,7 @@ public class BallHandler : SceneSingleton<BallHandler>
             case ShootType.Shoot:
                 this.trail.material = this.yellow;
                 this.rigidbody.gravityScale = 0;
-                GameManager.Get.ResetBarLevel(Team.GetTeam(this.Index));
+                GameManager.Get.ResetBarLevel(myteam);
 
                 this.engageShoot = true;
                 break;

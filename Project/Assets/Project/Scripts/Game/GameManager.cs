@@ -42,8 +42,8 @@ public class GameManager : BaseViewModel
     public bool timerStart;
 
 
-    private Team team1;
-	private Team team2;
+    public Team team1;
+	public Team team2;
 
 	private Index ballIndex;
 
@@ -160,6 +160,7 @@ public class GameManager : BaseViewModel
             team2Player1 = GamepadInput.ip_GamePad.Index.Three;
             team2Player2 = GamepadInput.ip_GamePad.Index.Four;
         }
+
         this.Team1 = new Team() {
 
             FirstPlayerIndex = team1Player1,

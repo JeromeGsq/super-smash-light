@@ -50,6 +50,11 @@ public class PlayerMovementHandler : MonoBehaviour
     public float stickY;
     public float stickX;
 
+
+    public int myteam;
+
+
+
     private GamepadState gamepadState;
 
     [SerializeField]
@@ -232,9 +237,9 @@ public class PlayerMovementHandler : MonoBehaviour
     private void OnControllerCollider(RaycastHit2D cast)
     {
         if (this.isDashing && this.isPushed == false &&
-            (Team.GetTeam(this.index) == 2 ?
-                (cast.collider.CompareTag(Tags.Player1) || cast.collider.CompareTag(Tags.Player3)) :
-                (cast.collider.CompareTag(Tags.Player2) || cast.collider.CompareTag(Tags.Player4)))
+            (myteam == 2 ?
+                (cast.collider.CompareTag(Tags.Player1) || cast.collider.CompareTag(Tags.Player2)) :
+                (cast.collider.CompareTag(Tags.Player3) || cast.collider.CompareTag(Tags.Player4)))
            )
         {
             var enemy = cast.collider;
@@ -243,7 +248,7 @@ public class PlayerMovementHandler : MonoBehaviour
             // Get ball from enemy
             if (BallHandler.Get.Index == enemyPlayerHandler.index)
             {
-                BallHandler.Get.SetGrabbed(this.ballAnchor, this.index);
+                BallHandler.Get.SetGrabbed(this.ballAnchor, this.index, myteam);
             }
 
             // Apply collision on enemy
@@ -272,7 +277,7 @@ public class PlayerMovementHandler : MonoBehaviour
             }
             else if (this.canGrab && BallHandler.Get.IsGrabbed == false)
             {
-                BallHandler.Get.SetGrabbed(this.ballAnchor, this.index);
+                BallHandler.Get.SetGrabbed(this.ballAnchor, this.index, myteam);
             }
         }
     }
@@ -293,6 +298,9 @@ public class PlayerMovementHandler : MonoBehaviour
 
     private void Update()
     {
+
+        //this.myteam = Team.GetTeam(this.Index);
+
         if(this.gamepadState.LB) 
         {
             this.LBhold = true;
@@ -362,7 +370,7 @@ public class PlayerMovementHandler : MonoBehaviour
 
         if (BallHandler.Get.Index == this.index)
         {
-            // Pass control
+            // Pass controlset
             if (this.RBreleased || this.RTreleased)
             {
                 if (this.RBreleased && RBtime > 1.5f)
@@ -625,9 +633,9 @@ public class PlayerMovementHandler : MonoBehaviour
         CameraHandler.Get.Rumble();
 
         // Add point to the other team
-        if(Team.GetTeam(BallHandler.Get.LastShooter) != Team.GetTeam(this.index))
+        if(BallHandler.Get.lastShooterTeam != myteam)
         {
-            var otherTeamIndex = Team.GetTeam(this.index);
+            var otherTeamIndex = myteam;
             Debug.Log("Teamadd1");
             GameManager.Get.AddPoint(otherTeamIndex);
         }
@@ -652,7 +660,7 @@ public class PlayerMovementHandler : MonoBehaviour
             this.canGrab = true;
         }, 1f));
 
-        GameManager.Get.ResetBarLevel(Team.GetTeam(this.Index));
+        GameManager.Get.ResetBarLevel(myteam);
         this.player.gameObject.SetActive(false);
         this.trigger2D.enabled = false;
         this.controller.boxCollider.enabled = false;

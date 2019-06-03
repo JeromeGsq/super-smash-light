@@ -45,6 +45,8 @@ public class GameManager : BaseViewModel
     public Team team1;
 	public Team team2;
 
+    public bool forTest;
+
 	private Index ballIndex;
 
 	public Team Team1
@@ -100,80 +102,86 @@ public class GameManager : BaseViewModel
 
     private void Awake()
 	{
-        if((GameMenuManager2.gamepad1team + GameMenuManager2.gamepad2team) == 2) 
-            {
-            team1Player1 = GamepadInput.ip_GamePad.Index.One;
-            team1Player2 = GamepadInput.ip_GamePad.Index.Two;
+        if(!forTest) {
+
+            if((GameMenuManager2.gamepad1team + GameMenuManager2.gamepad2team) == 2) {
+                team1Player1 = GamepadInput.ip_GamePad.Index.One;
+                team1Player2 = GamepadInput.ip_GamePad.Index.Two;
+            }
+            if((GameMenuManager2.gamepad1team + GameMenuManager2.gamepad2team) == 4) {
+                team2Player1 = GamepadInput.ip_GamePad.Index.One;
+                team2Player2 = GamepadInput.ip_GamePad.Index.Two;
+            }
+            if((GameMenuManager2.gamepad1team + GameMenuManager2.gamepad3team) == 2) {
+                team1Player1 = GamepadInput.ip_GamePad.Index.One;
+                team1Player2 = GamepadInput.ip_GamePad.Index.Three;
+            }
+            if((GameMenuManager2.gamepad1team + GameMenuManager2.gamepad3team) == 4) {
+                team2Player1 = GamepadInput.ip_GamePad.Index.One;
+                team2Player2 = GamepadInput.ip_GamePad.Index.Three;
+            }
+            if((GameMenuManager2.gamepad1team + GameMenuManager2.gamepad4team) == 2) {
+                team1Player1 = GamepadInput.ip_GamePad.Index.One;
+                team1Player2 = GamepadInput.ip_GamePad.Index.Four;
+            }
+            if((GameMenuManager2.gamepad1team + GameMenuManager2.gamepad4team) == 4) {
+                team2Player1 = GamepadInput.ip_GamePad.Index.One;
+                team2Player2 = GamepadInput.ip_GamePad.Index.Four;
+            }
+            if((GameMenuManager2.gamepad2team + GameMenuManager2.gamepad3team) == 2) {
+                team1Player1 = GamepadInput.ip_GamePad.Index.Two;
+                team1Player2 = GamepadInput.ip_GamePad.Index.Three;
+            }
+            if((GameMenuManager2.gamepad2team + GameMenuManager2.gamepad3team) == 4) {
+                team2Player1 = GamepadInput.ip_GamePad.Index.Two;
+                team2Player2 = GamepadInput.ip_GamePad.Index.Three;
+            }
+            if((GameMenuManager2.gamepad2team + GameMenuManager2.gamepad4team) == 2) {
+                team1Player1 = GamepadInput.ip_GamePad.Index.Two;
+                team1Player2 = GamepadInput.ip_GamePad.Index.Four;
+            }
+            if((GameMenuManager2.gamepad2team + GameMenuManager2.gamepad4team) == 4) {
+                team2Player1 = GamepadInput.ip_GamePad.Index.Two;
+                team2Player2 = GamepadInput.ip_GamePad.Index.Four;
+            }
+            if((GameMenuManager2.gamepad3team + GameMenuManager2.gamepad4team) == 2) {
+                team1Player1 = GamepadInput.ip_GamePad.Index.Three;
+                team1Player2 = GamepadInput.ip_GamePad.Index.Four;
+            }
+            if((GameMenuManager2.gamepad3team + GameMenuManager2.gamepad4team) == 4) {
+                team2Player1 = GamepadInput.ip_GamePad.Index.Three;
+                team2Player2 = GamepadInput.ip_GamePad.Index.Four;
+            }
+
+            this.Team1 = new Team() {
+
+                FirstPlayerIndex = team1Player1,
+                SecondPlayerIndex = team1Player2,
+            };
+
+            this.Team2 = new Team() {
+                FirstPlayerIndex = team2Player1,
+                SecondPlayerIndex = team2Player2,
+            };
         }
-        if((GameMenuManager2.gamepad1team + GameMenuManager2.gamepad2team) == 4) 
+    
+        if(forTest) 
             {
-            team2Player1 = GamepadInput.ip_GamePad.Index.One;
-            team2Player2 = GamepadInput.ip_GamePad.Index.Two;
-        }
-        if((GameMenuManager2.gamepad1team + GameMenuManager2.gamepad3team) == 2) 
+            this.Team1 = new Team() 
             {
-            team1Player1 = GamepadInput.ip_GamePad.Index.One;
-            team1Player2 = GamepadInput.ip_GamePad.Index.Three;
-        }
-        if((GameMenuManager2.gamepad1team + GameMenuManager2.gamepad3team) == 4) 
+
+                FirstPlayerIndex = GamepadInput.ip_GamePad.Index.One,
+                SecondPlayerIndex = GamepadInput.ip_GamePad.Index.Three,
+            };
+
+            this.Team2 = new Team() 
             {
-            team2Player1 = GamepadInput.ip_GamePad.Index.One;
-            team2Player2 = GamepadInput.ip_GamePad.Index.Three;
-        }
-        if((GameMenuManager2.gamepad1team + GameMenuManager2.gamepad4team) == 2) 
-            {
-            team1Player1 = GamepadInput.ip_GamePad.Index.One;
-            team1Player2 = GamepadInput.ip_GamePad.Index.Four;
-        }
-        if((GameMenuManager2.gamepad1team + GameMenuManager2.gamepad4team) == 4) 
-            {
-            team2Player1 = GamepadInput.ip_GamePad.Index.One;
-            team2Player2 = GamepadInput.ip_GamePad.Index.Four;
-        }
-        if((GameMenuManager2.gamepad2team + GameMenuManager2.gamepad3team) == 2) 
-            {
-            team1Player1 = GamepadInput.ip_GamePad.Index.Two;
-            team1Player2 = GamepadInput.ip_GamePad.Index.Three;
-        }
-        if((GameMenuManager2.gamepad2team + GameMenuManager2.gamepad3team) == 4) 
-            {
-            team2Player1 = GamepadInput.ip_GamePad.Index.Two;
-            team2Player2 = GamepadInput.ip_GamePad.Index.Three;
-        }
-        if((GameMenuManager2.gamepad2team + GameMenuManager2.gamepad4team) == 2) 
-            {
-            team1Player1 = GamepadInput.ip_GamePad.Index.Two;
-            team1Player2 = GamepadInput.ip_GamePad.Index.Four;
-        }
-        if((GameMenuManager2.gamepad2team + GameMenuManager2.gamepad4team) == 4) 
-            {
-            team2Player1 = GamepadInput.ip_GamePad.Index.Two;
-            team2Player2 = GamepadInput.ip_GamePad.Index.Four;
-        }
-        if((GameMenuManager2.gamepad3team + GameMenuManager2.gamepad4team) == 2)
-            {
-            team1Player1 = GamepadInput.ip_GamePad.Index.Three;
-            team1Player2 = GamepadInput.ip_GamePad.Index.Four;
-        }
-        if((GameMenuManager2.gamepad3team + GameMenuManager2.gamepad4team) == 4) 
-            {
-            team2Player1 = GamepadInput.ip_GamePad.Index.Three;
-            team2Player2 = GamepadInput.ip_GamePad.Index.Four;
+                FirstPlayerIndex = GamepadInput.ip_GamePad.Index.Two,
+                SecondPlayerIndex = GamepadInput.ip_GamePad.Index.Four,
+            };
         }
 
-        this.Team1 = new Team() {
-
-            FirstPlayerIndex = team1Player1,
-			SecondPlayerIndex = team1Player2,
-		};
-
-		this.Team2 = new Team()
-		{
-			FirstPlayerIndex = team2Player1,
-			SecondPlayerIndex = team2Player2,
-		};
-
-		this.team1.BarLevel = 0f;
+            this.team1.BarLevel = 0f;
 		this.team2.BarLevel = 0f;
 
 		this.RaisePropertyChanged(nameof(this.Team1BarLevel));

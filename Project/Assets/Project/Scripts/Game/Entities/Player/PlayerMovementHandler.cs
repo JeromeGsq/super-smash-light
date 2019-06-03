@@ -164,11 +164,14 @@ public class PlayerMovementHandler : MonoBehaviour
     private float pushPowerOnMe = 50f;
 
     public RuntimeAnimatorController ColorBlue;
+    public RuntimeAnimatorController ColorBlue2;
     public RuntimeAnimatorController ColorViolet;
+    public RuntimeAnimatorController ColorGreen;
     public RuntimeAnimatorController ColorOrange;
     public RuntimeAnimatorController ColorRed;
     public RuntimeAnimatorController ColorYellow;
-    public RuntimeAnimatorController ColorGreen;
+    public RuntimeAnimatorController ColorPurple;
+
 
     public bool IsTargeting
     {
@@ -198,15 +201,58 @@ public class PlayerMovementHandler : MonoBehaviour
         set => this.mainPosition = value;
     }
 
+    private RuntimeAnimatorController color1;
+    private RuntimeAnimatorController color2;
+    private RuntimeAnimatorController color3;
+    private RuntimeAnimatorController color4;
+
     private void Awake()
         
     {
         ColorBlue = Resources.Load<RuntimeAnimatorController>("Animations/PlayerBlue");
+        ColorBlue2 = Resources.Load<RuntimeAnimatorController>("Animations/PlayerBlue2");
         ColorViolet = Resources.Load<RuntimeAnimatorController>("Animations/PlayerViolet");
+        ColorGreen = Resources.Load<RuntimeAnimatorController>("Animations/PlayerGreen");
         ColorOrange = Resources.Load<RuntimeAnimatorController>("Animations/PlayerOrange");
         ColorRed = Resources.Load<RuntimeAnimatorController>("Animations/PlayerRed");
         ColorYellow = Resources.Load<RuntimeAnimatorController>("Animations/PlayerYellow");
-        ColorGreen = Resources.Load<RuntimeAnimatorController>("Animations/PlayerGreen");
+        ColorPurple = Resources.Load<RuntimeAnimatorController>("Animations/PlayerPurple");
+
+        if(GameMenuManager2.gamepad1color == 1) {color1 = ColorRed;}
+        if(GameMenuManager2.gamepad1color == 2) {color1 = ColorOrange;}
+        if(GameMenuManager2.gamepad1color == 3) {color1 = ColorYellow;}
+        if(GameMenuManager2.gamepad1color == 4) {color1 = ColorPurple;}
+        if(GameMenuManager2.gamepad1color == 21) {color1 = ColorBlue;}
+        if(GameMenuManager2.gamepad1color == 22) {color1 = ColorBlue2;}
+        if(GameMenuManager2.gamepad1color == 23) {color1 = ColorGreen;}
+        if(GameMenuManager2.gamepad1color == 24) {color1 = ColorViolet;}
+
+        if(GameMenuManager2.gamepad2color == 1) {color2 = ColorRed;}
+        if(GameMenuManager2.gamepad2color == 2) {color2 = ColorOrange;}
+        if(GameMenuManager2.gamepad2color == 3) {color2 = ColorYellow;}
+        if(GameMenuManager2.gamepad2color == 4) {color2 = ColorPurple;}
+        if(GameMenuManager2.gamepad2color == 21) {color2 = ColorBlue;}
+        if(GameMenuManager2.gamepad2color == 22) {color2 = ColorBlue2;}
+        if(GameMenuManager2.gamepad2color == 23) {color2 = ColorGreen;}
+        if(GameMenuManager2.gamepad2color == 24) {color2 = ColorViolet;}
+
+        if(GameMenuManager2.gamepad3color == 1) {color3 = ColorRed;}
+        if(GameMenuManager2.gamepad3color == 2) {color3 = ColorOrange;}
+        if(GameMenuManager2.gamepad3color == 3) {color3 = ColorYellow;}
+        if(GameMenuManager2.gamepad3color == 4) {color3 = ColorPurple;}
+        if(GameMenuManager2.gamepad3color == 21) {color3 = ColorBlue;}
+        if(GameMenuManager2.gamepad3color == 22) {color3 = ColorBlue2;}
+        if(GameMenuManager2.gamepad3color == 23) {color3 = ColorGreen;}
+        if(GameMenuManager2.gamepad3color == 24) {color3 = ColorViolet;}
+
+        if(GameMenuManager2.gamepad4color == 1) {color4 = ColorRed;}
+        if(GameMenuManager2.gamepad4color == 2) {color4 = ColorOrange;}
+        if(GameMenuManager2.gamepad4color == 3) {color4 = ColorYellow;}
+        if(GameMenuManager2.gamepad4color == 4) {color4 = ColorPurple;}
+        if(GameMenuManager2.gamepad4color == 21) {color4 = ColorBlue;}
+        if(GameMenuManager2.gamepad4color == 22) {color4 = ColorBlue2;}
+        if(GameMenuManager2.gamepad4color == 23) {color4 = ColorGreen;}
+        if(GameMenuManager2.gamepad4color == 24) {color4 = ColorViolet;}
 
         this.controller = GetComponent<CharacterController2D>();
         this.gamepadState = new GamepadState();
@@ -397,7 +443,7 @@ public class PlayerMovementHandler : MonoBehaviour
             // Shoot control
             if (this.LBreleased || this.LTreleased)
             {
-                if (GameManager.Get.CanShoot(Team.GetTeam(this.index)))
+                if (GameManager.Get.CanShoot(myteam))
                 {
                     BallHandler.Get.Shoot(this.sight, this.shootPower, ShootType.Shoot);
                 }
@@ -609,16 +655,16 @@ public class PlayerMovementHandler : MonoBehaviour
         switch (this.Index)
         {
             case Index.One:
-                color = ColorBlue;
+                color = color1;
                 break;
             case Index.Two:
-                color = ColorOrange;
+                color = color2;
                 break;
             case Index.Three:
-                color = ColorGreen;
+                color = color3;
                 break;
             case Index.Four:
-                color = ColorYellow;
+                color = color4;
                 break;
         }
 

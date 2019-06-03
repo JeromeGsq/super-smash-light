@@ -97,7 +97,7 @@ public class BallHandler : SceneSingleton<BallHandler>
         this.transform.localPosition = Vector3.zero;
         this.isGrabbed = true;
         this.myteam = team;
-        this.trail.material = Team.GetTeam(this.Index) == 1 ? this.blue : this.red;
+        this.trail.material = myteam == 1 ? this.blue : this.red;
 
         // if the last shooter is my teammate
         if ((myteam == lastShooterTeam)

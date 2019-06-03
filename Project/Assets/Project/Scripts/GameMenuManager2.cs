@@ -13,10 +13,10 @@ public class GameMenuManager2 : MonoBehaviour {
     static public int gamepad3team;
     static public int gamepad4team;
 
-    static int gamepad1color;
-    static int gamepad2color;
-    static int gamepad3color;
-    static int gamepad4color;
+    static public int gamepad1color;
+    static public int gamepad2color;
+    static public int gamepad3color;
+    static public int gamepad4color;
 
     private bool gamepad1Validated;
     private bool gamepad2Validated;

@@ -24,5 +24,8 @@ public class EndOfGameScript : MonoBehaviour
         if(this.gamepadState.Start) {
             SceneManager.LoadScene(0);
         }
+        if(this.gamepadState.Back) {
+            SceneManager.LoadScene(1);
+        }
     }
 }

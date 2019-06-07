@@ -11,6 +11,8 @@ using UnityWeld.Binding;
 [Binding]
 public class GameMenuManager3 : BaseViewModel {
 
+    static public int selectedLevel;
+
     private int position;
     private GamepadState gamepadState;
 
@@ -158,8 +160,16 @@ public class GameMenuManager3 : BaseViewModel {
         }
 
         if(selection) {
-            if(this.gamepadState.Start) {
-                SceneManager.LoadScene(0);
+            if(this.gamepadState.Start) 
+                {
+                if(this.position > 1) 
+                {
+                    selectedLevel = this.position - 1;
+                } else 
+                    {
+                    selectedLevel = UnityEngine.Random.Range(1, 3);
+                    }
+                    SceneManager.LoadScene(0);
             }
         }
 

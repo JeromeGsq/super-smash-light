@@ -1,8 +1,7 @@
 ﻿using System;
-using GamepadInput;
 using UnityEngine;
 using UnityWeld.Binding;
-using static GamepadInput.ip_GamePad;
+using XInputDotNetPure;
 
 [Binding]
 public class GameManager : BaseViewModel
@@ -47,7 +46,7 @@ public class GameManager : BaseViewModel
 
     public bool forTest;
 
-	private Index ballIndex;
+	private PlayerIndex ballIndex;
 
 	public Team Team1
 	{
@@ -62,7 +61,7 @@ public class GameManager : BaseViewModel
 	}
 
 	[Binding]
-	public Index BallIndex
+	public PlayerIndex BallIndex
 	{
 		get => this.ballIndex;
 		set => this.Set(ref this.ballIndex, value, nameof(this.BallIndex));
@@ -95,62 +94,62 @@ public class GameManager : BaseViewModel
     public string theTime {
         get => $" {this.minutes} : {this.seconds}";
     }
-    private Index team1Player1;
-    private Index team1Player2;
-    private Index team2Player1;
-    private Index team2Player2;
+    private PlayerIndex team1Player1;
+    private PlayerIndex team1Player2;
+    private PlayerIndex team2Player1;
+    private PlayerIndex team2Player2;
 
     private void Awake()
 	{
         if(!forTest) {
 
             if((GameMenuManager2.gamepad1team + GameMenuManager2.gamepad2team) == 2) {
-                team1Player1 = GamepadInput.ip_GamePad.Index.One;
-                team1Player2 = GamepadInput.ip_GamePad.Index.Two;
+                team1Player1 = PlayerIndex.One;
+                team1Player2 = PlayerIndex.Two;
             }
             if((GameMenuManager2.gamepad1team + GameMenuManager2.gamepad2team) == 4) {
-                team2Player1 = GamepadInput.ip_GamePad.Index.One;
-                team2Player2 = GamepadInput.ip_GamePad.Index.Two;
+                team2Player1 = PlayerIndex.One;
+                team2Player2 = PlayerIndex.Two;
             }
             if((GameMenuManager2.gamepad1team + GameMenuManager2.gamepad3team) == 2) {
-                team1Player1 = GamepadInput.ip_GamePad.Index.One;
-                team1Player2 = GamepadInput.ip_GamePad.Index.Three;
+                team1Player1 = PlayerIndex.One;
+                team1Player2 = PlayerIndex.Three;
             }
             if((GameMenuManager2.gamepad1team + GameMenuManager2.gamepad3team) == 4) {
-                team2Player1 = GamepadInput.ip_GamePad.Index.One;
-                team2Player2 = GamepadInput.ip_GamePad.Index.Three;
+                team2Player1 = PlayerIndex.One;
+                team2Player2 = PlayerIndex.Three;
             }
             if((GameMenuManager2.gamepad1team + GameMenuManager2.gamepad4team) == 2) {
-                team1Player1 = GamepadInput.ip_GamePad.Index.One;
-                team1Player2 = GamepadInput.ip_GamePad.Index.Four;
+                team1Player1 = PlayerIndex.One;
+                team1Player2 = PlayerIndex.Four;
             }
             if((GameMenuManager2.gamepad1team + GameMenuManager2.gamepad4team) == 4) {
-                team2Player1 = GamepadInput.ip_GamePad.Index.One;
-                team2Player2 = GamepadInput.ip_GamePad.Index.Four;
+                team2Player1 = PlayerIndex.One;
+                team2Player2 = PlayerIndex.Four;
             }
             if((GameMenuManager2.gamepad2team + GameMenuManager2.gamepad3team) == 2) {
-                team1Player1 = GamepadInput.ip_GamePad.Index.Two;
-                team1Player2 = GamepadInput.ip_GamePad.Index.Three;
+                team1Player1 = PlayerIndex.Two;
+                team1Player2 = PlayerIndex.Three;
             }
             if((GameMenuManager2.gamepad2team + GameMenuManager2.gamepad3team) == 4) {
-                team2Player1 = GamepadInput.ip_GamePad.Index.Two;
-                team2Player2 = GamepadInput.ip_GamePad.Index.Three;
+                team2Player1 = PlayerIndex.Two;
+                team2Player2 = PlayerIndex.Three;
             }
             if((GameMenuManager2.gamepad2team + GameMenuManager2.gamepad4team) == 2) {
-                team1Player1 = GamepadInput.ip_GamePad.Index.Two;
-                team1Player2 = GamepadInput.ip_GamePad.Index.Four;
+                team1Player1 = PlayerIndex.Two;
+                team1Player2 = PlayerIndex.Four;
             }
             if((GameMenuManager2.gamepad2team + GameMenuManager2.gamepad4team) == 4) {
-                team2Player1 = GamepadInput.ip_GamePad.Index.Two;
-                team2Player2 = GamepadInput.ip_GamePad.Index.Four;
+                team2Player1 = PlayerIndex.Two;
+                team2Player2 = PlayerIndex.Four;
             }
             if((GameMenuManager2.gamepad3team + GameMenuManager2.gamepad4team) == 2) {
-                team1Player1 = GamepadInput.ip_GamePad.Index.Three;
-                team1Player2 = GamepadInput.ip_GamePad.Index.Four;
+                team1Player1 = PlayerIndex.Three;
+                team1Player2 = PlayerIndex.Four;
             }
             if((GameMenuManager2.gamepad3team + GameMenuManager2.gamepad4team) == 4) {
-                team2Player1 = GamepadInput.ip_GamePad.Index.Three;
-                team2Player2 = GamepadInput.ip_GamePad.Index.Four;
+                team2Player1 = PlayerIndex.Three;
+                team2Player2 = PlayerIndex.Four;
             }
 
             this.Team1 = new Team() {
@@ -170,14 +169,14 @@ public class GameManager : BaseViewModel
             this.Team1 = new Team() 
             {
 
-                FirstPlayerIndex = GamepadInput.ip_GamePad.Index.One,
-                SecondPlayerIndex = GamepadInput.ip_GamePad.Index.Three,
+                FirstPlayerIndex = PlayerIndex.One,
+                SecondPlayerIndex = PlayerIndex.Three,
             };
 
             this.Team2 = new Team() 
             {
-                FirstPlayerIndex = GamepadInput.ip_GamePad.Index.Two,
-                SecondPlayerIndex = GamepadInput.ip_GamePad.Index.Four,
+                FirstPlayerIndex = PlayerIndex.Two,
+                SecondPlayerIndex = PlayerIndex.Four,
             };
         }
 
@@ -289,7 +288,7 @@ public class GameManager : BaseViewModel
 		}
 	}
 
-	public void SetBallIndex(ip_GamePad.Index index)
+	public void SetBallIndex(PlayerIndex index)
 	{
 		this.BallIndex = index;
 	}

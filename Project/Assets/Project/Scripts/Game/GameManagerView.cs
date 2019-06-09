@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using GamepadInput;
 using UnityEngine;
 using UnityEngine.UI;
 using UnityWeld.Binding;
-using static GamepadInput.ip_GamePad;
+using XInputDotNetPure;
 
 [Binding]
 
@@ -101,7 +100,7 @@ public class GameManagerView : BaseView<GameManager>
 		}
 		else if(property.PropertyName.Equals(nameof(this.ViewModel.BallIndex)))
 		{
-			this.UpdateBallColor(this.ViewModel.BallIndex);
+			//this.UpdateBallColor(this.ViewModel.BallIndex);
 		}
 	}
 	
@@ -151,7 +150,7 @@ public class GameManagerView : BaseView<GameManager>
         
 	}
 
-	private PlayerMovementHandler InitPlayer(Transform anchor, Index index, string tag,int team)
+	private PlayerMovementHandler InitPlayer(Transform anchor, PlayerIndex index, string tag,int team)
 	{
 		GameObject player = Instantiate(this.playerPrefab, null);
 		player.transform.position = anchor.position;
@@ -170,16 +169,16 @@ public class GameManagerView : BaseView<GameManager>
 		return playerHandler;
 	}
 
-	private void UpdateBallColor(Index ballIndex)
-	{
-		var teamIndex = Team.GetTeam(ballIndex);
-		var color = Color.white;
+	//private void UpdateBallColor(PlayerIndex ballIndex)
+	//{
+	//  var teamIndex = Team.GetTeam(ballIndex);
+    //  var color = Color.white;
 
-		if(ballIndex != Index.Any)
-		{
-			color = teamIndex == 1 ? Color.blue : Color.red;
-		}
+	//	if(ballIndex != PlayerIndex.One)
+	//	{
+	//		color = teamIndex == 1 ? Color.blue : Color.red;
+	//	}
 
 		//this.ballImage.color = color;
-	}
+	//}
 }

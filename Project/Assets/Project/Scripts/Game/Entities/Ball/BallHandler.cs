@@ -1,7 +1,7 @@
 ﻿using System;
 using Root.DesignPatterns;
 using UnityEngine;
-using static GamepadInput.ip_GamePad;
+using XInputDotNetPure;
 
 [RequireComponent(typeof(Collider2D))]
 [RequireComponent(typeof(Rigidbody2D))]
@@ -10,14 +10,14 @@ public class BallHandler : SceneSingleton<BallHandler>
     private Rigidbody2D rigidbody;
     private Collider2D collider;
 
-    private Index index = Index.Any;
+    private PlayerIndex index = PlayerIndex.One;
 
     private bool isGrabbed = false;
     private bool engagePass = false;
     private bool engageShoot = false;
 
     private Vector3 lastKnownShootPosition;
-    private Index lastShooter = Index.Any;
+    private PlayerIndex lastShooter = PlayerIndex.One;
     public int lastShooterTeam = 2;
 
     [Space(20)]
@@ -48,7 +48,7 @@ public class BallHandler : SceneSingleton<BallHandler>
 
     public int myteam;
 
-    public Index Index
+    public PlayerIndex Index
     {
         get => this.index;
         set
@@ -70,7 +70,7 @@ public class BallHandler : SceneSingleton<BallHandler>
         set => this.engageShoot = value;
     }
 
-    public Index LastShooter => this.lastShooter;
+    public PlayerIndex LastShooter => this.lastShooter;
 
     public bool IsGrabbed => this.isGrabbed;
 
@@ -88,7 +88,7 @@ public class BallHandler : SceneSingleton<BallHandler>
         this.rigidbody.bodyType = this.isGrabbed ? RigidbodyType2D.Static : RigidbodyType2D.Dynamic;
     }
 
-    public void SetGrabbed(Transform ballAnchor, Index index, int team)
+    public void SetGrabbed(Transform ballAnchor, PlayerIndex index, int team)
     {
         this.rebond = 0;
         this.collider.isTrigger = true;
@@ -163,7 +163,7 @@ public class BallHandler : SceneSingleton<BallHandler>
             this.rigidbody.gravityScale = 1;
             this.engagePass = false;
             this.engageShoot = false;
-            this.Index = Index.Any;
+            this.Index = PlayerIndex.One;
             this.trail.material = this.white;
             this.rebond = 0;
         }

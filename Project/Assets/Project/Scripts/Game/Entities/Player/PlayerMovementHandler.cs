@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using Prime31;
-using GamepadInput;
-using static GamepadInput.ip_GamePad;
+using XInputDotNetPure;
 using DG.Tweening;
 using UnityEngine.SceneManagement;
 using System;
@@ -55,7 +54,7 @@ public class PlayerMovementHandler : MonoBehaviour
 
 
 
-    private GamepadState gamepadState;
+    private GamePadState gamepadState;
 
     [SerializeField]
     private GameObject deathPrefab;
@@ -64,7 +63,7 @@ public class PlayerMovementHandler : MonoBehaviour
 
     [Tooltip("Cet index permet de choisir via quelle manette ce joueur va être controllé")]
     [SerializeField]
-    private Index index = Index.One;
+    private PlayerIndex index = PlayerIndex.One;
 
     [Space(20)]
 
@@ -179,7 +178,7 @@ public class PlayerMovementHandler : MonoBehaviour
         private set;
     }
 
-    public Index Index
+    public PlayerIndex Index
     {
         get => this.index;
         set
@@ -255,7 +254,7 @@ public class PlayerMovementHandler : MonoBehaviour
         if(GameMenuManager2.gamepad4color == 24) {color4 = ColorViolet;}
 
         this.controller = GetComponent<CharacterController2D>();
-        this.gamepadState = new GamepadState();
+        this.gamepadState = GamePad.GetState(Index);
 
         this.savedGravity = this.gravity;
 
@@ -317,7 +316,7 @@ public class PlayerMovementHandler : MonoBehaviour
     {
         if (collision.CompareTag(Tags.Ball))
         {
-            if (BallHandler.Get.EngageShoot == true && BallHandler.Get.LastShooter != this.index)
+            if (BallHandler.Get.EngageShoot == true && BallHandler.Get.LastShooter != this.Index)
             {
                 this.SetDestroyed();
             }
@@ -347,12 +346,12 @@ public class PlayerMovementHandler : MonoBehaviour
 
         //this.myteam = Team.GetTeam(this.Index);
 
-        if(this.gamepadState.LB) 
+        if(this.gamepadState.Buttons.LeftShoulder == ButtonState.Pressed) 
         {
             this.LBhold = true;
             this.LBtime += 0.1f;
         }
-        if(this.LBhold & !this.gamepadState.LB) 
+        if(this.LBhold & this.gamepadState.Buttons.LeftShoulder == ButtonState.Released) 
         {
             this.LBreleased = true;
             StartCoroutine(CoroutineUtils.DelaySeconds(() =>
@@ -363,12 +362,12 @@ public class PlayerMovementHandler : MonoBehaviour
             }, 0.00001f));
         }
 
-        if(this.gamepadState.LT >0) 
+        if(this.gamepadState.Triggers.Left > 0) 
         {
             this.LThold = true;
             this.LTtime += 0.1f;
         }
-        if(this.LThold & this.gamepadState.LT == 0) {
+        if(this.LThold & this.gamepadState.Triggers.Left == 0) {
             this.LTreleased = true;
             StartCoroutine(CoroutineUtils.DelaySeconds(() => 
             {
@@ -377,12 +376,12 @@ public class PlayerMovementHandler : MonoBehaviour
                 this.LTtime = 0;
             }, 0.00001f));
         }
-        if(this.gamepadState.RB)
+        if(this.gamepadState.Buttons.RightShoulder == ButtonState.Pressed)
         {
             this.RBhold = true;
             this.RBtime += 0.1f;
         }
-        if(this.RBhold & !this.gamepadState.RB)
+        if(this.RBhold & this.gamepadState.Buttons.RightShoulder == ButtonState.Released)
         {
             this.RBreleased = true;
             StartCoroutine(CoroutineUtils.DelaySeconds(() => 
@@ -392,12 +391,12 @@ public class PlayerMovementHandler : MonoBehaviour
                 this.RBtime = 0;
             }, 0.00001f));
         }
-        if(this.gamepadState.RT > 0) 
+        if(this.gamepadState.Triggers.Right > 0) 
         {
             this.RThold = true;
             this.RTtime += 0.1f;
         }
-        if(this.RThold & this.gamepadState.RT==0) 
+        if(this.RThold & this.gamepadState.Triggers.Left == 0) 
         {
             this.RTreleased = true;
             StartCoroutine(CoroutineUtils.DelaySeconds(() => 
@@ -412,7 +411,7 @@ public class PlayerMovementHandler : MonoBehaviour
             return;
         }
 
-        ip_GamePad.GetState(ref this.gamepadState, this.index);
+        this.gamepadState = GamePad.GetState(Index);
 
         if (BallHandler.Get.Index == this.index)
         {
@@ -457,11 +456,11 @@ public class PlayerMovementHandler : MonoBehaviour
         }
 
         // Sight control
-        this.IsTargeting = this.gamepadState.LT > 0 || this.gamepadState.LB || this.gamepadState.RT > 0 || this.gamepadState.RB;
+        this.IsTargeting = this.gamepadState.Triggers.Left > 0 || this.gamepadState.Buttons.LeftShoulder == ButtonState.Pressed || this.gamepadState.Triggers.Right > 0 || this.gamepadState.Buttons.RightShoulder == ButtonState.Pressed;
 
         if (this.IsTargeting )
         {
-            if(this.gamepadState.LB) 
+            if(this.gamepadState.Buttons.RightShoulder == ButtonState.Pressed) 
                 {
 
                 if(LBtime < 1.2f && this.player.transform.localScale.x < 0f) 
@@ -473,7 +472,7 @@ public class PlayerMovementHandler : MonoBehaviour
                     this.sight.transform.localPosition = Vector3.right * 2.5f;
                 }
             }
-            if(this.gamepadState.LT>0) 
+            if(this.gamepadState.Triggers.Left > 0) 
                 {
 
                 if(LTtime < 1.2f && this.player.transform.localScale.x < 0f) 
@@ -491,10 +490,10 @@ public class PlayerMovementHandler : MonoBehaviour
         if (this.IsTargeting)
         {
             this.sightAnchor.gameObject.SetActive(true);
-            if((Mathf.Atan2(this.gamepadState.RightStickAxis.y, this.gamepadState.RightStickAxis.x) > 0) || (Mathf.Atan2(this.gamepadState.RightStickAxis.y, this.gamepadState.RightStickAxis.x) < 0)) {
+            if((Mathf.Atan2(this.gamepadState.ThumbSticks.Right.Y, this.gamepadState.ThumbSticks.Right.X) > 0) || (Mathf.Atan2(this.gamepadState.ThumbSticks.Right.Y, this.gamepadState.ThumbSticks.Right.X) < 0)) {
 
-                stickY = this.gamepadState.RightStickAxis.y;
-                stickX = this.gamepadState.RightStickAxis.x;
+                stickY = this.gamepadState.ThumbSticks.Right.Y;
+                stickX = this.gamepadState.ThumbSticks.Right.X;
             }
             this.sightAnchor.eulerAngles = new Vector3(0, 0, Mathf.Atan2(stickY, stickX) * 180 / Mathf.PI);
         }
@@ -515,7 +514,7 @@ public class PlayerMovementHandler : MonoBehaviour
             this.velocity.y = 0;
         }
 
-        if (this.gamepadState.LeftStickAxis.x > 0.1f )
+        if (this.gamepadState.ThumbSticks.Left.X > 0.1f )
         {
             this.normalizedHorizontalSpeed = 1;
             if (this.controller.isGrounded)
@@ -527,7 +526,7 @@ public class PlayerMovementHandler : MonoBehaviour
                 this.player.transform.localScale = new Vector3(-this.player.transform.localScale.x, this.player.transform.localScale.y, this.player.transform.localScale.z);
             }
         }
-        else if (this.gamepadState.LeftStickAxis.x < -0.1f )
+        else if (this.gamepadState.ThumbSticks.Left.X < -0.1f )
         {
             this.normalizedHorizontalSpeed = -1;
             if (this.controller.isGrounded)
@@ -550,7 +549,7 @@ public class PlayerMovementHandler : MonoBehaviour
 
         // Jump control
         if ((this.controller.isGrounded || this.jumpsCount < this.maxJumps)
-            && this.gamepadState.APressed)
+            && this.gamepadState.Buttons.A == ButtonState.Pressed)
         {
             this.jumpsCount++;
             this.velocity.y = Mathf.Sqrt(2f * this.jumpHeight * -this.gravity);
@@ -558,16 +557,16 @@ public class PlayerMovementHandler : MonoBehaviour
         }
 
         // Dash control
-        if (BallHandler.Get.Index != this.index
+        if (BallHandler.Get.Index != this.Index
             && this.isDashing == false
-            && this.gamepadState.B
-            && this.gamepadState.LeftStickAxis.magnitude > 0.5f
+            && this.gamepadState.Buttons.B == ButtonState.Pressed
+            && new Vector2(this.gamepadState.ThumbSticks.Left.X, this.gamepadState.ThumbSticks.Left.Y).magnitude > 0.5f
             && this.canDash)
         {
             this.canDash = false;
             this.isDashing = true;
 
-            var direction = new Vector2(this.gamepadState.LeftStickAxis.x, this.gamepadState.LeftStickAxis.y);
+            var direction = new Vector2(this.gamepadState.ThumbSticks.Left.X, this.gamepadState.ThumbSticks.Left.Y);
             this.velocity = (direction.normalized * this.dashDirectionOverdrive) * this.dashSpeed;
 
             this.savedGravity = this.gravity;
@@ -584,7 +583,7 @@ public class PlayerMovementHandler : MonoBehaviour
 
             this.dashCoroutine = StartCoroutine(CoroutineUtils.DelaySeconds(() =>
             {
-                if (this.gamepadState.LeftStickAxis.magnitude == 0
+                if (new Vector2(this.gamepadState.ThumbSticks.Left.X, this.gamepadState.ThumbSticks.Left.Y).magnitude == 0
                     && this.canDash == false
                     && this.isDashing == false)
                 {
@@ -595,7 +594,7 @@ public class PlayerMovementHandler : MonoBehaviour
             }, this.dashCoolDown));
         }
 
-        if (this.gamepadState.LeftStickAxis.magnitude == 0
+        if (new Vector2(this.gamepadState.ThumbSticks.Left.X, this.gamepadState.ThumbSticks.Left.Y).magnitude == 0
             && this.canDash == false
             && this.isDashing == false
             && this.dashCoroutine == null)
@@ -637,7 +636,7 @@ public class PlayerMovementHandler : MonoBehaviour
             this.velocity.y += this.gravity * Time.deltaTime;
         }
 
-        if (this.controller.isGrounded && this.gamepadState.LeftStickAxis.y < 0)
+        if (this.controller.isGrounded && this.gamepadState.ThumbSticks.Left.Y < 0)
         {
             this.controller.ignoreOneWayPlatformsThisFrame = true;
         }
@@ -654,16 +653,16 @@ public class PlayerMovementHandler : MonoBehaviour
         var color = this.player.GetComponent<Animator>().runtimeAnimatorController;
         switch (this.Index)
         {
-            case Index.One:
+            case PlayerIndex.One:
                 color = color1;
                 break;
-            case Index.Two:
+            case PlayerIndex.Two:
                 color = color2;
                 break;
-            case Index.Three:
+            case PlayerIndex.Three:
                 color = color3;
                 break;
-            case Index.Four:
+            case PlayerIndex.Four:
                 color = color4;
                 break;
         }

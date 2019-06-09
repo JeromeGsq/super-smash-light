@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using UnityWeld.Binding;
-using static GamepadInput.ip_GamePad;
+using XInputDotNetPure;
 
 public class Team
 {
@@ -13,18 +13,18 @@ public class Team
 		get; set;
 	}
 
-	public Index FirstPlayerIndex {
+	public PlayerIndex FirstPlayerIndex {
 		get;
 		set;
 	}
 
-	public Index SecondPlayerIndex
+	public PlayerIndex SecondPlayerIndex
 	{
 		get;
 		set;
 	}
 
-	public static int GetTeam(Index index)
+	public static int GetTeam(PlayerIndex index)
 	{
 		var teamIndex = (int)index % 2;
 

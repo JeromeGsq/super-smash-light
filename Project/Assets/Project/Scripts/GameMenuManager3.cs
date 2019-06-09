@@ -169,7 +169,7 @@ public class GameMenuManager3 : BaseViewModel {
                     {
                     selectedLevel = UnityEngine.Random.Range(1, 3);
                     }
-                    SceneManager.LoadScene(0);
+                    SceneManager.LoadScene(1);
             }
         }
 

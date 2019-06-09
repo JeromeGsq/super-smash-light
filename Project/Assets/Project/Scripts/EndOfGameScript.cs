@@ -22,10 +22,10 @@ public class EndOfGameScript : MonoBehaviour
         ip_GamePad.GetState(ref this.gamepadState, ip_GamePad.Index.Any);
 
         if(this.gamepadState.Start) {
-            SceneManager.LoadScene(0);
+            SceneManager.LoadScene(1);
         }
         if(this.gamepadState.Back) {
-            SceneManager.LoadScene(1);
+            SceneManager.LoadScene(0);
         }
     }
 }

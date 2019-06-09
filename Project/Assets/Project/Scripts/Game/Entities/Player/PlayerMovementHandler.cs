@@ -49,7 +49,7 @@ public class PlayerMovementHandler : MonoBehaviour
     public float stickY;
     public float stickX;
 
-
+    public bool oldpadForJump;
     public int myteam;
 
 
@@ -341,115 +341,91 @@ public class PlayerMovementHandler : MonoBehaviour
         }
     }
 
-    private void Update()
-    {
+    private void Update() {
 
         //this.myteam = Team.GetTeam(this.Index);
 
-        if(this.gamepadState.Buttons.LeftShoulder == ButtonState.Pressed) 
-        {
+        if(this.gamepadState.Buttons.LeftShoulder == ButtonState.Pressed) {
             this.LBhold = true;
             this.LBtime += 0.1f;
         }
-        if(this.LBhold & this.gamepadState.Buttons.LeftShoulder == ButtonState.Released) 
-        {
+        if(this.LBhold & this.gamepadState.Buttons.LeftShoulder == ButtonState.Released) {
             this.LBreleased = true;
-            StartCoroutine(CoroutineUtils.DelaySeconds(() =>
-            {
-                this.LBhold =  false;
+            StartCoroutine(CoroutineUtils.DelaySeconds(() => {
+                this.LBhold = false;
                 this.LBreleased = false;
                 this.LBtime = 0;
             }, 0.00001f));
         }
 
-        if(this.gamepadState.Triggers.Left > 0) 
-        {
+        if(this.gamepadState.Triggers.Left > 0) {
             this.LThold = true;
             this.LTtime += 0.1f;
         }
         if(this.LThold & this.gamepadState.Triggers.Left == 0) {
             this.LTreleased = true;
-            StartCoroutine(CoroutineUtils.DelaySeconds(() => 
-            {
+            StartCoroutine(CoroutineUtils.DelaySeconds(() => {
                 this.LThold = false;
                 this.LTreleased = false;
                 this.LTtime = 0;
             }, 0.00001f));
         }
-        if(this.gamepadState.Buttons.RightShoulder == ButtonState.Pressed)
-        {
+        if(this.gamepadState.Buttons.RightShoulder == ButtonState.Pressed) {
             this.RBhold = true;
             this.RBtime += 0.1f;
         }
-        if(this.RBhold & this.gamepadState.Buttons.RightShoulder == ButtonState.Released)
-        {
+        if(this.RBhold & this.gamepadState.Buttons.RightShoulder == ButtonState.Released) {
             this.RBreleased = true;
-            StartCoroutine(CoroutineUtils.DelaySeconds(() => 
-            {
+            StartCoroutine(CoroutineUtils.DelaySeconds(() => {
                 this.RBhold = false;
                 this.RBreleased = false;
                 this.RBtime = 0;
             }, 0.00001f));
         }
-        if(this.gamepadState.Triggers.Right > 0) 
-        {
+        if(this.gamepadState.Triggers.Right > 0) {
             this.RThold = true;
             this.RTtime += 0.1f;
         }
-        if(this.RThold & this.gamepadState.Triggers.Left == 0) 
-        {
+        if(this.RThold & this.gamepadState.Triggers.Left == 0) {
             this.RTreleased = true;
-            StartCoroutine(CoroutineUtils.DelaySeconds(() => 
-            {
+            StartCoroutine(CoroutineUtils.DelaySeconds(() => {
                 this.RThold = false;
                 this.RTreleased = false;
                 this.RTtime = 0;
             }, 0.00001f));
         }
-        if(this.isDestroyed)
-        {
+        if(this.isDestroyed) {
             return;
         }
 
         this.gamepadState = GamePad.GetState(Index);
 
-        if (BallHandler.Get.Index == this.index)
-        {
+        if(BallHandler.Get.isGrabbed && BallHandler.Get.Index == this.index) {
             // Pass controlset
-            if (this.RBreleased || this.RTreleased)
-            {
-                if (this.RBreleased && RBtime > 1.5f)
-                {
+            if(this.RBreleased || this.RTreleased) {
+                if(this.RBreleased && RBtime > 1.5f) {
                     BallHandler.Get.Shoot(this.sight, this.passPower, ShootType.Pass);
-                } 
-                else if(this.RTreleased && RTtime > 1.5f) 
-                {
+                } else if(this.RTreleased && RTtime > 1.5f) {
                     BallHandler.Get.Shoot(this.sight, this.passPower, ShootType.Pass);
-                }
-                else
-                {
+                } else {
                     BallHandler.Get.Shoot(this.FriendTransform, this.passPower, ShootType.Pass);
                 }
 
                 this.canGrab = false;
-                StartCoroutine(CoroutineUtils.DelaySeconds(() =>
-                {
+                StartCoroutine(CoroutineUtils.DelaySeconds(() => {
                     this.canGrab = true;
                 }, this.deltaTimeGrab));
             }
-            
+
 
             // Shoot control
-            if (this.LBreleased || this.LTreleased)
-            {
-                if (GameManager.Get.CanShoot(myteam))
-                {
+            if(this.LBreleased || this.LTreleased) {
+                if(GameManager.Get.CanShoot(myteam)) {
                     BallHandler.Get.Shoot(this.sight, this.shootPower, ShootType.Shoot);
                 }
 
                 this.canGrab = false;
-                StartCoroutine(CoroutineUtils.DelaySeconds(() =>
-                {
+                StartCoroutine(CoroutineUtils.DelaySeconds(() => {
                     this.canGrab = true;
                 }, this.deltaTimeGrab));
             }
@@ -458,37 +434,27 @@ public class PlayerMovementHandler : MonoBehaviour
         // Sight control
         this.IsTargeting = this.gamepadState.Triggers.Left > 0 || this.gamepadState.Buttons.LeftShoulder == ButtonState.Pressed || this.gamepadState.Triggers.Right > 0 || this.gamepadState.Buttons.RightShoulder == ButtonState.Pressed;
 
-        if (this.IsTargeting )
-        {
-            if(this.gamepadState.Buttons.RightShoulder == ButtonState.Pressed) 
-                {
+        if(this.IsTargeting) {
+            if(this.gamepadState.Buttons.LeftShoulder == ButtonState.Pressed) {
 
-                if(LBtime < 1.2f && this.player.transform.localScale.x < 0f) 
-                {
+                if(LBtime < 1.2f && this.player.transform.localScale.x < 0f) {
                     this.sight.transform.localPosition = Vector3.left * 2.5f;
-                }
-                else 
-                {
+                } else {
                     this.sight.transform.localPosition = Vector3.right * 2.5f;
                 }
             }
-            if(this.gamepadState.Triggers.Left > 0) 
-                {
+            if(this.gamepadState.Triggers.Left > 0) {
 
-                if(LTtime < 1.2f && this.player.transform.localScale.x < 0f) 
-                {
+                if(LTtime < 1.2f && this.player.transform.localScale.x < 0f) {
                     this.sight.transform.localPosition = Vector3.left * 2.5f;
-                } 
-                else
-                {
+                } else {
                     this.sight.transform.localPosition = Vector3.right * 2.5f;
                 }
             }
         }
 
 
-        if (this.IsTargeting)
-        {
+        if(this.IsTargeting) {
             this.sightAnchor.gameObject.SetActive(true);
             if((Mathf.Atan2(this.gamepadState.ThumbSticks.Right.Y, this.gamepadState.ThumbSticks.Right.X) > 0) || (Mathf.Atan2(this.gamepadState.ThumbSticks.Right.Y, this.gamepadState.ThumbSticks.Right.X) < 0)) {
 
@@ -496,66 +462,59 @@ public class PlayerMovementHandler : MonoBehaviour
                 stickX = this.gamepadState.ThumbSticks.Right.X;
             }
             this.sightAnchor.eulerAngles = new Vector3(0, 0, Mathf.Atan2(stickY, stickX) * 180 / Mathf.PI);
-        }
-        else
-        {
+        } else {
             stickY = 0;
             stickX = 0;
-            StartCoroutine(CoroutineUtils.DelaySeconds(() =>
-            {
+            StartCoroutine(CoroutineUtils.DelaySeconds(() => {
                 this.sightAnchor.gameObject.SetActive(false);
             }, 0.0001f));
-    }
+        }
 
         // Movement & Jump control
-        if (this.controller.isGrounded)
-        {
+        if(this.controller.isGrounded) {
             this.jumpsCount = 0;
             this.velocity.y = 0;
         }
 
-        if (this.gamepadState.ThumbSticks.Left.X > 0.1f )
-        {
+        if(this.gamepadState.ThumbSticks.Left.X > 0.1f) {
             this.normalizedHorizontalSpeed = 1;
-            if (this.controller.isGrounded)
-            {
+            if(this.controller.isGrounded) {
                 this.animator.Play(Animator.StringToHash("Run"));
             }
-            if (this.player.transform.localScale.x < 0f)
-            {
+            if(this.player.transform.localScale.x < 0f) {
                 this.player.transform.localScale = new Vector3(-this.player.transform.localScale.x, this.player.transform.localScale.y, this.player.transform.localScale.z);
             }
-        }
-        else if (this.gamepadState.ThumbSticks.Left.X < -0.1f )
-        {
+        } else if(this.gamepadState.ThumbSticks.Left.X < -0.1f) {
             this.normalizedHorizontalSpeed = -1;
-            if (this.controller.isGrounded)
-            {
+            if(this.controller.isGrounded) {
                 this.animator.Play(Animator.StringToHash("Run"));
             }
-            if (this.player.transform.localScale.x > 0f)
-            {
+            if(this.player.transform.localScale.x > 0f) {
                 this.player.transform.localScale = new Vector3(-this.player.transform.localScale.x, this.player.transform.localScale.y, this.player.transform.localScale.z);
             }
-        }
-        else
-        {
+        } else {
             this.normalizedHorizontalSpeed = 0;
-            if (this.controller.isGrounded)
-            {
+            if(this.controller.isGrounded) {
                 this.animator.Play(Animator.StringToHash("Idle"));
             }
         }
 
         // Jump control
-        if ((this.controller.isGrounded || this.jumpsCount < this.maxJumps)
-            && this.gamepadState.Buttons.A == ButtonState.Pressed)
+        if((this.controller.isGrounded || this.jumpsCount < this.maxJumps)
+            && this.gamepadState.Buttons.A == ButtonState.Pressed
+            && this.oldpadForJump == false
+            )
         {
             this.jumpsCount++;
             this.velocity.y = Mathf.Sqrt(2f * this.jumpHeight * -this.gravity);
             this.animator.Play(Animator.StringToHash("Jump"));
+            oldpadForJump = true;
         }
 
+        if(this.gamepadState.Buttons.A == ButtonState.Released) 
+            {
+            oldpadForJump = false;
+            }
         // Dash control
         if (BallHandler.Get.Index != this.Index
             && this.isDashing == false

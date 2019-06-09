@@ -10,14 +10,14 @@ public class BallHandler : SceneSingleton<BallHandler>
     private Rigidbody2D rigidbody;
     private Collider2D collider;
 
-    private PlayerIndex index = PlayerIndex.One;
+    public PlayerIndex index;
 
-    private bool isGrabbed = false;
+    public bool isGrabbed = false;
     private bool engagePass = false;
     private bool engageShoot = false;
 
     private Vector3 lastKnownShootPosition;
-    private PlayerIndex lastShooter = PlayerIndex.One;
+    private PlayerIndex lastShooter;
     public int lastShooterTeam = 2;
 
     [Space(20)]

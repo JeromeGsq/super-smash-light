@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using Prime31;
-using GamepadInput;
-using static GamepadInput.ip_GamePad;
+using XInputDotNetPure;
 using UnityEngine.SceneManagement;
 using System;
 
@@ -31,7 +30,7 @@ public class GameMenuManager : MonoBehaviour {
 
     public GameObject selecteur;
 
-    private GamepadState gamepadState;
+    private GamePadState gamepadState;
 
     public GameObject MenuPrincipal;
     public GameObject SelectPlayerMenu;
@@ -42,7 +41,6 @@ public class GameMenuManager : MonoBehaviour {
     void Awake() {
         AnimatedBandeau.SetActive(false);
         positions = 1;
-        this.gamepadState = new GamepadState();
     }
 
     // Update is called once per frame
@@ -53,55 +51,59 @@ public class GameMenuManager : MonoBehaviour {
 
     void Update() {
 
+        for(int i = 0; i < 4; ++i) {
+            PlayerIndex index = (PlayerIndex)i;
 
-    ip_GamePad.GetState(ref this.gamepadState, ip_GamePad.Index.Any);
-        if(positions == 1) {
-            selecteur.GetComponent<Transform>().position = new Vector3(6.18f, -2.23f, selecteur.GetComponent<Transform>().position.z);
-            fond.GetComponent<SpriteRenderer>().sprite = fondPartie;
-            illu.GetComponent<SpriteRenderer>().sprite = illuPartie;
-            illu1.GetComponent<SpriteRenderer>().sprite = illuPartie1;
-            illu2.GetComponent<SpriteRenderer>().sprite = illuPartie2;
-            illu2.GetComponent<Transform>().localPosition = new Vector3(-0.34f, -0.96f, -0.21f);
-            GameObject.Find("patern1").GetComponent<SpriteRenderer>().sprite = paternPartie;
-            GameObject.Find("patern2").GetComponent<SpriteRenderer>().sprite = paternPartie;
-            GameObject.Find("patern3").GetComponent<SpriteRenderer>().sprite = paternPartie;
-            GameObject.Find("patern4").GetComponent<SpriteRenderer>().sprite = paternPartie;
-            if(this.gamepadState.APressed) {
-                BoutonPartie.GetComponent<Animator>().Play(Animator.StringToHash("PartieRapideMenu"));
-                StartCoroutine(CoroutineUtils.DelaySeconds(() => {
-                    AnimatedBandeau.SetActive(false);
-                    AnimatedBandeau.SetActive(true);
-                }, 0.3f));
 
-                StartCoroutine(CoroutineUtils.DelaySeconds(() => {
-                    SelectPlayerMenu.SetActive(true);
-                    MenuPrincipal.SetActive(false);
-                }, 0.7f));
+            this.gamepadState = GamePad.GetState(index);
+            if(positions == 1) {
+                selecteur.GetComponent<Transform>().position = new Vector3(6.18f, -2.23f, selecteur.GetComponent<Transform>().position.z);
+                fond.GetComponent<SpriteRenderer>().sprite = fondPartie;
+                illu.GetComponent<SpriteRenderer>().sprite = illuPartie;
+                illu1.GetComponent<SpriteRenderer>().sprite = illuPartie1;
+                illu2.GetComponent<SpriteRenderer>().sprite = illuPartie2;
+                illu2.GetComponent<Transform>().localPosition = new Vector3(-0.34f, -0.96f, -0.21f);
+                GameObject.Find("patern1").GetComponent<SpriteRenderer>().sprite = paternPartie;
+                GameObject.Find("patern2").GetComponent<SpriteRenderer>().sprite = paternPartie;
+                GameObject.Find("patern3").GetComponent<SpriteRenderer>().sprite = paternPartie;
+                GameObject.Find("patern4").GetComponent<SpriteRenderer>().sprite = paternPartie;
+                if(this.gamepadState.Buttons.A == ButtonState.Pressed) {
+                    BoutonPartie.GetComponent<Animator>().Play(Animator.StringToHash("PartieRapideMenu"));
+                    StartCoroutine(CoroutineUtils.DelaySeconds(() => {
+                        AnimatedBandeau.SetActive(false);
+                        AnimatedBandeau.SetActive(true);
+                    }, 0.3f));
+
+                    StartCoroutine(CoroutineUtils.DelaySeconds(() => {
+                        SelectPlayerMenu.SetActive(true);
+                        MenuPrincipal.SetActive(false);
+                    }, 0.7f));
+                }
+
+            } else {
+                selecteur.GetComponent<Transform>().position = new Vector3(6.18f, -5.43f, selecteur.GetComponent<Transform>().position.z);
+                fond.GetComponent<SpriteRenderer>().sprite = fondOption;
+                illu.GetComponent<SpriteRenderer>().sprite = illuOption;
+                illu1.GetComponent<SpriteRenderer>().sprite = null;
+                illu2.GetComponent<SpriteRenderer>().sprite = illuOption1;
+                illu2.GetComponent<Transform>().localPosition = new Vector3(-2.49f, 1.23f, -0.21f);
+                GameObject.Find("patern1").GetComponent<SpriteRenderer>().sprite = paternOption;
+                GameObject.Find("patern2").GetComponent<SpriteRenderer>().sprite = paternOption;
+                GameObject.Find("patern3").GetComponent<SpriteRenderer>().sprite = paternOption;
+                GameObject.Find("patern4").GetComponent<SpriteRenderer>().sprite = paternOption;
+                if(this.gamepadState.Buttons.A == ButtonState.Pressed) {
+                    BoutonOption.GetComponent<Animator>().Play(Animator.StringToHash("OptionMenu"));
+                }
             }
 
-    } else {
-            selecteur.GetComponent<Transform>().position = new Vector3(6.18f, -5.43f, selecteur.GetComponent<Transform>().position.z);
-            fond.GetComponent<SpriteRenderer>().sprite = fondOption;
-            illu.GetComponent<SpriteRenderer>().sprite = illuOption;
-            illu1.GetComponent<SpriteRenderer>().sprite = null;
-            illu2.GetComponent<SpriteRenderer>().sprite = illuOption1;
-            illu2.GetComponent<Transform>().localPosition = new Vector3(-2.49f, 1.23f, -0.21f);
-            GameObject.Find("patern1").GetComponent<SpriteRenderer>().sprite = paternOption;
-            GameObject.Find("patern2").GetComponent<SpriteRenderer>().sprite = paternOption;
-            GameObject.Find("patern3").GetComponent<SpriteRenderer>().sprite = paternOption;
-            GameObject.Find("patern4").GetComponent<SpriteRenderer>().sprite = paternOption;
-            if(this.gamepadState.APressed) {
-                BoutonOption.GetComponent<Animator>().Play(Animator.StringToHash("OptionMenu"));
+            if(positions == 1 && this.gamepadState.DPad.Down == ButtonState.Pressed) {
+                positions = 2;
+
             }
-        }
+            if(positions == 2 && this.gamepadState.DPad.Up == ButtonState.Pressed) {
+                positions = 1;
 
-        if(positions == 1 && this.gamepadState.Down) {
-            positions = 2;
-
-        }
-        if(positions == 2 && this.gamepadState.Up) {
-            positions = 1;
-
+            }
         }
     }
     }

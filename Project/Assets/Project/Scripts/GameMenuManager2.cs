@@ -380,7 +380,7 @@ public class GameMenuManager2 : MonoBehaviour {
 
         if(this.gamepad2Validated == false) {
 
-            if(this.gamepadState2.DPad.Right == ButtonState.Pressed && dpad2R == true) {
+            if(this.gamepadState2.DPad.Right == ButtonState.Pressed && dpad2R == false) {
                 gamepad2team = 2;
                 if(gamepad2color >= 20) {
                     gamepad2color -= 20;
@@ -388,7 +388,7 @@ public class GameMenuManager2 : MonoBehaviour {
                 gamepad2.GetComponent<Transform>().localPosition = new Vector3(8.33f, -2.5f, -2.3f);
                 dpad2R = true;
             }
-            if(this.gamepadState2.DPad.Left == ButtonState.Pressed && dpad2L == true) {
+            if(this.gamepadState2.DPad.Left == ButtonState.Pressed && dpad2L == false) {
                 gamepad2team = 1;
                 if(gamepad2color <= 21) {
                     gamepad2color += 20;
@@ -686,7 +686,7 @@ public class GameMenuManager2 : MonoBehaviour {
             if(gamepad1Validated && gamepad2Validated && gamepad3Validated && gamepad4Validated) {
                 if((gamepad1team + gamepad2team + gamepad3team + gamepad4team) == 6) {
                     continueMessage.SetActive(true);
-                    if(this.gamepadState4.Buttons.Start == ButtonState.Pressed) {
+                    if(this.gamepadState.Buttons.Start == ButtonState.Pressed) {
                         this.gameObject.SetActive(false);
                         Menu3.SetActive(true);
                     }
@@ -699,7 +699,7 @@ public class GameMenuManager2 : MonoBehaviour {
                 alerteMessage.SetActive(false);
             }
 
-            if(this.gamepadState4.Buttons.Back == ButtonState.Pressed) {
+            if(this.gamepadState.Buttons.Back == ButtonState.Pressed) {
                 canvas.SetActive(false);
                 fade.SetActive(false);
                 fade.SetActive(true);

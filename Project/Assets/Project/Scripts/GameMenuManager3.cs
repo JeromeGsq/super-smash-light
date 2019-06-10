@@ -1,7 +1,6 @@
 ﻿using UnityEngine;
 using Prime31;
-using GamepadInput;
-using static GamepadInput.ip_GamePad;
+using XInputDotNetPure;
 using UnityEngine.SceneManagement;
 using System;
 using System.Collections.Generic;
@@ -14,7 +13,7 @@ public class GameMenuManager3 : BaseViewModel {
     static public int selectedLevel;
 
     private int position;
-    private GamepadState gamepadState;
+    private GamePadState gamepadState;
 
     [Space(20)]
     [SerializeField]
@@ -83,6 +82,14 @@ public class GameMenuManager3 : BaseViewModel {
     [SerializeField]
     private GameObject fade;
 
+    private bool dpadUp;
+
+    private bool dpadDown;
+
+    private bool dpadR;
+
+    private bool dpadL;
+
 
     void OnEnable() {
         selection = false;
@@ -93,119 +100,142 @@ public class GameMenuManager3 : BaseViewModel {
         void Start() {
         canvas.SetActive(true);
         position = 1;
-        this.gamepadState = new GamepadState();
         pressed = false;
         selection = false;
     }
 
     // Update is called once per frame
     void Update() {
-        ip_GamePad.GetState(ref this.gamepadState, ip_GamePad.Index.Any);
-        pressed = false;
-        if(!selection) {
 
-            if(this.position == 4) {
-                if(this.gamepadState.RightPressed && pressed == false) {
-                    this.position = 1;
-                    pressed = true;
+        PlayerIndex index = (PlayerIndex.One);
+
+            ///////////////////////////////////////////////////////////////////////////////
+
+            //old pad script
+
+            if(this.gamepadState.DPad.Up == ButtonState.Released) {
+                dpadUp = false;
+            }
+
+            if(this.gamepadState.DPad.Down == ButtonState.Released) {
+                dpadDown = false;
+            }
+
+            if(this.gamepadState.DPad.Right == ButtonState.Released) {
+                dpadR = false;
+            }
+
+            if(this.gamepadState.DPad.Left == ButtonState.Released) {
+                dpadL = false;
+            }
+
+
+            ///////////////////////////////////////////////////////////////////////////////
+
+
+
+            this.gamepadState = GamePad.GetState(index);
+            pressed = false;
+            if(!selection) {
+
+                if(this.position == 4) {
+                    if(this.gamepadState.DPad.Right == ButtonState.Pressed && dpadR == false) {
+                        this.position = 1;
+                        dpadR = true;
+                    }
+
+                    if(this.gamepadState.DPad.Left == ButtonState.Pressed && dpadL == false) {
+                        this.position = 3;
+                        dpadL = true;
+                    }
                 }
-
-                if(this.gamepadState.LeftPressed && pressed == false) {
-                    this.position = 3;
-                    pressed = true;
+                if(this.position == 3) {
+                    if(this.gamepadState.DPad.Right == ButtonState.Pressed && dpadR == false) {
+                        this.position = 4;
+                        dpadR = true;
+                    }
+                    if(this.gamepadState.DPad.Left == ButtonState.Pressed && dpadL == false) {
+                        this.position = 2;
+                        dpadL = true;
+                    }
+                }
+                if(this.position == 2) {
+                    if(this.gamepadState.DPad.Right == ButtonState.Pressed && dpadR == false) {
+                        this.position = 3;
+                        dpadR = true;
+                    }
+                    if(this.gamepadState.DPad.Left == ButtonState.Pressed && dpadL == false) {
+                        this.position = 1;
+                        dpadL = true;
+                    }
+                }
+                if(this.position == 1) {
+                    if(this.gamepadState.DPad.Right == ButtonState.Pressed && dpadR == false) {
+                        this.position = 2;
+                        dpadR = true;
+                    }
+                    if(this.gamepadState.DPad.Left == ButtonState.Pressed && dpadL == false) {
+                        this.position = 4;
+                        dpadL = true;
+                    }
                 }
             }
-            if(this.position == 3) {
-                if(this.gamepadState.RightPressed && pressed == false) {
-                    this.position = 4;
-                    pressed = true;
-                }
-                if(this.gamepadState.LeftPressed && pressed == false) {
-                    this.position = 2;
-                    pressed = true;
-                }
-            }
-            if(this.position == 2) {
-                if(this.gamepadState.RightPressed && pressed == false) {
-                    this.position = 3;
-                    pressed = true;
-                }
-                if(this.gamepadState.LeftPressed && pressed == false) {
-                    this.position = 1;
-                    pressed = true;
-                }
-            }
-            if(this.position == 1) {
-                if(this.gamepadState.RightPressed && pressed == false) {
-                    this.position = 2;
-                    pressed = true;
-                }
-                if(this.gamepadState.LeftPressed && pressed == false) {
-                    this.position = 4;
-                    pressed = true;
-                }
-            }
-        }
 
 
-        if(!selection && gamepadState.A) {
-            cursor.GetComponent<SpriteRenderer>().sprite = selectionSpriteV;
-            selection = true;
-            ContinuePanel.SetActive(true);
-        }
-        if(selection && gamepadState.B) {
-            cursor.GetComponent<SpriteRenderer>().sprite = selectionSpriteU;
-            selection = false;
-            ContinuePanel.SetActive(false);
-        }
+            if(!selection && this.gamepadState.Buttons.A == ButtonState.Pressed) {
+                cursor.GetComponent<SpriteRenderer>().sprite = selectionSpriteV;
+                selection = true;
+                ContinuePanel.SetActive(true);
+            }
+            if(selection && this.gamepadState.Buttons.B == ButtonState.Pressed) {
+                cursor.GetComponent<SpriteRenderer>().sprite = selectionSpriteU;
+                selection = false;
+                ContinuePanel.SetActive(false);
+            }
 
-        if(selection) {
-            if(this.gamepadState.Start) 
-                {
-                if(this.position > 1) 
-                {
-                    selectedLevel = this.position - 1;
-                } else 
-                    {
-                    selectedLevel = UnityEngine.Random.Range(1, 3);
+            if(selection) {
+                if(this.gamepadState.Buttons.Start == ButtonState.Pressed) {
+                    if(this.position > 1) {
+                        selectedLevel = this.position - 1;
+                    } else {
+                        selectedLevel = UnityEngine.Random.Range(1, 3);
                     }
                     SceneManager.LoadScene(1);
+                }
             }
-        }
 
-        if(this.position == 1) {
-            cursor.GetComponent<Transform>().position = pos1;
-            bigPreview.GetComponent<SpriteRenderer>().sprite = lvlA;
-            title = "Random";
-        }
-        if(this.position == 2) {
-            cursor.GetComponent<Transform>().position = pos2;
-            bigPreview.GetComponent<SpriteRenderer>().sprite = lvl1;
-            title = "Jungle";
-        }
-        if(this.position == 3) {
-            cursor.GetComponent<Transform>().position = pos3;
-            bigPreview.GetComponent<SpriteRenderer>().sprite = lvl2;
-            title = "Desert";
-        }
-        if(this.position == 4) {
-            cursor.GetComponent<Transform>().position = pos4;
-            bigPreview.GetComponent<SpriteRenderer>().sprite = lvl3;
-            title = "High Montain";
-        }
+            if(this.position == 1) {
+                cursor.GetComponent<Transform>().position = pos1;
+                bigPreview.GetComponent<SpriteRenderer>().sprite = lvlA;
+                title = "Random";
+            }
+            if(this.position == 2) {
+                cursor.GetComponent<Transform>().position = pos2;
+                bigPreview.GetComponent<SpriteRenderer>().sprite = lvl1;
+                title = "Jungle";
+            }
+            if(this.position == 3) {
+                cursor.GetComponent<Transform>().position = pos3;
+                bigPreview.GetComponent<SpriteRenderer>().sprite = lvl2;
+                title = "Desert";
+            }
+            if(this.position == 4) {
+                cursor.GetComponent<Transform>().position = pos4;
+                bigPreview.GetComponent<SpriteRenderer>().sprite = lvl3;
+                title = "High Montain";
+            }
 
-        this.RaisePropertyChanged(nameof(this.TitlePreview));
+            this.RaisePropertyChanged(nameof(this.TitlePreview));
 
-        if(gamepadState.Back) 
-            {
-            canvas.SetActive(false);
-            fade.SetActive(false);
-            fade.SetActive(true);
-            StartCoroutine(CoroutineUtils.DelaySeconds(() => {
-                this.menu2.SetActive(true);
-                this.gameObject.SetActive(false);
-            }, 0.8f));
-        }
+            if(this.gamepadState.Buttons.Back == ButtonState.Pressed) {
+                canvas.SetActive(false);
+                fade.SetActive(false);
+                fade.SetActive(true);
+                StartCoroutine(CoroutineUtils.DelaySeconds(() => {
+                    this.menu2.SetActive(true);
+                    this.gameObject.SetActive(false);
+                }, 0.8f));
+            }
 
     }
 

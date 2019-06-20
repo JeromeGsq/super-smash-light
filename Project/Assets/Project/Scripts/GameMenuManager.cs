@@ -23,6 +23,7 @@ public class GameMenuManager : MonoBehaviour {
 
     public GameObject BoutonPartie;
     public GameObject BoutonOption;
+    public GameObject BoutonQuitter;
 
     public GameObject paternHolder;
     public Sprite paternPartie;
@@ -35,6 +36,9 @@ public class GameMenuManager : MonoBehaviour {
     public GameObject MenuPrincipal;
     public GameObject SelectPlayerMenu;
     public GameObject AnimatedBandeau;
+
+    public bool pressedUp;
+    public bool pressedDown;
 
 
     // Start is called before the first frame update
@@ -51,13 +55,13 @@ public class GameMenuManager : MonoBehaviour {
 
     void Update() {
 
-        for(int i = 0; i < 4; ++i) {
-            PlayerIndex index = (PlayerIndex)i;
+       // for(int i = 0; i < 4; ++i) {
+            PlayerIndex index = (PlayerIndex.One);
 
 
             this.gamepadState = GamePad.GetState(index);
             if(positions == 1) {
-                selecteur.GetComponent<Transform>().position = new Vector3(6.18f, -2.23f, selecteur.GetComponent<Transform>().position.z);
+                selecteur.GetComponent<Transform>().position = new Vector3(6.18f, -1.25f, selecteur.GetComponent<Transform>().position.z);
                 fond.GetComponent<SpriteRenderer>().sprite = fondPartie;
                 illu.GetComponent<SpriteRenderer>().sprite = illuPartie;
                 illu1.GetComponent<SpriteRenderer>().sprite = illuPartie1;
@@ -80,8 +84,8 @@ public class GameMenuManager : MonoBehaviour {
                     }, 0.7f));
                 }
 
-            } else {
-                selecteur.GetComponent<Transform>().position = new Vector3(6.18f, -5.43f, selecteur.GetComponent<Transform>().position.z);
+            } else if(positions == 2) {
+                selecteur.GetComponent<Transform>().position = new Vector3(6.18f, -4.5f, selecteur.GetComponent<Transform>().position.z);
                 fond.GetComponent<SpriteRenderer>().sprite = fondOption;
                 illu.GetComponent<SpriteRenderer>().sprite = illuOption;
                 illu1.GetComponent<SpriteRenderer>().sprite = null;
@@ -94,16 +98,48 @@ public class GameMenuManager : MonoBehaviour {
                 if(this.gamepadState.Buttons.A == ButtonState.Pressed) {
                     BoutonOption.GetComponent<Animator>().Play(Animator.StringToHash("OptionMenu"));
                 }
+            } else {
+                selecteur.GetComponent<Transform>().position = new Vector3(6.18f, -7.75f, selecteur.GetComponent<Transform>().position.z);
+                fond.GetComponent<SpriteRenderer>().sprite = fondOption;
+                illu.GetComponent<SpriteRenderer>().sprite = illuOption;
+                illu1.GetComponent<SpriteRenderer>().sprite = null;
+                illu2.GetComponent<SpriteRenderer>().sprite = illuOption1;
+                illu2.GetComponent<Transform>().localPosition = new Vector3(-2.49f, 1.23f, -0.21f);
+                GameObject.Find("patern1").GetComponent<SpriteRenderer>().sprite = paternOption;
+                GameObject.Find("patern2").GetComponent<SpriteRenderer>().sprite = paternOption;
+                GameObject.Find("patern3").GetComponent<SpriteRenderer>().sprite = paternOption;
+                GameObject.Find("patern4").GetComponent<SpriteRenderer>().sprite = paternOption;
+                if(this.gamepadState.Buttons.A == ButtonState.Pressed) {
+                    BoutonQuitter.GetComponent<Animator>().Play(Animator.StringToHash("OptionMenu"));
+                }
             }
 
-            if(positions == 1 && this.gamepadState.DPad.Down == ButtonState.Pressed) {
+            if(positions == 1 && this.gamepadState.DPad.Down == ButtonState.Pressed && pressedDown == false) {
+                pressedDown = true;
                 positions = 2;
-
+                
             }
-            if(positions == 2 && this.gamepadState.DPad.Up == ButtonState.Pressed) {
+            if(positions == 2 && this.gamepadState.DPad.Up == ButtonState.Pressed && pressedUp == false) {
+                pressedUp = true;
                 positions = 1;
 
             }
-        }
+            if(positions == 2 && this.gamepadState.DPad.Down == ButtonState.Pressed && pressedDown == false) {
+                pressedDown = true;
+                positions = 3;
+
+            }
+            if(positions == 3 && this.gamepadState.DPad.Up == ButtonState.Pressed && pressedUp == false) {
+                pressedUp = true;
+                positions = 2;
+
+            }
+            if(pressedUp == true && this.gamepadState.DPad.Up == ButtonState.Released) {
+                pressedUp = false;
+            }
+            if(pressedDown == true && this.gamepadState.DPad.Down == ButtonState.Released) {
+                pressedDown = false;
+            }
+        //}
     }
     }

@@ -718,6 +718,20 @@ public class GameMenuManager2 : MonoBehaviour {
             }
         }
 
+        // for debug , appuyer sur entré pour passer directement au menu suivant avec les manettes pre-valider
+
+        if(Input.GetKeyDown(KeyCode.Space)) {
+            gamepad1team = 1;
+            gamepad2team = 1;
+            gamepad3team = 2;
+            gamepad4team = 2;
+            gamepad1color = 1;
+            gamepad2color = 3;
+            gamepad3color = 21;
+            gamepad4color = 23;
+            this.gameObject.SetActive(false);
+            Menu3.SetActive(true);
+        }
 
     }
 }

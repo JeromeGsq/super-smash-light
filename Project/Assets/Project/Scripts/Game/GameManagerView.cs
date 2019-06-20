@@ -17,6 +17,9 @@ public class GameManagerView : BaseView<GameManager>
     public GameObject player3;
     public GameObject player4;
 
+    [SerializeField]
+    private int debugLevel = 1;
+
     [Space(20)]
     [SerializeField]
     private GameManager gamemanager;
@@ -35,7 +38,13 @@ public class GameManagerView : BaseView<GameManager>
 	[SerializeField]
 	private GameObject playerPrefab;
 
-	[Space(20)]
+    [SerializeField]
+    private GameObject playerPrefabTeam1;
+
+    [SerializeField]
+    private GameObject playerPrefabTeam2;
+
+    [Space(20)]
 
 	[SerializeField]
 	private Transform spawnBallAnchor;
@@ -60,8 +69,21 @@ public class GameManagerView : BaseView<GameManager>
 
 	[SerializeField]
 	private Image ballImage;
+    
+    [Space(10)]
+    [SerializeField]
+    private GameObject lv1;
 
-	private List<GameObject> players;
+    [Space(10)]
+    [SerializeField]
+    private GameObject lv2;
+
+    [Space(10)]
+    [SerializeField]
+    private GameObject lv3;
+
+    private List<GameObject> players;
+
 
 
     public override void Awake()
@@ -75,6 +97,29 @@ public class GameManagerView : BaseView<GameManager>
 	{
         
 		base.Start();
+        GameObject currentLevel = null;
+        if (GameMenuManager3.selectedLevel == 0)
+            GameMenuManager3.selectedLevel = debugLevel;
+        if (GameMenuManager3.selectedLevel == 1)
+        {
+           currentLevel = Instantiate(lv1, null);
+        }
+        if (GameMenuManager3.selectedLevel == 2)
+        {
+            currentLevel = Instantiate(lv2, null);
+        }
+        if (GameMenuManager3.selectedLevel == 3)
+        {
+            currentLevel = Instantiate(lv3, null);
+        }
+        
+        var playerSpawner = currentLevel.GetComponent<PlayerSpawner>();
+        spanwnPlayer1Anchor = playerSpawner.spawnerPlayer1;
+        spanwnPlayer2Anchor = playerSpawner.spawnerPlayer2;
+        spanwnPlayer3Anchor = playerSpawner.spawnerPlayer3;
+        spanwnPlayer4Anchor = playerSpawner.spawnerPlayer4;
+        
+
         this.InitBall();
         GameObject countdown = Instantiate(this.countdownPrefab);
         StartCoroutine(CoroutineUtils.DelaySeconds(() =>
@@ -120,7 +165,7 @@ public class GameManagerView : BaseView<GameManager>
 			return;
 		}
 
-		if(index == 1)
+        if (index == 1)
 		{
 			var player1 = InitPlayer(this.spanwnPlayer1Anchor, team.FirstPlayerIndex, Tags.Player1,1);
 			var player2 = InitPlayer(this.spanwnPlayer2Anchor, team.SecondPlayerIndex, Tags.Player2,1);
@@ -152,7 +197,8 @@ public class GameManagerView : BaseView<GameManager>
 
 	private PlayerMovementHandler InitPlayer(Transform anchor, PlayerIndex index, string tag,int team)
 	{
-		GameObject player = Instantiate(this.playerPrefab, null);
+        GameObject prefab = team > 1 ? playerPrefabTeam2 : playerPrefabTeam1;
+		GameObject player = Instantiate(prefab, null);
 		player.transform.position = anchor.position;
 
 		var playerHandler = player.GetComponent<PlayerMovementHandler>();

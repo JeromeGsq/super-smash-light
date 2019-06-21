@@ -76,7 +76,7 @@ public class GameMenuManager : MonoBehaviour {
                     StartCoroutine(CoroutineUtils.DelaySeconds(() => {
                         AnimatedBandeau.SetActive(false);
                         AnimatedBandeau.SetActive(true);
-                    }, 0.3f));
+                    }, 0.1f));
 
                     StartCoroutine(CoroutineUtils.DelaySeconds(() => {
                         SelectPlayerMenu.SetActive(true);
@@ -111,7 +111,9 @@ public class GameMenuManager : MonoBehaviour {
                 GameObject.Find("patern4").GetComponent<SpriteRenderer>().sprite = paternOption;
                 if(this.gamepadState.Buttons.A == ButtonState.Pressed) {
                     BoutonQuitter.GetComponent<Animator>().Play(Animator.StringToHash("OptionMenu"));
-                }
+                     Application.Quit();
+                Debug.Log("Quitter le jeu");
+            }
             }
 
             if(positions == 1 && this.gamepadState.DPad.Down == ButtonState.Pressed && pressedDown == false) {

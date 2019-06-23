@@ -52,10 +52,6 @@ public class BackToWindows : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        if(returnWindows == true)
-        {
-            pressedLeft = false;
-        }
     }
 
     // Update is called once per frame
@@ -63,19 +59,15 @@ public class BackToWindows : MonoBehaviour
     {
         // for(int i = 0; i < 4; ++i) {
         PlayerIndex index = (PlayerIndex.One);
-        if (this.gamepadState.DPad.Left == ButtonState.Pressed && pressedLeft == true)
-        {
-                pressedLeft = true;
-            if (this.gamepadState.DPad.Left == ButtonState.Pressed && pressedLeft == true)
+        this.gamepadState = GamePad.GetState(index);
+        if (this.gamepadState.DPad.Left == ButtonState.Pressed)
             {
-                Debug.Log(pressedLeft);
+                Debug.Log("left");
             }
-
-            if (pressedLeft == true && this.gamepadState.DPad.Left == ButtonState.Released)
-            {
-                pressedLeft = false;
-            }
+        if(this.gamepadState.DPad.Left == ButtonState.Pressed) {
+            Debug.Log("right");
         }
+
         //if (this.gamepadState.Buttons.A == ButtonState.Released && pressedA == true)
         //{
         //    Debug.Log("Retour Windows");

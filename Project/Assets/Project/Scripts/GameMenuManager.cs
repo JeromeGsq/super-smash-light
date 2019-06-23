@@ -39,6 +39,8 @@ public class GameMenuManager : MonoBehaviour {
 
     public bool pressedUp;
     public bool pressedDown;
+    [SerializeField]
+    public GameObject returnWindows;
 
 
     // Start is called before the first frame update
@@ -109,11 +111,26 @@ public class GameMenuManager : MonoBehaviour {
                 GameObject.Find("patern2").GetComponent<SpriteRenderer>().sprite = paternOption;
                 GameObject.Find("patern3").GetComponent<SpriteRenderer>().sprite = paternOption;
                 GameObject.Find("patern4").GetComponent<SpriteRenderer>().sprite = paternOption;
-                if(this.gamepadState.Buttons.A == ButtonState.Pressed) {
-                    BoutonQuitter.GetComponent<Animator>().Play(Animator.StringToHash("OptionMenu"));
-                     Application.Quit();
-                Debug.Log("Quitter le jeu");
+            
+            
+            //Quitter le jeu
+            if (gamepadState.Buttons.A == ButtonState.Pressed && pressedDown == false)
+            {
+                pressedDown = true;
+                BoutonQuitter.GetComponent<Animator>().Play(Animator.StringToHash("OptionMenu"));
+
+                StartCoroutine(CoroutineUtils.DelaySeconds(() => {
+                    MenuPrincipal.SetActive(false);
+                    returnWindows.SetActive(true);
+                }, 0.7f));
+
+                Debug.Log("switch to BackToWindows script");
             }
+            //if (this.gamepadState.Buttons.A == ButtonState.Pressed) {
+            //        BoutonQuitter.GetComponent<Animator>().Play(Animator.StringToHash("OptionMenu"));
+            //         Application.Quit();
+            //    Debug.Log("Quitter le jeu");
+            //}
             }
 
             if(positions == 1 && this.gamepadState.DPad.Down == ButtonState.Pressed && pressedDown == false) {

@@ -62,10 +62,32 @@ public class BackToWindows : MonoBehaviour
         this.gamepadState = GamePad.GetState(index);
         if (this.gamepadState.DPad.Left == ButtonState.Pressed)
             {
-                Debug.Log("left");
+            cursorPosYes.SetActive(true);
+            cursorPosNo.SetActive(false);
+            Debug.Log("left");
             }
-        if(this.gamepadState.DPad.Left == ButtonState.Pressed) {
+
+        if (this.gamepadState.DPad.Right == ButtonState.Pressed)
+        {
+            cursorPosNo.SetActive(true);
+            cursorPosYes.SetActive(false);
             Debug.Log("right");
+        }
+
+        if(cursorPosYes == true && this.gamepadState.Buttons.A == ButtonState.Pressed)
+        {
+            Debug.Log("Quit");
+            Application.Quit();
+
+        }
+
+        if (cursorPosNo == true && this.gamepadState.Buttons.A == ButtonState.Pressed)
+        {
+            MenuPrincipal.SetActive(true);
+            returnWindows.SetActive(false);
+            Debug.Log("Retour menu");
+            
+
         }
 
         //if (this.gamepadState.Buttons.A == ButtonState.Released && pressedA == true)
@@ -78,7 +100,6 @@ public class BackToWindows : MonoBehaviour
         //    //cursorPosNo.SetActive(false);
         //}
 
-        //Application.Quit();
     }
 
 }

@@ -40,6 +40,8 @@ public class GameMenuManager : MonoBehaviour {
     public bool pressedUp;
     public bool pressedDown;
     [SerializeField]
+    public bool pressedA;
+    [SerializeField]
     public GameObject returnWindows;
 
 
@@ -52,6 +54,8 @@ public class GameMenuManager : MonoBehaviour {
     // Update is called once per frame
     private void Start() {
         AnimatedBandeau.SetActive(false);
+        pressedA = true;
+        
 
     }
 

@@ -48,10 +48,14 @@ public class BackToWindows : MonoBehaviour
     [SerializeField]
     public ButtonState LeftStick { get; }
 
+    [SerializeField]
+    public GameObject fadeQuit;
+
 
     // Start is called before the first frame update
     void Start()
     {
+        stateNo = true;
     }
 
     // Update is called once per frame
@@ -62,6 +66,8 @@ public class BackToWindows : MonoBehaviour
         this.gamepadState = GamePad.GetState(index);
         if (this.gamepadState.DPad.Left == ButtonState.Pressed)
             {
+            stateYes = true;
+            stateNo = false;
             cursorPosYes.SetActive(true);
             cursorPosNo.SetActive(false);
             Debug.Log("left");
@@ -69,20 +75,26 @@ public class BackToWindows : MonoBehaviour
 
         if (this.gamepadState.DPad.Right == ButtonState.Pressed)
         {
+            stateNo = true;
+            stateYes = false;
             cursorPosNo.SetActive(true);
             cursorPosYes.SetActive(false);
             Debug.Log("right");
         }
 
-        if(cursorPosYes == true && this.gamepadState.Buttons.A == ButtonState.Pressed)
+        if(stateYes == true && cursorPosYes == true && this.gamepadState.Buttons.A == ButtonState.Pressed)
         {
+            returnWindows.SetActive(true);
+            MenuPrincipal.SetActive(false);
             Debug.Log("Quit");
+            fadeQuit.SetActive(true);
             Application.Quit();
 
         }
 
-        if (cursorPosNo == true && this.gamepadState.Buttons.A == ButtonState.Pressed)
+        if (stateNo == true && cursorPosNo == true && this.gamepadState.Buttons.A == ButtonState.Pressed)
         {
+            fadeQuit.SetActive(false);
             returnWindows.SetActive(false);
             MenuPrincipal.SetActive(true);
             Debug.Log("Retour menu");

@@ -49,12 +49,16 @@ public class GameMenuManager : MonoBehaviour {
     void Awake() {
         AnimatedBandeau.SetActive(false);
         positions = 1;
+        
     }
 
-    // Update is called once per frame
-    private void Start() {
-        AnimatedBandeau.SetActive(false);
+    void OnEnable() {
         pressedA = true;
+    }
+        // Update is called once per frame
+        private void Start() {
+        AnimatedBandeau.SetActive(false);
+        
         
 
     }
@@ -118,9 +122,9 @@ public class GameMenuManager : MonoBehaviour {
             
             
             //Quitter le jeu
-            if (gamepadState.Buttons.A == ButtonState.Pressed && pressedDown == false)
+            if (gamepadState.Buttons.A == ButtonState.Pressed && pressedA == false)
             {
-                pressedDown = true;
+                pressedA = true;
                 BoutonQuitter.GetComponent<Animator>().Play(Animator.StringToHash("OptionMenu"));
 
                 StartCoroutine(CoroutineUtils.DelaySeconds(() => {
@@ -163,6 +167,9 @@ public class GameMenuManager : MonoBehaviour {
             if(pressedDown == true && this.gamepadState.DPad.Down == ButtonState.Released) {
                 pressedDown = false;
             }
+        if(pressedA == true && this.gamepadState.Buttons.A == ButtonState.Released) {
+            pressedA = false;
+        }
         //}
     }
     }

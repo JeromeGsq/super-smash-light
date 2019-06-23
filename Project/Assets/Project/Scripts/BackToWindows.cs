@@ -83,8 +83,8 @@ public class BackToWindows : MonoBehaviour
 
         if (cursorPosNo == true && this.gamepadState.Buttons.A == ButtonState.Pressed)
         {
-            MenuPrincipal.SetActive(true);
             returnWindows.SetActive(false);
+            MenuPrincipal.SetActive(true);
             Debug.Log("Retour menu");
             
 

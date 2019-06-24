@@ -106,17 +106,5 @@ public class BackToWindows : MonoBehaviour
             
 
         }
-
-        //if (this.gamepadState.Buttons.A == ButtonState.Released && pressedA == true)
-        //{
-        //    Debug.Log("Retour Windows");
-        //    // BoutonQuitter.GetComponent<Animator>().Play(Animator.StringToHash("OptionMenu"));
-        //    //MenuPrincipal.SetActive(true);
-        //    //returnWindows.SetActive(false);
-        //    //cursorPosYes.SetActive(true);
-        //    //cursorPosNo.SetActive(false);
-        //}
-
     }
-
 }

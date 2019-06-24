@@ -90,6 +90,11 @@ public class BackToWindows : MonoBehaviour
             fadeQuit.SetActive(true);
             Application.Quit();
 
+#if UNITY_EDITOR
+
+            UnityEditor.EditorApplication.isPlaying = false;
+#endif
+
         }
 
         if (stateNo == true && cursorPosNo == true && this.gamepadState.Buttons.A == ButtonState.Pressed)

@@ -12,16 +12,24 @@ public class GameMenuPause : MonoBehaviour {
     public static bool GameIsPaused = false;
 
     [SerializeField]
-    public bool pressedStart;
+    public GameObject pauseMenuUI;
+
+    [SerializeField]
+    private GamePadState gamepadState;
+
+    [SerializeField]
+    public bool pressedUp;
+
+    [SerializeField]
+    public bool pressedDown;
 
     [SerializeField]
     public bool pressedA;
 
     [SerializeField]
-    public GameObject pauseMenuUI;
+    public bool pressedSelect;
 
-    [SerializeField]
-    private GamePadState gamepadState;
+    private int Position = 0;
 
 
     // Start is called before the first frame update
@@ -36,33 +44,60 @@ public class GameMenuPause : MonoBehaviour {
         PlayerIndex index = (PlayerIndex.One);
         this.gamepadState = GamePad.GetState(index);
 
-        if (this.gamepadState.Buttons.Start == ButtonState.Pressed)
-     {
+        if (this.gamepadState.Buttons.Back == ButtonState.Pressed)
+        {
             Debug.Log("Pressed Start");
-        if (GameIsPaused)
-        {
-                Resume();
+            pressedSelect = true;
+            pauseMenuUI.SetActive(true);
+            Time.timeScale = 0.0001f;
+            GameIsPaused = true;
+
         }
-        else
-                    
+
+        if (this.gamepadState.Buttons.Back == ButtonState.Released && pressedSelect == true && GameIsPaused == true)
         {
-                Pause();
+            pressedSelect = false;
+            Time.timeScale = 0;
+            GameIsPaused = true;
+            pauseMenuUI.SetActive(true);
         }
-     }
-        
+
+        if (this.gamepadState.Buttons.Back == ButtonState.Released && pressedSelect == false)
+        {
+            pressedSelect = false;
+            Time.timeScale = 1;
+            GameIsPaused = false;
+            pauseMenuUI.SetActive(false);
+        }
+     //   if (this.gamepadState.Buttons.Start == ButtonState.Pressed && GameIsPaused == true)
+     //{
+     //}
+
+
+            //if (GameIsPaused)
+            //{
+            //        Resume();
+            //}
+            //else
+
+            //{
+            //        Pause();
+            //}
     }
 
-    void Resume ()
+    //public void Resume ()
+    //{
+    //}
+
+     public void Option()
     {
-        pauseMenuUI.SetActive(false);
-        Time.timeScale = 1f;
-        GameIsPaused = false;
+        Position = 1;
+        Debug.Log("Option");
     }
 
-    void Pause ()
+    public void QuitGame()
     {
-        pauseMenuUI.SetActive(true);
-        Time.timeScale = 0f;
-        GameIsPaused = true;
+        Position = 2;
+        Debug.Log("Quit");
     }
 }

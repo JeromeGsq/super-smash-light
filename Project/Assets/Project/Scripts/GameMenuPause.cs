@@ -89,15 +89,21 @@ public class GameMenuPause : MonoBehaviour {
     //{
     //}
 
-     public void Option()
+    public void Restart()
     {
         Position = 1;
+        Debug.Log("Restart");
+    }
+
+     public void Option()
+    {
+        Position = 2;
         Debug.Log("Option");
     }
 
     public void QuitGame()
     {
-        Position = 2;
+        Position = 3;
         Debug.Log("Quit");
     }
 }

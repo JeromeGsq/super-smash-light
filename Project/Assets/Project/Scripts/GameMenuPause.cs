@@ -9,7 +9,8 @@ using System;
 
 public class GameMenuPause : MonoBehaviour {
 
-    public static bool GameIsPaused = false;
+    private static bool GameIsPaused = false;
+   // private static bool GameIsAlreadyInPaused = false;
 
     [SerializeField]
     public GameObject pauseMenuUI;
@@ -27,7 +28,7 @@ public class GameMenuPause : MonoBehaviour {
     public bool pressedA;
 
     [SerializeField]
-    public bool pressedSelect;
+    public bool pressedStart = true;
 
     private int Position = 0;
 
@@ -44,45 +45,103 @@ public class GameMenuPause : MonoBehaviour {
         PlayerIndex index = (PlayerIndex.One);
         this.gamepadState = GamePad.GetState(index);
 
-        if (this.gamepadState.Buttons.Back == ButtonState.Pressed)
-        {
-            Debug.Log("Pressed Start");
-            pressedSelect = true;
-            pauseMenuUI.SetActive(true);
-            Time.timeScale = 0.0001f;
-            GameIsPaused = true;
 
+        if (this.gamepadState.Buttons.Start == ButtonState.Pressed && pressedStart == true)
+        {
+            pressedStart = false;
+            if (GameIsPaused)
+            {
+                Debug.Log("Return Game");
+                pauseMenuUI.SetActive(false);
+                Time.timeScale = 1f;
+                GameIsPaused = false;
+            }
+            else
+            {
+                //GameIsPaused = true;
+                Debug.Log("Pause");
+                pauseMenuUI.SetActive(true);
+                Time.timeScale = 0f;
+                GameIsPaused = true;
+            }
         }
 
-        if (this.gamepadState.Buttons.Back == ButtonState.Released && pressedSelect == true && GameIsPaused == true)
+        if (this.gamepadState.Buttons.Start == ButtonState.Pressed )
         {
-            pressedSelect = false;
-            Time.timeScale = 0;
-            GameIsPaused = true;
-            pauseMenuUI.SetActive(true);
+            pressedStart = true;
         }
 
-        if (this.gamepadState.Buttons.Back == ButtonState.Released && pressedSelect == false)
-        {
-            pressedSelect = false;
-            Time.timeScale = 1;
-            GameIsPaused = false;
-            pauseMenuUI.SetActive(false);
-        }
-     //   if (this.gamepadState.Buttons.Start == ButtonState.Pressed && GameIsPaused == true)
-     //{
-     //}
+        //if (this.gamepadState.Buttons.Start == ButtonState.Released)
+        //{
+        //    GameIsPaused = GameIsPaused == true ? false : true;
+        //}
+
+        //if (this.gamepadState.Buttons.Start == ButtonState.Pressed && GameIsAlreadyInPaused == false)
+        //{
+        //    GameIsPaused = true;
+        //    pressedStart = true;
+        //}
+
+        //if (this.gamepadState.Buttons.Start == ButtonState.Released && GameIsPaused == true && pressedStart == true && GameIsAlreadyInPaused == false)
+        //{
+        //    Debug.Log("Pause");
+        //    pauseMenuUI.SetActive(true);
+        //    Time.timeScale = 0f;
+        //    GameIsAlreadyInPaused = true;
+        //}
+
+        //if (this.gamepadState.Buttons.Start == ButtonState.Pressed && GameIsPaused == true  && GameIsAlreadyInPaused == true)
+        //{
+        //    GameIsPaused = false;
+        //    pressedStart = true;
+        //}
+
+        // if (this.gamepadState.Buttons.Start == ButtonState.Released && GameIsPaused == false && pressedStart == true && GameIsAlreadyInPaused == true)
+        //{
+        //    Debug.Log("Return Game");
+        //    pauseMenuUI.SetActive(false);
+        //    Time.timeScale = 1f;
+        //    GameIsAlreadyInPaused = false;
+        //}
+
+        //pressedStart = false;
+        //Time.timeScale = 1;
+        //GameIsPaused = false;
+        //pauseMenuUI.SetActive(false);
 
 
-            //if (GameIsPaused)
-            //{
-            //        Resume();
-            //}
-            //else
 
-            //{
-            //        Pause();
-            //}
+        //if (this.gamepadState.Buttons.Start == ButtonState.Released && pressedStart == true && GameIsPaused == true)
+        //{
+        //    pressedStart = false;
+        //    Time.timeScale = 0;
+        //    GameIsPaused = true;
+        //    pauseMenuUI.SetActive(true);
+        //}
+
+        //if (this.gamepadState.Buttons.Back == ButtonState.Released && pressedStart == false)
+        //{
+        //    pressedStart = false;
+        //    Time.timeScale = 1;
+        //    GameIsPaused = false;
+        //    pauseMenuUI.SetActive(false);
+        //}
+
+
+        //   if (this.gamepadState.Buttons.Start == ButtonState.Pressed && GameIsPaused == true)
+        //{
+        //}
+
+
+        //if (GameIsPaused)
+        //{
+        //        Resume();
+        //}
+        //else
+
+        //{
+        //        Pause();
+        //}
     }
 
     //public void Resume ()

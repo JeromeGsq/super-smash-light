@@ -39,6 +39,7 @@ public class GameMenuManager : MonoBehaviour {
 
     public bool pressedUp;
     public bool pressedDown;
+    private bool pressedBack = true;
     [SerializeField]
     public bool pressedA;
     [SerializeField]
@@ -82,6 +83,7 @@ public class GameMenuManager : MonoBehaviour {
                 GameObject.Find("patern3").GetComponent<SpriteRenderer>().sprite = paternPartie;
                 GameObject.Find("patern4").GetComponent<SpriteRenderer>().sprite = paternPartie;
                 if(this.gamepadState.Buttons.A == ButtonState.Pressed) {
+                pressedBack = true;
                     BoutonPartie.GetComponent<Animator>().Play(Animator.StringToHash("PartieRapideMenu"));
                     StartCoroutine(CoroutineUtils.DelaySeconds(() => {
                         AnimatedBandeau.SetActive(false);

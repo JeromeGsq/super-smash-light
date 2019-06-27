@@ -110,6 +110,8 @@ public class GameMenuManager2 : MonoBehaviour {
     private bool btn3A;
     private bool btn4A;
 
+    private bool pressedBack;
+
     // Start is called before the first frame update
     void Start() {
 
@@ -167,6 +169,8 @@ public class GameMenuManager2 : MonoBehaviour {
     }
     // Update is called once per frame
     void Update() {
+
+        pressedBack = true;
 
 
         this.gamepadState1 = GamePad.GetState(PlayerIndex.One);
@@ -699,10 +703,11 @@ public class GameMenuManager2 : MonoBehaviour {
                 alerteMessage.SetActive(false);
             }
 
-            if(this.gamepadState.Buttons.Back == ButtonState.Pressed) {
+            if(this.gamepadState.Buttons.Back == ButtonState.Pressed && pressedBack == true) {
                 canvas.SetActive(false);
                 fade.SetActive(false);
                 fade.SetActive(true);
+                pressedBack = false;
                 StartCoroutine(CoroutineUtils.DelaySeconds(() => {
                     gamepad1team = 0;
                     gamepad2team = 0;

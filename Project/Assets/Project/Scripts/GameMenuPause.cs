@@ -47,6 +47,8 @@ public class GameMenuPause : MonoBehaviour {
         this.gamepadState = GamePad.GetState(index);
         // GameIsAlreadyInPaused = false;
 
+    //Apparition & disparition du menu en appuyant sur start
+
             if (this.gamepadState.Buttons.Start == ButtonState.Pressed)
         {
             CountPressStart++;
@@ -55,6 +57,7 @@ public class GameMenuPause : MonoBehaviour {
             {
                 if (GameIsAlreadyInPaused)
                 {
+                    GameIsPaused = false;
                     Debug.Log("Return Game");
                     pauseMenuUI.SetActive(false);
                     Time.timeScale = 1f;
@@ -76,85 +79,41 @@ public class GameMenuPause : MonoBehaviour {
             CountPressStart = 0;
         }
 
-           
-        //if (this.gamepadState.Buttons.Start == ButtonState.Released)
-        //{
-        //    GameIsPaused = GameIsPaused == true ? false : true;
-        //}
+            //Interractions avec le menu
 
-        //if (this.gamepadState.Buttons.Start == ButtonState.Pressed && GameIsAlreadyInPaused == false)
-        //{
-        //    GameIsPaused = true;
-        //    pressedStart = true;
-        //}
+        if(this.gamepadState.DPad.Up == ButtonState.Pressed && pauseMenuUI == true)
+        {
+            Position = 0;
+            Debug.Log(Position);
+        }
 
-            //if (this.gamepadState.Buttons.Start == ButtonState.Released && GameIsPaused == true && pressedStart == true && GameIsAlreadyInPaused == false)
-            //{
-            //    Debug.Log("Pause");
-            //    pauseMenuUI.SetActive(true);
-            //    Time.timeScale = 0f;
-            //    GameIsAlreadyInPaused = true;
-            //}
+        if(this.gamepadState.DPad.Down == ButtonState.Pressed && pauseMenuUI == true)
+        {
+            Position = 3;
+            Debug.Log(Position);
+        }
 
-            //if (this.gamepadState.Buttons.Start == ButtonState.Pressed && GameIsPaused == true  && GameIsAlreadyInPaused == true)
-            //{
-            //    GameIsPaused = false;
-            //    pressedStart = true;
-            //}
-
-            // if (this.gamepadState.Buttons.Start == ButtonState.Released && GameIsPaused == false && pressedStart == true && GameIsAlreadyInPaused == true)
-            //{
-            //    Debug.Log("Return Game");
-            //    pauseMenuUI.SetActive(false);
-            //    Time.timeScale = 1f;
-            //    GameIsAlreadyInPaused = false;
-            //}
-
-            //pressedStart = false;
-            //Time.timeScale = 1;
-            //GameIsPaused = false;
-            //pauseMenuUI.SetActive(false);
-
-
-
-            //if (this.gamepadState.Buttons.Start == ButtonState.Released && pressedStart == true && GameIsPaused == true)
-            //{
-            //    pressedStart = false;
-            //    Time.timeScale = 0;
-            //    GameIsPaused = true;
-            //    pauseMenuUI.SetActive(true);
-            //}
-
-            //if (this.gamepadState.Buttons.Back == ButtonState.Released && pressedStart == false)
-            //{
-            //    pressedStart = false;
-            //    Time.timeScale = 1;
-            //    GameIsPaused = false;
-            //    pauseMenuUI.SetActive(false);
-            //}
-
-
-            //   if (this.gamepadState.Buttons.Start == ButtonState.Pressed && GameIsPaused == true)
-            //{
-            //}
-
-
-            //if (GameIsPaused)
-            //{
-            //        Resume();
-            //}
-            //else
-
-            //{
-            //        Pause();
-            //}
+            if (this.gamepadState.Buttons.A == ButtonState.Pressed && pauseMenuUI == true && Position == 0)
+        {
+            print("Resume");
+            GameIsPaused = false;
+            Debug.Log("Return Game");
+            pauseMenuUI.SetActive(false);
+            Time.timeScale = 1f;
+            GameIsAlreadyInPaused = false;
+        } 
+            
+            if (this.gamepadState.Buttons.A == ButtonState.Pressed && pauseMenuUI == true && Position == 3)
+        {
+            print("QuitGame");
+            SceneManager.LoadScene("_mainmenu");
+        }  
     }
 
-    //public void Resume ()
-    //{
-    //}
 
-        public void SwitchBetweenPause()
+    //Action du menu
+
+    public void SwitchBetweenPause()
     {
 
     }

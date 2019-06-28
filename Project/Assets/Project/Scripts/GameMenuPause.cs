@@ -28,35 +28,25 @@ public class GameMenuPause : MonoBehaviour {
     public bool pressedA;
 
     [SerializeField]
-<<<<<<< Updated upstream
     public bool pressedStart;
 
     private int Position = 0;
     private int CountPressStart = 0;
-=======
-    public bool pressedBackInGame;
-
-    private int Position = 0;
-    private bool pressedBack;
->>>>>>> Stashed changes
 
 
     // Start is called before the first frame update
     void Start()
     {
-        pressedBack = false;
         
     }
 
     // Update is called once per frame
     void Update()
     {
-        pressedBack = false;
         PlayerIndex index = (PlayerIndex.One);
         this.gamepadState = GamePad.GetState(index);
         // GameIsAlreadyInPaused = false;
 
-<<<<<<< Updated upstream
             if (this.gamepadState.Buttons.Start == ButtonState.Pressed)
         {
             CountPressStart++;
@@ -147,36 +137,6 @@ public class GameMenuPause : MonoBehaviour {
             //   if (this.gamepadState.Buttons.Start == ButtonState.Pressed && GameIsPaused == true)
             //{
             //}
-=======
-        if (this.gamepadState.Buttons.Guide == ButtonState.Pressed)
-        {
-            Debug.Log("Pressed Start");
-            pressedBackInGame = true;
-            pauseMenuUI.SetActive(true);
-            Time.timeScale = 0.0001f;
-            GameIsPaused = true;
-
-        }
-
-        if (this.gamepadState.Buttons.Guide == ButtonState.Released && pressedBackInGame == true && GameIsPaused == true)
-        {
-            pressedBackInGame = false;
-            Time.timeScale = 0;
-            GameIsPaused = true;
-            pauseMenuUI.SetActive(true);
-        }
-
-        if (this.gamepadState.Buttons.Guide == ButtonState.Released && pressedBackInGame == false)
-        {
-            pressedBackInGame = false;
-            Time.timeScale = 1;
-            GameIsPaused = false;
-            pauseMenuUI.SetActive(false);
-        }
-     //   if (this.gamepadState.Buttons.Start == ButtonState.Pressed && GameIsPaused == true)
-     //{
-     //}
->>>>>>> Stashed changes
 
 
             //if (GameIsPaused)

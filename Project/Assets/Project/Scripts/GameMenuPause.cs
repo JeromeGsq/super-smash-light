@@ -33,11 +33,14 @@ public class GameMenuPause : MonoBehaviour {
     private int Position = 0;
     private int CountPressStart = 0;
 
+    [SerializeField]
+    public GameObject selecteur1;
+    public GameObject selecteur2;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        pressedStart = true;
     }
 
     // Update is called once per frame
@@ -49,10 +52,10 @@ public class GameMenuPause : MonoBehaviour {
 
     //Apparition & disparition du menu en appuyant sur start
 
-            if (this.gamepadState.Buttons.Start == ButtonState.Pressed)
+            if (this.gamepadState.Buttons.Start == ButtonState.Pressed && pressedStart == false)
         {
             CountPressStart++;
-            pressedStart = false;
+            pressedStart = true;
             if (CountPressStart<2)
             {
                 if (GameIsAlreadyInPaused)
@@ -73,7 +76,7 @@ public class GameMenuPause : MonoBehaviour {
             }
         }
 
-        else if (this.gamepadState.Buttons.Start == ButtonState.Released)
+        else if (this.gamepadState.Buttons.Start == ButtonState.Released && pressedStart == false)
         {
             pressedStart = true;
             CountPressStart = 0;
@@ -84,12 +87,16 @@ public class GameMenuPause : MonoBehaviour {
         if(this.gamepadState.DPad.Up == ButtonState.Pressed && pauseMenuUI == true)
         {
             Position = 0;
+            selecteur2.SetActive(false);
+            selecteur1.SetActive(true);
             Debug.Log(Position);
         }
 
         if(this.gamepadState.DPad.Down == ButtonState.Pressed && pauseMenuUI == true)
         {
             Position = 3;
+            selecteur1.SetActive(false);
+            selecteur2.SetActive(true);
             Debug.Log(Position);
         }
 
@@ -106,8 +113,13 @@ public class GameMenuPause : MonoBehaviour {
             if (this.gamepadState.Buttons.A == ButtonState.Pressed && pauseMenuUI == true && Position == 3)
         {
             print("QuitGame");
+            Time.timeScale = 1f;
             SceneManager.LoadScene("_mainmenu");
-        }  
+        }
+        if(this.gamepadState.Buttons.Start == ButtonState.Released && pressedStart == true) {
+            pressedStart = false;
+        }
+
     }
 
 

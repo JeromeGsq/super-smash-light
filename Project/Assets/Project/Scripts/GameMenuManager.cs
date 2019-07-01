@@ -41,28 +41,28 @@ public class GameMenuManager : MonoBehaviour {
     public bool pressedDown;
     private bool pressedBack = true;
     [SerializeField]
-    public bool pressedA;
+    public bool pressedA = true;
     [SerializeField]
     public GameObject returnWindows;
-
 
     // Start is called before the first frame update
     void Awake() {
         AnimatedBandeau.SetActive(false);
         positions = 1;
-        
-    }
-
-    void OnEnable() {
         pressedA = true;
-    }
-        // Update is called once per frame
-        private void Start() {
-        AnimatedBandeau.SetActive(false);
-        
-        
 
     }
+
+    void OnEnable() 
+        {
+        pressedA = true;
+        }
+        // Update is called once per frame
+        private void Start() 
+        {
+        AnimatedBandeau.SetActive(false);
+        pressedA = true;
+        }
 
     void Update() {
 
@@ -82,8 +82,8 @@ public class GameMenuManager : MonoBehaviour {
                 GameObject.Find("patern2").GetComponent<SpriteRenderer>().sprite = paternPartie;
                 GameObject.Find("patern3").GetComponent<SpriteRenderer>().sprite = paternPartie;
                 GameObject.Find("patern4").GetComponent<SpriteRenderer>().sprite = paternPartie;
-                if(this.gamepadState.Buttons.A == ButtonState.Pressed) {
-                pressedBack = true;
+                if(this.gamepadState.Buttons.A == ButtonState.Pressed && pressedA == false) {
+                pressedA = true;
                     BoutonPartie.GetComponent<Animator>().Play(Animator.StringToHash("PartieRapideMenu"));
                     StartCoroutine(CoroutineUtils.DelaySeconds(() => {
                         AnimatedBandeau.SetActive(false);
@@ -107,7 +107,7 @@ public class GameMenuManager : MonoBehaviour {
                 GameObject.Find("patern2").GetComponent<SpriteRenderer>().sprite = paternOption;
                 GameObject.Find("patern3").GetComponent<SpriteRenderer>().sprite = paternOption;
                 GameObject.Find("patern4").GetComponent<SpriteRenderer>().sprite = paternOption;
-                if(this.gamepadState.Buttons.A == ButtonState.Pressed) {
+                if(this.gamepadState.Buttons.A == ButtonState.Pressed && pressedA == false) {
                     BoutonOption.GetComponent<Animator>().Play(Animator.StringToHash("OptionMenu"));
                 }
             } else {
@@ -169,9 +169,10 @@ public class GameMenuManager : MonoBehaviour {
             if(pressedDown == true && this.gamepadState.DPad.Down == ButtonState.Released) {
                 pressedDown = false;
             }
-        if(pressedA == true && this.gamepadState.Buttons.A == ButtonState.Released) {
+        if(pressedA == true && this.gamepadState.Buttons.A == ButtonState.Released) 
+            {
             pressedA = false;
-        }
+            }
         //}
     }
     }

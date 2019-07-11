@@ -13,6 +13,7 @@ public class GameMenuManager : MonoBehaviour {
 
     public Sprite fondPartie;
     public Sprite fondOption;
+    public Sprite fondQuitter;
 
     public Sprite illuPartie;
     public Sprite illuPartie1;
@@ -110,19 +111,20 @@ public class GameMenuManager : MonoBehaviour {
                 if(this.gamepadState.Buttons.A == ButtonState.Pressed && pressedA == false) {
                     BoutonOption.GetComponent<Animator>().Play(Animator.StringToHash("OptionMenu"));
                 }
-            } else {
-                selecteur.GetComponent<Transform>().position = new Vector3(6.18f, -7.75f, selecteur.GetComponent<Transform>().position.z);
-                fond.GetComponent<SpriteRenderer>().sprite = fondOption;
-                illu.GetComponent<SpriteRenderer>().sprite = illuOption;
-                illu1.GetComponent<SpriteRenderer>().sprite = null;
-                illu2.GetComponent<SpriteRenderer>().sprite = illuOption1;
-                illu2.GetComponent<Transform>().localPosition = new Vector3(-2.49f, 1.23f, -0.21f);
-                GameObject.Find("patern1").GetComponent<SpriteRenderer>().sprite = paternOption;
-                GameObject.Find("patern2").GetComponent<SpriteRenderer>().sprite = paternOption;
-                GameObject.Find("patern3").GetComponent<SpriteRenderer>().sprite = paternOption;
-                GameObject.Find("patern4").GetComponent<SpriteRenderer>().sprite = paternOption;
-            
-            
+
+        }
+            else if (positions == 3)
+                {
+                    selecteur.GetComponent<Transform>().position = new Vector3(6.18f, -7.75f, selecteur.GetComponent<Transform>().position.z);
+                    fond.GetComponent<SpriteRenderer>().sprite = fondQuitter;
+                    illu.GetComponent<SpriteRenderer>().sprite = illuOption;
+                    illu1.GetComponent<SpriteRenderer>().sprite = null;
+                    illu2.GetComponent<SpriteRenderer>().sprite = illuOption1;
+                    illu2.GetComponent<Transform>().localPosition = new Vector3(-2.49f, 1.23f, -0.21f);
+                    GameObject.Find("patern1").GetComponent<SpriteRenderer>().sprite = paternOption;
+                    GameObject.Find("patern2").GetComponent<SpriteRenderer>().sprite = paternOption;
+                    GameObject.Find("patern3").GetComponent<SpriteRenderer>().sprite = paternOption;
+                    GameObject.Find("patern4").GetComponent<SpriteRenderer>().sprite = paternOption;
             //Quitter le jeu
             if (gamepadState.Buttons.A == ButtonState.Pressed && pressedA == false)
             {
@@ -136,6 +138,21 @@ public class GameMenuManager : MonoBehaviour {
 
                 Debug.Log("switch to BackToWindows script");
             }
+        }
+            else {
+                selecteur.GetComponent<Transform>().position = new Vector3(6.18f, -7.75f, selecteur.GetComponent<Transform>().position.z);
+                fond.GetComponent<SpriteRenderer>().sprite = fondOption;
+                illu.GetComponent<SpriteRenderer>().sprite = illuOption;
+                illu1.GetComponent<SpriteRenderer>().sprite = null;
+                illu2.GetComponent<SpriteRenderer>().sprite = illuOption1;
+                illu2.GetComponent<Transform>().localPosition = new Vector3(-2.49f, 1.23f, -0.21f);
+                GameObject.Find("patern1").GetComponent<SpriteRenderer>().sprite = paternOption;
+                GameObject.Find("patern2").GetComponent<SpriteRenderer>().sprite = paternOption;
+                GameObject.Find("patern3").GetComponent<SpriteRenderer>().sprite = paternOption;
+                GameObject.Find("patern4").GetComponent<SpriteRenderer>().sprite = paternOption;
+            
+            
+           
             //if (this.gamepadState.Buttons.A == ButtonState.Pressed) {
             //        BoutonQuitter.GetComponent<Animator>().Play(Animator.StringToHash("OptionMenu"));
             //         Application.Quit();

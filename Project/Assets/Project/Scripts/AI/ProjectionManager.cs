@@ -52,9 +52,14 @@ public class ProjectionManager : MonoBehaviour
 
                 lastPositions[i] = entities[i].transform.position;
 
-                for (int j = 1; j <= numberProjections; j++)
+                Vector3 newPos = entities[i].transform.position;
+                float gravity = -60 * projectionDelay;
+
+                for (int j = 0; j < numberProjections; j++)
                 {
-                    Vector3 newPos = entities[i].transform.position + new Vector3(xSpeed * j * projectionDelay, ySpeed * j * projectionDelay, 0);
+
+                    newPos += new Vector3(xSpeed * projectionDelay, ySpeed * projectionDelay, 0);
+
                     int xIndex = (int)((newPos.x - GetComponent<GridMaker>().startPos.x) / GetComponent<GridMaker>().incrX);
                     int yIndex = (int)((newPos.y - GetComponent<GridMaker>().startPos.y) / GetComponent<GridMaker>().incrY);
 
@@ -62,9 +67,10 @@ public class ProjectionManager : MonoBehaviour
                         yIndex >= 0 && yIndex < GetComponent<GridMaker>().grid.GetLength(1) && 
                         !GetComponent<GridMaker>().grid[xIndex, yIndex].isSolid)
                     {
-                        GetComponent<GridMaker>().grid[xIndex, yIndex].projections.Add(new GridProjection(entities[i], i * projectionDelay));
+                        GetComponent<GridMaker>().grid[xIndex, yIndex].projections.Add(new GridProjection(entities[i], j * projectionDelay));
                     }
                     else break;
+                    if(ySpeed != 0) ySpeed += gravity;
                 }
             }
         }

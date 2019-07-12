@@ -29,6 +29,7 @@ public class GameMenuManager : MonoBehaviour {
     public GameObject paternHolder;
     public Sprite paternPartie;
     public Sprite paternOption;
+    public Sprite paternQuit;
 
     public GameObject selecteur;
 
@@ -121,10 +122,10 @@ public class GameMenuManager : MonoBehaviour {
                     illu1.GetComponent<SpriteRenderer>().sprite = null;
                     illu2.GetComponent<SpriteRenderer>().sprite = illuOption1;
                     illu2.GetComponent<Transform>().localPosition = new Vector3(-2.49f, 1.23f, -0.21f);
-                    GameObject.Find("patern1").GetComponent<SpriteRenderer>().sprite = paternOption;
-                    GameObject.Find("patern2").GetComponent<SpriteRenderer>().sprite = paternOption;
-                    GameObject.Find("patern3").GetComponent<SpriteRenderer>().sprite = paternOption;
-                    GameObject.Find("patern4").GetComponent<SpriteRenderer>().sprite = paternOption;
+                    GameObject.Find("patern1").GetComponent<SpriteRenderer>().sprite = paternQuit;
+                    GameObject.Find("patern2").GetComponent<SpriteRenderer>().sprite = paternQuit;
+                    GameObject.Find("patern3").GetComponent<SpriteRenderer>().sprite = paternQuit;
+                    GameObject.Find("patern4").GetComponent<SpriteRenderer>().sprite = paternQuit;
             //Quitter le jeu
             if (gamepadState.Buttons.A == ButtonState.Pressed && pressedA == false)
             {

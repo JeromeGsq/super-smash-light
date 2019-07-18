@@ -21,16 +21,16 @@ public class ProjectionManager : MonoBehaviour
 
     void Update()
     {
-        if(!hasLoaded && manager.player1 != null)
+        if(!hasLoaded && manager.ProjectionReference1 != null)
         {
-            entities.Add(manager.player1);
-            entities.Add(manager.player2);
-            entities.Add(manager.player3);
-            entities.Add(manager.player4);
-            lastPositions.Add(manager.player1.transform.position);
-            lastPositions.Add(manager.player2.transform.position);
-            lastPositions.Add(manager.player3.transform.position);
-            lastPositions.Add(manager.player4.transform.position);
+            entities.Add(manager.ProjectionReference1);
+            entities.Add(manager.ProjectionReference2);
+            entities.Add(manager.ProjectionReference3);
+            entities.Add(manager.ProjectionReference4);
+            lastPositions.Add(manager.ProjectionReference1.transform.position);
+            lastPositions.Add(manager.ProjectionReference2.transform.position);
+            lastPositions.Add(manager.ProjectionReference3.transform.position);
+            lastPositions.Add(manager.ProjectionReference4.transform.position);
             hasLoaded = true;
         }
 

@@ -203,10 +203,10 @@ public class GameManager : BaseViewModel
 
         if(timer <= 1) {
             endPanel.SetActive(true);
-            gamemanagerview.player1.SetActive(false);
-            gamemanagerview.player2.SetActive(false);
-            gamemanagerview.player3.SetActive(false);
-            gamemanagerview.player4.SetActive(false);
+            gamemanagerview.ProjectionReference1.SetActive(false);
+            gamemanagerview.ProjectionReference2.SetActive(false);
+            gamemanagerview.ProjectionReference3.SetActive(false);
+            gamemanagerview.ProjectionReference4.SetActive(false);
         }
     }
 

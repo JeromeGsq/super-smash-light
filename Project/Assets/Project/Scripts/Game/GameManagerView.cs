@@ -12,10 +12,10 @@ using XInputDotNetPure;
 [RequireComponent(typeof(GameManager))]
 public class GameManagerView : BaseView<GameManager>
 {
-    public GameObject player1;
-    public GameObject player2;
-    public GameObject player3;
-    public GameObject player4;
+    public GameObject ProjectionReference1;
+    public GameObject ProjectionReference2;
+    public GameObject ProjectionReference3;
+    public GameObject ProjectionReference4;
 
     [SerializeField]
     private int debugLevel = 1;
@@ -39,10 +39,16 @@ public class GameManagerView : BaseView<GameManager>
 	private GameObject playerPrefab;
 
     [SerializeField]
-    private GameObject playerPrefabTeam1;
+    private GameObject playerPrefabTeam11;
 
     [SerializeField]
-    private GameObject playerPrefabTeam2;
+    private GameObject playerPrefabTeam12;
+
+    [SerializeField]
+    private GameObject playerPrefabTeam21;
+
+    [SerializeField]
+    private GameObject playerPrefabTeam22;
 
     [Space(20)]
 
@@ -167,64 +173,104 @@ public class GameManagerView : BaseView<GameManager>
 
         if (index == 1)
 		{
-			var player1 = InitPlayer(this.spanwnPlayer1Anchor, team.FirstPlayerIndex, Tags.Player1,1);
-			var player2 = InitPlayer(this.spanwnPlayer2Anchor, team.SecondPlayerIndex, Tags.Player2,1);
+            MovementHandler player1, player2;
+
+            if (playerPrefabTeam11.GetComponent<PlayerMovementHandler>() != null)
+                player1 = InitPlayer(playerPrefabTeam11, this.spanwnPlayer1Anchor, team.FirstPlayerIndex, Tags.Player1, 1);
+            else
+                player1 = InitAIPlayer(playerPrefabTeam11, this.spanwnPlayer1Anchor, team.FirstPlayerIndex, Tags.Player1, 1);
+
+            if (playerPrefabTeam12.GetComponent<PlayerMovementHandler>() != null)
+                player2 = InitPlayer(playerPrefabTeam12, this.spanwnPlayer2Anchor, team.SecondPlayerIndex, Tags.Player2, 1);
+            else
+                player2 = InitAIPlayer(playerPrefabTeam12, this.spanwnPlayer2Anchor, team.SecondPlayerIndex, Tags.Player2, 1);
 
 			player1.FriendTransform = player2.gameObject.transform;
 			player2.FriendTransform = player1.gameObject.transform;
 
 			this.players.Add(player1.gameObject);
 			this.players.Add(player2.gameObject);
-            this.player1 = player1.gameObject;
-            this.player2 = player2.gameObject;
+            this.ProjectionReference1 = player1.gameObject;
+            this.ProjectionReference2 = player2.gameObject;
         }
 
 		if(index == 2)
 		{
-			var player3 = InitPlayer(this.spanwnPlayer3Anchor, team.FirstPlayerIndex, Tags.Player3,2);
-			var player4 = InitPlayer(this.spanwnPlayer4Anchor, team.SecondPlayerIndex, Tags.Player4,2);
+            MovementHandler player3, player4;
+
+            if (playerPrefabTeam21.GetComponent<PlayerMovementHandler>() != null)
+                player3 = InitPlayer(playerPrefabTeam21, this.spanwnPlayer3Anchor, team.FirstPlayerIndex, Tags.Player3, 2);
+            else
+                player3 = InitAIPlayer(playerPrefabTeam21, this.spanwnPlayer3Anchor, team.FirstPlayerIndex, Tags.Player3, 2);
+
+            if (playerPrefabTeam21.GetComponent<PlayerMovementHandler>() != null)
+                player4 = InitPlayer(playerPrefabTeam22, this.spanwnPlayer4Anchor, team.SecondPlayerIndex, Tags.Player4, 2);
+            else
+                player4 = InitAIPlayer(playerPrefabTeam22, this.spanwnPlayer4Anchor, team.SecondPlayerIndex, Tags.Player4, 2);
 
 			player3.FriendTransform = player4.gameObject.transform;
 			player4.FriendTransform = player3.gameObject.transform;
 
 			this.players.Add(player3.gameObject);
 			this.players.Add(player4.gameObject);
-            this.player3 = player3.gameObject;
-            this.player4 = player4.gameObject;
+            this.ProjectionReference3 = player3.gameObject;
+            this.ProjectionReference4 = player4.gameObject;
         }
         
 	}
 
-	private PlayerMovementHandler InitPlayer(Transform anchor, PlayerIndex index, string tag,int team)
+	private PlayerMovementHandler InitPlayer(GameObject prefab, Transform anchor, PlayerIndex index, string tag,int team)
 	{
-        GameObject prefab = team > 1 ? playerPrefabTeam2 : playerPrefabTeam1;
 		GameObject player = Instantiate(prefab, null);
 		player.transform.position = anchor.position;
 
 		var playerHandler = player.GetComponent<PlayerMovementHandler>();
-		playerHandler.Index = index;
-        playerHandler.myteam = team;
-        player.tag = tag;
-        
 
-
-        playerHandler.MainPosition = player.transform.position;
+        if (playerHandler != null)
+        {
+            playerHandler.Index = index;
+            playerHandler.myteam = team;
+            player.tag = tag;
+            playerHandler.MainPosition = player.transform.position;
+        }
+        else Debug.LogError("No Player Handler Found");
 
 		SmoothFollow.Get.Targets.Add(player.transform);
 
 		return playerHandler;
 	}
 
-	//private void UpdateBallColor(PlayerIndex ballIndex)
-	//{
-	//  var teamIndex = Team.GetTeam(ballIndex);
+    private AIMovementHandler InitAIPlayer(GameObject prefab, Transform anchor, PlayerIndex index, string tag, int team)
+    {
+        GameObject player = Instantiate(prefab, null);
+        player.transform.position = anchor.position;
+
+        var AIHandler = player.GetComponent<AIMovementHandler>();
+
+        if (AIHandler != null)
+        {
+            AIHandler.Index = index;
+            AIHandler.myteam = team;
+            player.tag = tag;
+            AIHandler.MainPosition = player.transform.position;
+        }
+        else Debug.LogError("No Player Handler Found");
+
+        SmoothFollow.Get.Targets.Add(player.transform);
+
+        return AIHandler;
+    }
+
+    //private void UpdateBallColor(PlayerIndex ballIndex)
+    //{
+    //  var teamIndex = Team.GetTeam(ballIndex);
     //  var color = Color.white;
 
-	//	if(ballIndex != PlayerIndex.One)
-	//	{
-	//		color = teamIndex == 1 ? Color.blue : Color.red;
-	//	}
+    //	if(ballIndex != PlayerIndex.One)
+    //	{
+    //		color = teamIndex == 1 ? Color.blue : Color.red;
+    //	}
 
-		//this.ballImage.color = color;
-	//}
+    //this.ballImage.color = color;
+    //}
 }

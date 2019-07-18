@@ -6,7 +6,7 @@ using UnityEngine.SceneManagement;
 using System;
 
 [RequireComponent(typeof(CharacterController2D))]
-public class PlayerMovementHandler : MonoBehaviour
+public class PlayerMovementHandler : MovementHandler
 {
     private CharacterController2D controller;
     private Vector3 mainPosition;
@@ -63,7 +63,7 @@ public class PlayerMovementHandler : MonoBehaviour
 
     [Tooltip("Cet index permet de choisir via quelle manette ce joueur va être controllé")]
     [SerializeField]
-    private PlayerIndex index = PlayerIndex.One;
+    internal PlayerIndex index = PlayerIndex.One;
 
     [Space(20)]
 
@@ -81,10 +81,6 @@ public class PlayerMovementHandler : MonoBehaviour
     [Tooltip("Le point d'ancrage de la balle quand le joueur l'aura sur lui")]
     [SerializeField]
     private Transform ballAnchor;
-
-    [Tooltip("Le transform du pote de ce joueur")]
-    [SerializeField]
-    private Transform friendTransform;
 
     [Tooltip("Le transform de l'ancre de la mire. Ce transform sera tourné en fonction du stick. Il ne sera pas déplacé et sert juste d'ancre")]
     [SerializeField]
@@ -180,24 +176,18 @@ public class PlayerMovementHandler : MonoBehaviour
 
     public PlayerIndex Index
     {
-        get => this.index;
+        get => index;
         set
         {
-            this.index = value;
-            this.SetColors();
+            index = value;
+            SetColors();
         }
-    }
-
-    public Transform FriendTransform
-    {
-        get => this.friendTransform;
-        set => this.friendTransform = value;
     }
 
     public Vector3 MainPosition
     {
-        get => this.mainPosition;
-        set => this.mainPosition = value;
+        get => mainPosition;
+        set => mainPosition = value;
     }
 
     private RuntimeAnimatorController color1;
@@ -253,35 +243,35 @@ public class PlayerMovementHandler : MonoBehaviour
         if(GameMenuManager2.gamepad4color == 23) {color4 = ColorGreen;}
         if(GameMenuManager2.gamepad4color == 24) {color4 = ColorViolet;}
 
-        this.controller = GetComponent<CharacterController2D>();
-        this.gamepadState = GamePad.GetState(Index);
+        controller = GetComponent<CharacterController2D>();
+        gamepadState = GamePad.GetState(Index);
 
-        this.savedGravity = this.gravity;
+        savedGravity = gravity;
 
         // listen to some events for illustration purposes
-        this.controller.onControllerCollidedEvent += this.OnControllerCollider;
-        this.controller.onTriggerEnterEvent += this.OnTriggerEnterEvent;
-        this.controller.onTriggerExitEvent += this.OnTriggerExitEvent;
+        controller.onControllerCollidedEvent += OnControllerCollider;
+        controller.onTriggerEnterEvent += OnTriggerEnterEvent;
+        controller.onTriggerExitEvent += OnTriggerExitEvent;
 
-        if (this.trigger2D == null)
+        if (trigger2D == null)
         {
-            this.trigger2D = this.GetComponent<Collider2D>();
+            trigger2D = GetComponent<Collider2D>();
             Debug.Log("PlayerHandler : Awake() : trigger2D is null, try to GetComponent<Collider2D>() on it");
         }
 
-        this.trigger2D.isTrigger = true;
+        trigger2D.isTrigger = true;
     }
 
     private void OnEnable()
 
     {
 
-        this.mainPosition = this.transform.position;
+        mainPosition = transform.position;
     }
 
     private void OnControllerCollider(RaycastHit2D cast)
     {
-        if (this.isDashing && this.isPushed == false &&
+        if (isDashing && isPushed == false &&
             (myteam == 2 ?
                 (cast.collider.CompareTag(Tags.Player1) || cast.collider.CompareTag(Tags.Player2)) :
                 (cast.collider.CompareTag(Tags.Player3) || cast.collider.CompareTag(Tags.Player4)))
@@ -293,14 +283,14 @@ public class PlayerMovementHandler : MonoBehaviour
             // Get ball from enemy
             if (BallHandler.Get.Index == enemyPlayerHandler.index)
             {
-                BallHandler.Get.SetGrabbed(this.ballAnchor, this.index, myteam);
+                BallHandler.Get.SetGrabbed(ballAnchor, index, myteam);
             }
 
             // Apply collision on enemy
-            enemyPlayerHandler.Collision(this.transform, this.pushPowerOnEnemy);
+            enemyPlayerHandler.Collision(transform, pushPowerOnEnemy);
 
             // Apply collision on ourselves
-            this.Collision(enemy.transform, this.pushPowerOnMe);
+            Collision(enemy.transform, pushPowerOnMe);
         }
     }
 
@@ -316,13 +306,13 @@ public class PlayerMovementHandler : MonoBehaviour
     {
         if (collision.CompareTag(Tags.Ball))
         {
-            if (BallHandler.Get.EngageShoot == true && BallHandler.Get.LastShooter != this.Index)
+            if (BallHandler.Get.EngageShoot == true && BallHandler.Get.LastShooter != Index)
             {
-                this.SetDestroyed();
+                SetDestroyed();
             }
-            else if (this.canGrab && BallHandler.Get.IsGrabbed == false)
+            else if (canGrab && BallHandler.Get.IsGrabbed == false)
             {
-                BallHandler.Get.SetGrabbed(this.ballAnchor, this.index, myteam);
+                BallHandler.Get.SetGrabbed(ballAnchor, index, myteam);
             }
         }
     }
@@ -330,287 +320,287 @@ public class PlayerMovementHandler : MonoBehaviour
     // Messages
     public void Collision(Transform sender, float power)
     {
-        if (this.isPushed == false)
+        if (isPushed == false)
         {
             Debug.Log($"PlayerMovementHandler : Push() : pushed by {sender.name}");
 
-            this.pushSender = sender;
-            this.pushPower = power;
-            this.isPushed = true;
-            this.gravity = this.savedGravity;
+            pushSender = sender;
+            pushPower = power;
+            isPushed = true;
+            gravity = savedGravity;
         }
     }
 
     private void Update() {
 
-        //this.myteam = Team.GetTeam(this.Index);
+        //myteam = Team.GetTeam(Index);
 
-        if(this.gamepadState.Buttons.LeftShoulder == ButtonState.Pressed) {
-            this.LBhold = true;
-            this.LBtime += 0.1f;
+        if(gamepadState.Buttons.LeftShoulder == ButtonState.Pressed) {
+            LBhold = true;
+            LBtime += 0.1f;
         }
-        if(this.LBhold & this.gamepadState.Buttons.LeftShoulder == ButtonState.Released) {
-            this.LBreleased = true;
+        if(LBhold & gamepadState.Buttons.LeftShoulder == ButtonState.Released) {
+            LBreleased = true;
             StartCoroutine(CoroutineUtils.DelaySeconds(() => {
-                this.LBhold = false;
-                this.LBreleased = false;
-                this.LBtime = 0;
+                LBhold = false;
+                LBreleased = false;
+                LBtime = 0;
             }, 0.00001f));
         }
 
-        if(this.gamepadState.Triggers.Left > 0) {
-            this.LThold = true;
-            this.LTtime += 0.1f;
+        if(gamepadState.Triggers.Left > 0) {
+            LThold = true;
+            LTtime += 0.1f;
         }
-        if(this.LThold & this.gamepadState.Triggers.Left == 0) {
-            this.LTreleased = true;
+        if(LThold & gamepadState.Triggers.Left == 0) {
+            LTreleased = true;
             StartCoroutine(CoroutineUtils.DelaySeconds(() => {
-                this.LThold = false;
-                this.LTreleased = false;
-                this.LTtime = 0;
+                LThold = false;
+                LTreleased = false;
+                LTtime = 0;
             }, 0.00001f));
         }
-        if(this.gamepadState.Buttons.RightShoulder == ButtonState.Pressed) {
-            this.RBhold = true;
-            this.RBtime += 0.1f;
+        if(gamepadState.Buttons.RightShoulder == ButtonState.Pressed) {
+            RBhold = true;
+            RBtime += 0.1f;
         }
-        if(this.RBhold & this.gamepadState.Buttons.RightShoulder == ButtonState.Released) {
-            this.RBreleased = true;
+        if(RBhold & gamepadState.Buttons.RightShoulder == ButtonState.Released) {
+            RBreleased = true;
             StartCoroutine(CoroutineUtils.DelaySeconds(() => {
-                this.RBhold = false;
-                this.RBreleased = false;
-                this.RBtime = 0;
+                RBhold = false;
+                RBreleased = false;
+                RBtime = 0;
             }, 0.00001f));
         }
-        if(this.gamepadState.Triggers.Right > 0) {
-            this.RThold = true;
-            this.RTtime += 0.1f;
+        if(gamepadState.Triggers.Right > 0) {
+            RThold = true;
+            RTtime += 0.1f;
         }
-        if(this.RThold & this.gamepadState.Triggers.Left == 0) {
-            this.RTreleased = true;
+        if(RThold & gamepadState.Triggers.Left == 0) {
+            RTreleased = true;
             StartCoroutine(CoroutineUtils.DelaySeconds(() => {
-                this.RThold = false;
-                this.RTreleased = false;
-                this.RTtime = 0;
+                RThold = false;
+                RTreleased = false;
+                RTtime = 0;
             }, 0.00001f));
         }
-        if(this.isDestroyed) {
+        if(isDestroyed) {
             return;
         }
 
-        this.gamepadState = GamePad.GetState(Index);
+        gamepadState = GamePad.GetState(Index);
 
-        if(BallHandler.Get.isGrabbed && BallHandler.Get.Index == this.index) {
+        if(BallHandler.Get.isGrabbed && BallHandler.Get.Index == index) {
             // Pass controlset
-            if(this.RBreleased || this.RTreleased) {
-                if(this.RBreleased && RBtime > 1.5f) {
-                    BallHandler.Get.Shoot(this.sight, this.passPower, ShootType.Pass);
-                } else if(this.RTreleased && RTtime > 1.5f) {
-                    BallHandler.Get.Shoot(this.sight, this.passPower, ShootType.Pass);
+            if(RBreleased || RTreleased) {
+                if(RBreleased && RBtime > 1.5f) {
+                    BallHandler.Get.Shoot(sight, passPower, ShootType.Pass);
+                } else if(RTreleased && RTtime > 1.5f) {
+                    BallHandler.Get.Shoot(sight, passPower, ShootType.Pass);
                 } else {
-                    BallHandler.Get.Shoot(this.FriendTransform, this.passPower, ShootType.Pass);
+                    BallHandler.Get.Shoot(FriendTransform, passPower, ShootType.Pass);
                 }
 
-                this.canGrab = false;
+                canGrab = false;
                 StartCoroutine(CoroutineUtils.DelaySeconds(() => {
-                    this.canGrab = true;
-                }, this.deltaTimeGrab));
+                    canGrab = true;
+                }, deltaTimeGrab));
             }
 
 
             // Shoot control
-            if(this.LBreleased || this.LTreleased) {
+            if(LBreleased || LTreleased) {
                 if(GameManager.Get.CanShoot(myteam)) {
-                    BallHandler.Get.Shoot(this.sight, this.shootPower, ShootType.Shoot);
+                    BallHandler.Get.Shoot(sight, shootPower, ShootType.Shoot);
                 }
 
-                this.canGrab = false;
+                canGrab = false;
                 StartCoroutine(CoroutineUtils.DelaySeconds(() => {
-                    this.canGrab = true;
-                }, this.deltaTimeGrab));
+                    canGrab = true;
+                }, deltaTimeGrab));
             }
         }
 
         // Sight control
-        this.IsTargeting = this.gamepadState.Triggers.Left > 0 || this.gamepadState.Buttons.LeftShoulder == ButtonState.Pressed || this.gamepadState.Triggers.Right > 0 || this.gamepadState.Buttons.RightShoulder == ButtonState.Pressed;
+        IsTargeting = gamepadState.Triggers.Left > 0 || gamepadState.Buttons.LeftShoulder == ButtonState.Pressed || gamepadState.Triggers.Right > 0 || gamepadState.Buttons.RightShoulder == ButtonState.Pressed;
 
-        if(this.IsTargeting) {
-            if(this.gamepadState.Buttons.LeftShoulder == ButtonState.Pressed) {
+        if(IsTargeting) {
+            if(gamepadState.Buttons.LeftShoulder == ButtonState.Pressed) {
 
-                if(LBtime < 1.2f && this.player.transform.localScale.x < 0f) {
-                    this.sight.transform.localPosition = Vector3.left * 2.5f;
+                if(LBtime < 1.2f && player.transform.localScale.x < 0f) {
+                    sight.transform.localPosition = Vector3.left * 2.5f;
                 } else {
-                    this.sight.transform.localPosition = Vector3.right * 2.5f;
+                    sight.transform.localPosition = Vector3.right * 2.5f;
                 }
             }
-            if(this.gamepadState.Triggers.Left > 0) {
+            if(gamepadState.Triggers.Left > 0) {
 
-                if(LTtime < 1.2f && this.player.transform.localScale.x < 0f) {
-                    this.sight.transform.localPosition = Vector3.left * 2.5f;
+                if(LTtime < 1.2f && player.transform.localScale.x < 0f) {
+                    sight.transform.localPosition = Vector3.left * 2.5f;
                 } else {
-                    this.sight.transform.localPosition = Vector3.right * 2.5f;
+                    sight.transform.localPosition = Vector3.right * 2.5f;
                 }
             }
         }
 
 
-        if(this.IsTargeting) {
-            this.sightAnchor.gameObject.SetActive(true);
-            if((Mathf.Atan2(this.gamepadState.ThumbSticks.Right.Y, this.gamepadState.ThumbSticks.Right.X) > 0) || (Mathf.Atan2(this.gamepadState.ThumbSticks.Right.Y, this.gamepadState.ThumbSticks.Right.X) < 0)) {
+        if(IsTargeting) {
+            sightAnchor.gameObject.SetActive(true);
+            if((Mathf.Atan2(gamepadState.ThumbSticks.Right.Y, gamepadState.ThumbSticks.Right.X) > 0) || (Mathf.Atan2(gamepadState.ThumbSticks.Right.Y, gamepadState.ThumbSticks.Right.X) < 0)) {
 
-                stickY = this.gamepadState.ThumbSticks.Right.Y;
-                stickX = this.gamepadState.ThumbSticks.Right.X;
+                stickY = gamepadState.ThumbSticks.Right.Y;
+                stickX = gamepadState.ThumbSticks.Right.X;
             }
-            this.sightAnchor.eulerAngles = new Vector3(0, 0, Mathf.Atan2(stickY, stickX) * 180 / Mathf.PI);
+            sightAnchor.eulerAngles = new Vector3(0, 0, Mathf.Atan2(stickY, stickX) * 180 / Mathf.PI);
         } else {
             stickY = 0;
             stickX = 0;
             StartCoroutine(CoroutineUtils.DelaySeconds(() => {
-                this.sightAnchor.gameObject.SetActive(false);
+                sightAnchor.gameObject.SetActive(false);
             }, 0.0001f));
         }
 
         // Movement & Jump control
-        if(this.controller.isGrounded) {
-            this.jumpsCount = 0;
-            this.velocity.y = 0;
+        if(controller.isGrounded) {
+            jumpsCount = 0;
+            velocity.y = 0;
         }
 
-        if(this.gamepadState.ThumbSticks.Left.X > 0.1f) {
-            this.normalizedHorizontalSpeed = 1;
-            if(this.controller.isGrounded) {
-                this.animator.Play(Animator.StringToHash("Run"));
+        if(gamepadState.ThumbSticks.Left.X > 0.1f) {
+            normalizedHorizontalSpeed = 1;
+            if(controller.isGrounded) {
+                animator.Play(Animator.StringToHash("Run"));
             }
-            if(this.player.transform.localScale.x < 0f) {
-                this.player.transform.localScale = new Vector3(-this.player.transform.localScale.x, this.player.transform.localScale.y, this.player.transform.localScale.z);
+            if(player.transform.localScale.x < 0f) {
+                player.transform.localScale = new Vector3(-player.transform.localScale.x, player.transform.localScale.y, player.transform.localScale.z);
             }
-        } else if(this.gamepadState.ThumbSticks.Left.X < -0.1f) {
-            this.normalizedHorizontalSpeed = -1;
-            if(this.controller.isGrounded) {
-                this.animator.Play(Animator.StringToHash("Run"));
+        } else if(gamepadState.ThumbSticks.Left.X < -0.1f) {
+            normalizedHorizontalSpeed = -1;
+            if(controller.isGrounded) {
+                animator.Play(Animator.StringToHash("Run"));
             }
-            if(this.player.transform.localScale.x > 0f) {
-                this.player.transform.localScale = new Vector3(-this.player.transform.localScale.x, this.player.transform.localScale.y, this.player.transform.localScale.z);
+            if(player.transform.localScale.x > 0f) {
+                player.transform.localScale = new Vector3(-player.transform.localScale.x, player.transform.localScale.y, player.transform.localScale.z);
             }
         } else {
-            this.normalizedHorizontalSpeed = 0;
-            if(this.controller.isGrounded) {
-                this.animator.Play(Animator.StringToHash("Idle"));
+            normalizedHorizontalSpeed = 0;
+            if(controller.isGrounded) {
+                animator.Play(Animator.StringToHash("Idle"));
             }
         }
 
         // Jump control
-        if((this.controller.isGrounded || this.jumpsCount < this.maxJumps)
-            && this.gamepadState.Buttons.A == ButtonState.Pressed
-            && this.oldpadForJump == false
+        if((controller.isGrounded || jumpsCount < maxJumps)
+            && gamepadState.Buttons.A == ButtonState.Pressed
+            && oldpadForJump == false
             )
         {
-            this.jumpsCount++;
-            this.velocity.y = Mathf.Sqrt(2f * this.jumpHeight * -this.gravity);
-            this.animator.Play(Animator.StringToHash("Jump"));
+            jumpsCount++;
+            velocity.y = Mathf.Sqrt(2f * jumpHeight * -gravity);
+            animator.Play(Animator.StringToHash("Jump"));
             oldpadForJump = true;
         }
 
-        if(this.gamepadState.Buttons.A == ButtonState.Released) 
+        if(gamepadState.Buttons.A == ButtonState.Released) 
             {
             oldpadForJump = false;
             }
         // Dash control
-        if (BallHandler.Get.Index != this.Index
-            && this.isDashing == false
-            && this.gamepadState.Buttons.B == ButtonState.Pressed
-            && new Vector2(this.gamepadState.ThumbSticks.Left.X, this.gamepadState.ThumbSticks.Left.Y).magnitude > 0.5f
-            && this.canDash)
+        if (BallHandler.Get.Index != Index
+            && isDashing == false
+            && gamepadState.Buttons.B == ButtonState.Pressed
+            && new Vector2(gamepadState.ThumbSticks.Left.X, gamepadState.ThumbSticks.Left.Y).magnitude > 0.5f
+            && canDash)
         {
-            this.canDash = false;
-            this.isDashing = true;
+            canDash = false;
+            isDashing = true;
 
-            var direction = new Vector2(this.gamepadState.ThumbSticks.Left.X, this.gamepadState.ThumbSticks.Left.Y);
-            this.velocity = (direction.normalized * this.dashDirectionOverdrive) * this.dashSpeed;
+            var direction = new Vector2(gamepadState.ThumbSticks.Left.X, gamepadState.ThumbSticks.Left.Y);
+            velocity = (direction.normalized * dashDirectionOverdrive) * dashSpeed;
 
-            this.savedGravity = this.gravity;
-            this.gravity = 0;
+            savedGravity = gravity;
+            gravity = 0;
 
-            this.animator.Play(Animator.StringToHash("Dash"));
+            animator.Play(Animator.StringToHash("Dash"));
 
             StartCoroutine(CoroutineUtils.DelaySeconds(() =>
             {
                 // Reset gravity and stop dashing
-                this.gravity = this.savedGravity;
-                this.isDashing = false;
-            }, this.dashDuration));
+                gravity = savedGravity;
+                isDashing = false;
+            }, dashDuration));
 
-            this.dashCoroutine = StartCoroutine(CoroutineUtils.DelaySeconds(() =>
+            dashCoroutine = StartCoroutine(CoroutineUtils.DelaySeconds(() =>
             {
-                if (new Vector2(this.gamepadState.ThumbSticks.Left.X, this.gamepadState.ThumbSticks.Left.Y).magnitude == 0
-                    && this.canDash == false
-                    && this.isDashing == false)
+                if (new Vector2(gamepadState.ThumbSticks.Left.X, gamepadState.ThumbSticks.Left.Y).magnitude == 0
+                    && canDash == false
+                    && isDashing == false)
                 {
                     // Allow to do a dash
-                    this.canDash = true;
+                    canDash = true;
                 }
-                this.dashCoroutine = null;
-            }, this.dashCoolDown));
+                dashCoroutine = null;
+            }, dashCoolDown));
         }
 
-        if (new Vector2(this.gamepadState.ThumbSticks.Left.X, this.gamepadState.ThumbSticks.Left.Y).magnitude == 0
-            && this.canDash == false
-            && this.isDashing == false
-            && this.dashCoroutine == null)
+        if (new Vector2(gamepadState.ThumbSticks.Left.X, gamepadState.ThumbSticks.Left.Y).magnitude == 0
+            && canDash == false
+            && isDashing == false
+            && dashCoroutine == null)
         {
-            this.canDash = true;
+            canDash = true;
         }
 
         // Is Pushed
-        if (this.isPushed == true && this.pushSender != null)
+        if (isPushed == true && pushSender != null)
         {
-            var direction = (this.transform.position - this.pushSender.position).normalized;
+            var direction = (transform.position - pushSender.position).normalized;
 
-            this.velocity.y = Mathf.Sqrt(2f * 2 * -this.gravity);
-            this.velocity.x = direction.x * this.pushPower;
+            velocity.y = Mathf.Sqrt(2f * 2 * -gravity);
+            velocity.x = direction.x * pushPower;
 
-            this.pushPower = 0;
-            this.pushSender = null;
+            pushPower = 0;
+            pushSender = null;
 
-            this.player.DOLocalRotate(new Vector3(0, 0, -Mathf.Sign(direction.x) * 360), this.dashDuration * 2, RotateMode.FastBeyond360);
+            player.DOLocalRotate(new Vector3(0, 0, -Mathf.Sign(direction.x) * 360), dashDuration * 2, RotateMode.FastBeyond360);
 
             StartCoroutine(CoroutineUtils.DelaySeconds(() =>
             {
                 // Allow to do a dash
-                this.isPushed = false;
+                isPushed = false;
             }, 1f));
         }
 
-        var smoothedMovementFactor = this.controller.isGrounded ? this.groundDamping : this.inAirDamping;
-        this.velocity.x = Mathf.Lerp(this.velocity.x, normalizedHorizontalSpeed * this.runSpeed, Time.deltaTime * smoothedMovementFactor);
+        var smoothedMovementFactor = controller.isGrounded ? groundDamping : inAirDamping;
+        velocity.x = Mathf.Lerp(velocity.x, normalizedHorizontalSpeed * runSpeed, Time.deltaTime * smoothedMovementFactor);
 
-        if (this.gravity == 0)
+        if (gravity == 0)
         {
             // Smooth dash on Y axis without gravity applied
-            this.velocity.y = Mathf.Lerp(this.velocity.y, 0, Time.deltaTime * smoothedMovementFactor);
+            velocity.y = Mathf.Lerp(velocity.y, 0, Time.deltaTime * smoothedMovementFactor);
         }
         else
         {
             // Use gravity as normal situation
-            this.velocity.y += this.gravity * Time.deltaTime;
+            velocity.y += gravity * Time.deltaTime;
         }
 
-        if (this.controller.isGrounded && this.gamepadState.ThumbSticks.Left.Y < 0)
+        if (controller.isGrounded && gamepadState.ThumbSticks.Left.Y < 0)
         {
-            this.controller.ignoreOneWayPlatformsThisFrame = true;
+            controller.ignoreOneWayPlatformsThisFrame = true;
         }
 
-        this.controller.move(this.velocity * Time.deltaTime);
+        controller.move(velocity * Time.deltaTime);
 
-        this.velocity = this.controller.velocity;
+        velocity = controller.velocity;
 
 
     }
 
     private void SetColors()
     {
-        var color = this.player.GetComponent<Animator>().runtimeAnimatorController;
-        switch (this.Index)
+        var color = player.GetComponent<Animator>().runtimeAnimatorController;
+        switch (Index)
         {
             case PlayerIndex.One:
                 color = color1;
@@ -626,13 +616,13 @@ public class PlayerMovementHandler : MonoBehaviour
                 break;
         }
 
-        this.player.GetComponent<Animator>().runtimeAnimatorController = color;
+        player.GetComponent<Animator>().runtimeAnimatorController = color;
     }
 
     private void SetDestroyed()
     {
         BallHandler.Get.EngageShoot = false;
-        this.isDestroyed = false;
+        isDestroyed = false;
 
         CameraHandler.Get.Rumble();
 
@@ -644,8 +634,8 @@ public class PlayerMovementHandler : MonoBehaviour
             GameManager.Get.AddPoint(otherTeamIndex);
         }
 
-        var particles = Instantiate(this.deathPrefab);
-        particles.transform.position = this.transform.position;
+        var particles = Instantiate(deathPrefab);
+        particles.transform.position = transform.position;
         particles.transform.SetParent(null);
 
         StartCoroutine(CoroutineUtils.DelaySeconds(() =>
@@ -656,18 +646,18 @@ public class PlayerMovementHandler : MonoBehaviour
         // Respawn
         StartCoroutine(CoroutineUtils.DelaySeconds(() =>
         {
-            this.transform.position = this.mainPosition;
-            this.player.gameObject.SetActive(true);
-            this.isDestroyed = false;
-            this.trigger2D.enabled = true;
-            this.controller.boxCollider.enabled = true;
-            this.canGrab = true;
+            transform.position = mainPosition;
+            player.gameObject.SetActive(true);
+            isDestroyed = false;
+            trigger2D.enabled = true;
+            controller.boxCollider.enabled = true;
+            canGrab = true;
         }, 1f));
 
         GameManager.Get.ResetBarLevel(myteam);
-        this.player.gameObject.SetActive(false);
-        this.trigger2D.enabled = false;
-        this.controller.boxCollider.enabled = false;
-        this.canGrab = false;
+        player.gameObject.SetActive(false);
+        trigger2D.enabled = false;
+        controller.boxCollider.enabled = false;
+        canGrab = false;
     }
 }

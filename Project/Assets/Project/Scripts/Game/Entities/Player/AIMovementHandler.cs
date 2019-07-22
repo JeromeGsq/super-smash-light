@@ -5,13 +5,19 @@ using DG.Tweening;
 using UnityEngine.SceneManagement;
 using System;
 
+public enum AIControllerType
+{
+    Random = 0
+}
+
 [RequireComponent(typeof(CharacterController2D))]
 public class AIMovementHandler : MovementHandler
 {
+    public AIControllerType chosenAiType;
+    private AgentAI agent;
+
     private CharacterController2D controller;
     private Vector3 mainPosition;
-
-    private ControllerEmulator emulator;
 
     private Vector3 velocity;
 
@@ -200,8 +206,6 @@ public class AIMovementHandler : MovementHandler
     private void Awake()
         
     {
-        emulator = GetComponent<ControllerEmulator>();
-
         ColorBlue = Resources.Load<RuntimeAnimatorController>("Animations/PlayerBlue");
         ColorBlue2 = Resources.Load<RuntimeAnimatorController>("Animations/PlayerBlue2");
         ColorViolet = Resources.Load<RuntimeAnimatorController>("Animations/PlayerViolet");
@@ -263,6 +267,16 @@ public class AIMovementHandler : MovementHandler
         }
 
         trigger2D.isTrigger = true;
+
+        switch(chosenAiType)
+        {
+            case AIControllerType.Random:
+                agent = new RandomAgent();
+                break;
+            default:
+                Debug.LogError("Bad AI type chosen");
+                break;
+        }
     }
 
     private void OnEnable()
@@ -355,13 +369,15 @@ public class AIMovementHandler : MovementHandler
 
     private void Update() {
 
+        agent.Update(new GridCase[0,0], gameObject);
+
         //myteam = Team.GetTeam(Index);
 
-        if(emulator.LeftShoulder) {
+        if(agent.shootOn) {
             LBhold = true;
             LBtime += 0.1f;
         }
-        if(LBhold & !emulator.LeftShoulder) {
+        if(LBhold & !agent.shootOn) {
             LBreleased = true;
             StartCoroutine(CoroutineUtils.DelaySeconds(() => {
                 LBhold = false;
@@ -370,23 +386,11 @@ public class AIMovementHandler : MovementHandler
             }, 0.00001f));
         }
 
-        if(emulator.LeftTrigger) {
-            LThold = true;
-            LTtime += 0.1f;
-        }
-        if(LThold & !emulator.LeftTrigger) {
-            LTreleased = true;
-            StartCoroutine(CoroutineUtils.DelaySeconds(() => {
-                LThold = false;
-                LTreleased = false;
-                LTtime = 0;
-            }, 0.00001f));
-        }
-        if(emulator.RightShoulder) {
+        if(agent.passOn) {
             RBhold = true;
             RBtime += 0.1f;
         }
-        if(RBhold & !emulator.RightShoulder) {
+        if(RBhold & !agent.passOn) {
             RBreleased = true;
             StartCoroutine(CoroutineUtils.DelaySeconds(() => {
                 RBhold = false;
@@ -394,18 +398,7 @@ public class AIMovementHandler : MovementHandler
                 RBtime = 0;
             }, 0.00001f));
         }
-        if(emulator.RightTrigger) {
-            RThold = true;
-            RTtime += 0.1f;
-        }
-        if(RThold & !emulator.RightTrigger) {
-            RTreleased = true;
-            StartCoroutine(CoroutineUtils.DelaySeconds(() => {
-                RThold = false;
-                RTreleased = false;
-                RTtime = 0;
-            }, 0.00001f));
-        }
+
         if(isDestroyed) {
             return;
         }
@@ -445,23 +438,12 @@ public class AIMovementHandler : MovementHandler
 
         // Sight control
         IsTargeting = 
-            emulator.RightShoulder || 
-            emulator.RightTrigger || 
-            emulator.LeftShoulder || 
-            emulator.LeftTrigger;
+            agent.shootOn || agent.passOn;
 
         if(IsTargeting) {
-            if(emulator.LeftShoulder) {
+            if(agent.shootOn) {
 
                 if(LBtime < 1.2f && player.transform.localScale.x < 0f) {
-                    sight.transform.localPosition = Vector3.left * 2.5f;
-                } else {
-                    sight.transform.localPosition = Vector3.right * 2.5f;
-                }
-            }
-            if(emulator.LeftTrigger) {
-
-                if(LTtime < 1.2f && player.transform.localScale.x < 0f) {
                     sight.transform.localPosition = Vector3.left * 2.5f;
                 } else {
                     sight.transform.localPosition = Vector3.right * 2.5f;
@@ -472,10 +454,10 @@ public class AIMovementHandler : MovementHandler
 
         if(IsTargeting) {
             sightAnchor.gameObject.SetActive(true);
-            if((Mathf.Atan2(emulator.RightThumbstick.y, emulator.RightThumbstick.x) > 0) || (Mathf.Atan2(emulator.RightThumbstick.y, emulator.RightThumbstick.x) < 0)) {
+            if((Mathf.Atan2(agent.targetingX, agent.targetingY) > 0) || (Mathf.Atan2(agent.targetingY, agent.targetingX) < 0)) {
 
-                stickY = emulator.RightThumbstick.y;
-                stickX = emulator.RightThumbstick.x;
+                stickY = agent.targetingY;
+                stickX = agent.targetingX;
             }
             sightAnchor.eulerAngles = new Vector3(0, 0, Mathf.Atan2(stickY, stickX) * 180 / Mathf.PI);
         } else {
@@ -492,7 +474,7 @@ public class AIMovementHandler : MovementHandler
             velocity.y = 0;
         }
 
-        if(emulator.LeftThumbstick.x > 0.1f) {
+        if(agent.horizontalSpeed > 0.1f) {
             normalizedHorizontalSpeed = 1;
             if(controller.isGrounded) {
                 animator.Play(Animator.StringToHash("Run"));
@@ -500,7 +482,7 @@ public class AIMovementHandler : MovementHandler
             if(player.transform.localScale.x < 0f) {
                 player.transform.localScale = new Vector3(-player.transform.localScale.x, player.transform.localScale.y, player.transform.localScale.z);
             }
-        } else if(emulator.LeftThumbstick.x < -0.1f) {
+        } else if(agent.horizontalSpeed < -0.1f) {
             normalizedHorizontalSpeed = -1;
             if(controller.isGrounded) {
                 animator.Play(Animator.StringToHash("Run"));
@@ -517,7 +499,7 @@ public class AIMovementHandler : MovementHandler
 
         // Jump control
         if((controller.isGrounded || jumpsCount < maxJumps)
-            && emulator.ButtonA
+            && agent.jumpOn
             && oldpadForJump == false
             )
         {
@@ -527,21 +509,20 @@ public class AIMovementHandler : MovementHandler
             oldpadForJump = true;
         }
 
-        if(!emulator.ButtonA) 
+        if(!agent.jumpOn) 
             {
             oldpadForJump = false;
             }
         // Dash control
         if (BallHandler.Get.Index != Index
             && isDashing == false
-            && emulator.ButtonB
-            && new Vector2(emulator.LeftThumbstick.x, emulator.LeftThumbstick.y).magnitude > 0.5f
+            && agent.dashOn
             && canDash)
         {
             canDash = false;
             isDashing = true;
 
-            var direction = new Vector2(emulator.LeftThumbstick.x, emulator.LeftThumbstick.y);
+            var direction = new Vector2(agent.horizontalSpeed, 0);
             velocity = (direction.normalized * dashDirectionOverdrive) * dashSpeed;
 
             savedGravity = gravity;
@@ -558,7 +539,7 @@ public class AIMovementHandler : MovementHandler
 
             dashCoroutine = StartCoroutine(CoroutineUtils.DelaySeconds(() =>
             {
-                if (new Vector2(emulator.LeftThumbstick.x, emulator.LeftThumbstick.y).magnitude == 0
+                if (new Vector2(agent.horizontalSpeed, 0).magnitude == 0
                     && canDash == false
                     && isDashing == false)
                 {
@@ -569,7 +550,7 @@ public class AIMovementHandler : MovementHandler
             }, dashCoolDown));
         }
 
-        if (new Vector2(emulator.LeftThumbstick.x, emulator.LeftThumbstick.y).magnitude == 0
+        if (new Vector2(agent.horizontalSpeed, 0).magnitude == 0
             && canDash == false
             && isDashing == false
             && dashCoroutine == null)
@@ -611,7 +592,7 @@ public class AIMovementHandler : MovementHandler
             velocity.y += gravity * Time.deltaTime;
         }
 
-        if (controller.isGrounded && emulator.LeftThumbstick.y < 0)
+        if (controller.isGrounded && agent.diveOn)
         {
             controller.ignoreOneWayPlatformsThisFrame = true;
         }

@@ -113,7 +113,9 @@ public class GameManagerView : BaseView<GameManager>
         
 		base.Start();
 
-        switch(TData.p1)
+        TData savedData = FindObjectOfType<TData>();
+
+        switch(savedData.p1)
         {
             case 0:
                 playerPrefabTeam11 = prefabModelIA;
@@ -129,7 +131,7 @@ public class GameManagerView : BaseView<GameManager>
                 break;
         }
 
-        switch (TData.p2)
+        switch (savedData.p2)
         {
             case 0:
                 playerPrefabTeam12 = prefabModelIA;
@@ -145,7 +147,7 @@ public class GameManagerView : BaseView<GameManager>
                 break;
         }
 
-        switch (TData.p3)
+        switch (savedData.p3)
         {
             case 0:
                 playerPrefabTeam21 = prefabModelIA;
@@ -161,7 +163,7 @@ public class GameManagerView : BaseView<GameManager>
                 break;
         }
 
-        switch (TData.p4)
+        switch (savedData.p4)
         {
             case 0:
                 playerPrefabTeam22 = prefabModelIA;

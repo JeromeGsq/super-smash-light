@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TData : MonoBehaviour
 {
-    static public int p1, p2, p3, p4;
+    public int p1, p2, p3, p4;
     // Start is called before the first frame update
     void Start()
     {

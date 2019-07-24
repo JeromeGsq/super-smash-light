@@ -115,70 +115,72 @@ public class GameManagerView : BaseView<GameManager>
 
         TData savedData = FindObjectOfType<TData>();
 
-        switch(savedData.p1)
+        if (savedData != null)
         {
-            case 0:
-                playerPrefabTeam11 = prefabModelIA;
-                break;
-            case 1:
-                playerPrefabTeam11 = prefabModelT1;
-                break;
-            case 2:
-                playerPrefabTeam11 = prefabModelT2;
-                break;
-            default:
-                Debug.LogError("Bad Data");
-                break;
-        }
+            switch (savedData.p1)
+            {
+                case 0:
+                    playerPrefabTeam11 = prefabModelIA;
+                    break;
+                case 1:
+                    playerPrefabTeam11 = prefabModelT1;
+                    break;
+                case 2:
+                    playerPrefabTeam11 = prefabModelT2;
+                    break;
+                default:
+                    Debug.LogError("Bad Data");
+                    break;
+            }
 
-        switch (savedData.p2)
-        {
-            case 0:
-                playerPrefabTeam12 = prefabModelIA;
-                break;
-            case 1:
-                playerPrefabTeam12 = prefabModelT1;
-                break;
-            case 2:
-                playerPrefabTeam12 = prefabModelT2;
-                break;
-            default:
-                Debug.LogError("Bad Data");
-                break;
-        }
+            switch (savedData.p2)
+            {
+                case 0:
+                    playerPrefabTeam12 = prefabModelIA;
+                    break;
+                case 1:
+                    playerPrefabTeam12 = prefabModelT1;
+                    break;
+                case 2:
+                    playerPrefabTeam12 = prefabModelT2;
+                    break;
+                default:
+                    Debug.LogError("Bad Data");
+                    break;
+            }
 
-        switch (savedData.p3)
-        {
-            case 0:
-                playerPrefabTeam21 = prefabModelIA;
-                break;
-            case 1:
-                playerPrefabTeam21 = prefabModelT1;
-                break;
-            case 2:
-                playerPrefabTeam21 = prefabModelT2;
-                break;
-            default:
-                Debug.LogError("Bad Data");
-                break;
-        }
+            switch (savedData.p3)
+            {
+                case 0:
+                    playerPrefabTeam21 = prefabModelIA;
+                    break;
+                case 1:
+                    playerPrefabTeam21 = prefabModelT1;
+                    break;
+                case 2:
+                    playerPrefabTeam21 = prefabModelT2;
+                    break;
+                default:
+                    Debug.LogError("Bad Data");
+                    break;
+            }
 
-        switch (savedData.p4)
-        {
-            case 0:
-                playerPrefabTeam22 = prefabModelIA;
-                break;
-            case 1:
-                playerPrefabTeam22 = prefabModelT1;
-                break;
-            case 2:
-                playerPrefabTeam22 = prefabModelT2;
-                break;
-            default:
-                Debug.LogError("Bad Data");
-                break;
+            switch (savedData.p4)
+            {
+                case 0:
+                    playerPrefabTeam22 = prefabModelIA;
+                    break;
+                case 1:
+                    playerPrefabTeam22 = prefabModelT1;
+                    break;
+                case 2:
+                    playerPrefabTeam22 = prefabModelT2;
+                    break;
+                default:
+                    Debug.LogError("Bad Data");
+                    break;
+            }
         }
-
         GameObject currentLevel = null;
         if (GameMenuManager3.selectedLevel == 0)
             GameMenuManager3.selectedLevel = debugLevel;

@@ -14,7 +14,6 @@ public abstract class AgentAI
     {
         jumpOn = false;
         dashOn = false;
-        passOn = false;
         diveOn = false;
 
         UpdateAgent(env, me);

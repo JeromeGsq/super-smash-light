@@ -24,15 +24,10 @@ public class AIMovementHandler : MovementHandler
 
     public int jumpsCount;
 
-    private bool isPushed;
-    private float pushPower;
-    private Transform pushSender;
-
     private Coroutine dashCoroutine;
     private bool isDashing;
     private bool canDash = true;
 
-    private float savedGravity;
     private float normalizedHorizontalSpeed;
 
     private bool isDestroyed;
@@ -64,16 +59,6 @@ public class AIMovementHandler : MovementHandler
 
     [Space(20)]
 
-    [Tooltip("Cet index permet de choisir via quelle manette ce joueur va être controllé")]
-    [SerializeField]
-    private PlayerIndex index = PlayerIndex.One;
-
-    [Space(20)]
-
-    [Tooltip("Le transform visuel du joueur qui sera flippé selon l'axe 'LocalScaleX'. Ce n'est que visuel")]
-    [SerializeField]
-    private Transform player;
-
     [SerializeField]
     private Animator animator;
 
@@ -99,9 +84,7 @@ public class AIMovementHandler : MovementHandler
 
     [Space(20)]
 
-    [Tooltip("Permettra de faire descendre plus radipedement ou de faire planner plus longtemps le joueur")]
-    [SerializeField]
-    private float gravity = -60f;
+    
     [Tooltip("Vitesse du joueur")]
     [SerializeField]
     private float runSpeed = 13f;
@@ -165,14 +148,7 @@ public class AIMovementHandler : MovementHandler
     [SerializeField]
     private float pushPowerOnMe = 50f;
 
-    public RuntimeAnimatorController ColorBlue;
-    public RuntimeAnimatorController ColorBlue2;
-    public RuntimeAnimatorController ColorViolet;
-    public RuntimeAnimatorController ColorGreen;
-    public RuntimeAnimatorController ColorOrange;
-    public RuntimeAnimatorController ColorRed;
-    public RuntimeAnimatorController ColorYellow;
-    public RuntimeAnimatorController ColorPurple;
+    
 
 
     public bool IsTargeting
@@ -181,74 +157,17 @@ public class AIMovementHandler : MovementHandler
         private set;
     }
 
-    public PlayerIndex Index
-    {
-        get => index;
-        set
-        {
-            index = value;
-            SetColors();
-        }
-    }
-
     public Vector3 MainPosition
     {
         get => mainPosition;
         set => mainPosition = value;
     }
 
-    private RuntimeAnimatorController color1;
-    private RuntimeAnimatorController color2;
-    private RuntimeAnimatorController color3;
-    private RuntimeAnimatorController color4;
 
-    private void Awake()
+    protected override void Awake()
         
     {
-        ColorBlue = Resources.Load<RuntimeAnimatorController>("Animations/PlayerBlue");
-        ColorBlue2 = Resources.Load<RuntimeAnimatorController>("Animations/PlayerBlue2");
-        ColorViolet = Resources.Load<RuntimeAnimatorController>("Animations/PlayerViolet");
-        ColorGreen = Resources.Load<RuntimeAnimatorController>("Animations/PlayerGreen");
-        ColorOrange = Resources.Load<RuntimeAnimatorController>("Animations/PlayerOrange");
-        ColorRed = Resources.Load<RuntimeAnimatorController>("Animations/PlayerRed");
-        ColorYellow = Resources.Load<RuntimeAnimatorController>("Animations/PlayerYellow");
-        ColorPurple = Resources.Load<RuntimeAnimatorController>("Animations/PlayerPurple");
-
-        if(GameMenuManager2.gamepad1color == 1) {color1 = ColorRed;}
-        if(GameMenuManager2.gamepad1color == 2) {color1 = ColorOrange;}
-        if(GameMenuManager2.gamepad1color == 3) {color1 = ColorYellow;}
-        if(GameMenuManager2.gamepad1color == 4) {color1 = ColorPurple;}
-        if(GameMenuManager2.gamepad1color == 21) {color1 = ColorBlue;}
-        if(GameMenuManager2.gamepad1color == 22) {color1 = ColorBlue2;}
-        if(GameMenuManager2.gamepad1color == 23) {color1 = ColorGreen;}
-        if(GameMenuManager2.gamepad1color == 24) {color1 = ColorViolet;}
-
-        if(GameMenuManager2.gamepad2color == 1) {color2 = ColorRed;}
-        if(GameMenuManager2.gamepad2color == 2) {color2 = ColorOrange;}
-        if(GameMenuManager2.gamepad2color == 3) {color2 = ColorYellow;}
-        if(GameMenuManager2.gamepad2color == 4) {color2 = ColorPurple;}
-        if(GameMenuManager2.gamepad2color == 21) {color2 = ColorBlue;}
-        if(GameMenuManager2.gamepad2color == 22) {color2 = ColorBlue2;}
-        if(GameMenuManager2.gamepad2color == 23) {color2 = ColorGreen;}
-        if(GameMenuManager2.gamepad2color == 24) {color2 = ColorViolet;}
-
-        if(GameMenuManager2.gamepad3color == 1) {color3 = ColorRed;}
-        if(GameMenuManager2.gamepad3color == 2) {color3 = ColorOrange;}
-        if(GameMenuManager2.gamepad3color == 3) {color3 = ColorYellow;}
-        if(GameMenuManager2.gamepad3color == 4) {color3 = ColorPurple;}
-        if(GameMenuManager2.gamepad3color == 21) {color3 = ColorBlue;}
-        if(GameMenuManager2.gamepad3color == 22) {color3 = ColorBlue2;}
-        if(GameMenuManager2.gamepad3color == 23) {color3 = ColorGreen;}
-        if(GameMenuManager2.gamepad3color == 24) {color3 = ColorViolet;}
-
-        if(GameMenuManager2.gamepad4color == 1) {color4 = ColorRed;}
-        if(GameMenuManager2.gamepad4color == 2) {color4 = ColorOrange;}
-        if(GameMenuManager2.gamepad4color == 3) {color4 = ColorYellow;}
-        if(GameMenuManager2.gamepad4color == 4) {color4 = ColorPurple;}
-        if(GameMenuManager2.gamepad4color == 21) {color4 = ColorBlue;}
-        if(GameMenuManager2.gamepad4color == 22) {color4 = ColorBlue2;}
-        if(GameMenuManager2.gamepad4color == 23) {color4 = ColorGreen;}
-        if(GameMenuManager2.gamepad4color == 24) {color4 = ColorViolet;}
+        base.Awake();
 
         controller = GetComponent<CharacterController2D>();
 
@@ -305,7 +224,7 @@ public class AIMovementHandler : MovementHandler
                 // Get ball from enemy
                 if (BallHandler.Get.Index == enemyPlayerHandler.index)
                 {
-                    BallHandler.Get.SetGrabbed(ballAnchor, index, myteam);
+                    BallHandler.Get.SetGrabbed(ballAnchor, Index, myteam);
                 }
 
                 // Apply collision on enemy
@@ -317,9 +236,9 @@ public class AIMovementHandler : MovementHandler
             else if (enemyAIHandler != null)
             {
                 // Get ball from enemy
-                if (BallHandler.Get.Index == enemyAIHandler.index)
+                if (BallHandler.Get.Index == enemyAIHandler.Index)
                 {
-                    BallHandler.Get.SetGrabbed(ballAnchor, index, myteam);
+                    BallHandler.Get.SetGrabbed(ballAnchor, Index, myteam);
                 }
 
                 // Apply collision on enemy
@@ -350,22 +269,8 @@ public class AIMovementHandler : MovementHandler
             }
             else if (canGrab && BallHandler.Get.IsGrabbed == false)
             {
-                BallHandler.Get.SetGrabbed(ballAnchor, index, myteam);
+                BallHandler.Get.SetGrabbed(ballAnchor, Index, myteam);
             }
-        }
-    }
-
-    // Messages
-    public void Collision(Transform sender, float power)
-    {
-        if (isPushed == false)
-        {
-            Debug.Log($"AIMovementHandler : Push() : pushed by {sender.name}");
-
-            pushSender = sender;
-            pushPower = power;
-            isPushed = true;
-            gravity = savedGravity;
         }
     }
 
@@ -407,7 +312,7 @@ public class AIMovementHandler : MovementHandler
 
         //gamepadState = GamePad.GetState(Index);
 
-        if(BallHandler.Get.isGrabbed && BallHandler.Get.Index == index) {
+        if(BallHandler.Get.isGrabbed && BallHandler.Get.Index == Index) {
             // Pass controlset
             if(RBreleased || RTreleased) {
                 if(RBreleased && RBtime > 1.5f) {
@@ -516,6 +421,7 @@ public class AIMovementHandler : MovementHandler
             oldpadForJump = false;
             }
         // Dash control
+
         if (BallHandler.Get.Index != Index
             && isDashing == false
             && agent.dashOn
@@ -541,14 +447,8 @@ public class AIMovementHandler : MovementHandler
 
             dashCoroutine = StartCoroutine(CoroutineUtils.DelaySeconds(() =>
             {
-                if (new Vector2(agent.horizontalSpeed, 0).magnitude == 0
-                    && canDash == false
-                    && isDashing == false)
-                {
-                    // Allow to do a dash
-                    canDash = true;
-                }
-                dashCoroutine = null;
+                canDash = true;
+                //dashCoroutine = null;
             }, dashCoolDown));
         }
 
@@ -604,28 +504,6 @@ public class AIMovementHandler : MovementHandler
         velocity = controller.velocity;
 
 
-    }
-
-    private void SetColors()
-    {
-        var color = player.GetComponent<Animator>().runtimeAnimatorController;
-        switch (Index)
-        {
-            case PlayerIndex.One:
-                color = color1;
-                break;
-            case PlayerIndex.Two:
-                color = color2;
-                break;
-            case PlayerIndex.Three:
-                color = color3;
-                break;
-            case PlayerIndex.Four:
-                color = color4;
-                break;
-        }
-
-        player.GetComponent<Animator>().runtimeAnimatorController = color;
     }
 
     private void SetDestroyed()

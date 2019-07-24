@@ -10,7 +10,7 @@ public class RandomAgent : AgentAI
         LT = Time.realtimeSinceStartup + 1 + 3 * Random.value;
         RT = Time.realtimeSinceStartup + 1 + 3 * Random.value;
         A = Time.realtimeSinceStartup + Random.value;
-        B = Time.realtimeSinceStartup + 1 + 3 * Random.value;
+        B = Time.realtimeSinceStartup + Random.value;
         m = Time.realtimeSinceStartup + 3 * Random.value;
     }
 
@@ -43,7 +43,7 @@ public class RandomAgent : AgentAI
         }
         if (Time.realtimeSinceStartup > B)
         {
-            B = Time.realtimeSinceStartup + 1 + Random.value;
+            B = Time.realtimeSinceStartup + Random.value;
             dashOn = true;
         }
         if (Time.realtimeSinceStartup > m)

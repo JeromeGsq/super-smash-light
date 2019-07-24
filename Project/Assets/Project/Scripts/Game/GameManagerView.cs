@@ -50,6 +50,15 @@ public class GameManagerView : BaseView<GameManager>
     [SerializeField]
     private GameObject playerPrefabTeam22;
 
+    [SerializeField]
+    private GameObject prefabModelT1;
+
+    [SerializeField]
+    private GameObject prefabModelT2;
+
+    [SerializeField]
+    private GameObject prefabModelIA;
+
     [Space(20)]
 
 	[SerializeField]
@@ -103,6 +112,71 @@ public class GameManagerView : BaseView<GameManager>
 	{
         
 		base.Start();
+
+        switch(TData.p1)
+        {
+            case 0:
+                playerPrefabTeam11 = prefabModelIA;
+                break;
+            case 1:
+                playerPrefabTeam11 = prefabModelT1;
+                break;
+            case 2:
+                playerPrefabTeam11 = prefabModelT2;
+                break;
+            default:
+                Debug.LogError("Bad Data");
+                break;
+        }
+
+        switch (TData.p2)
+        {
+            case 0:
+                playerPrefabTeam12 = prefabModelIA;
+                break;
+            case 1:
+                playerPrefabTeam12 = prefabModelT1;
+                break;
+            case 2:
+                playerPrefabTeam12 = prefabModelT2;
+                break;
+            default:
+                Debug.LogError("Bad Data");
+                break;
+        }
+
+        switch (TData.p3)
+        {
+            case 0:
+                playerPrefabTeam21 = prefabModelIA;
+                break;
+            case 1:
+                playerPrefabTeam21 = prefabModelT1;
+                break;
+            case 2:
+                playerPrefabTeam21 = prefabModelT2;
+                break;
+            default:
+                Debug.LogError("Bad Data");
+                break;
+        }
+
+        switch (TData.p4)
+        {
+            case 0:
+                playerPrefabTeam22 = prefabModelIA;
+                break;
+            case 1:
+                playerPrefabTeam22 = prefabModelT1;
+                break;
+            case 2:
+                playerPrefabTeam22 = prefabModelT2;
+                break;
+            default:
+                Debug.LogError("Bad Data");
+                break;
+        }
+
         GameObject currentLevel = null;
         if (GameMenuManager3.selectedLevel == 0)
             GameMenuManager3.selectedLevel = debugLevel;

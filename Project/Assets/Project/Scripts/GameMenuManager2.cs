@@ -904,12 +904,10 @@ public class GameMenuManager2 : MonoBehaviour {
             GameObject.Find("gamepad4").GetComponent<SpriteRenderer>().sprite = whiteGamepad;
         }
 
-        TData savedData = FindObjectOfType<TData>();
-        savedData.p1 = gamepad1team;
-        savedData.p2 = gamepad2team;
-        savedData.p3 = gamepad3team;
-        savedData.p4 = gamepad4team;
-        DontDestroyOnLoad(savedData.gameObject);
+        TData.p1 = gamepad1team;
+        TData.p2 = gamepad2team;
+        TData.p3 = gamepad3team;
+        TData.p4 = gamepad4team;
     }
 }
 

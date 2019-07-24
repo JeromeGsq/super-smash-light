@@ -137,6 +137,7 @@ public class GameManagerView : BaseView<GameManager>
         }, 4));
         
 	}
+    /*
     public override void OnPropertyChanged(object sender, PropertyChangedEventArgs property)
 	{
 		base.OnPropertyChanged(sender, property);
@@ -154,6 +155,7 @@ public class GameManagerView : BaseView<GameManager>
 			//this.UpdateBallColor(this.ViewModel.BallIndex);
 		}
 	}
+    */
 	
 	private void InitBall()
 	{

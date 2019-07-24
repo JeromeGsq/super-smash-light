@@ -2,12 +2,11 @@
 using Prime31;
 using XInputDotNetPure;
 using DG.Tweening;
-using UnityEngine.SceneManagement;
-using System;
 
 public enum AIControllerType
 {
-    Random = 0
+    Random = 0,
+    Reactive = 1
 }
 
 [RequireComponent(typeof(CharacterController2D))]
@@ -272,6 +271,9 @@ public class AIMovementHandler : MovementHandler
         {
             case AIControllerType.Random:
                 agent = new RandomAgent();
+                break;
+            case AIControllerType.Reactive:
+                agent = new ReactiveAgent();
                 break;
             default:
                 Debug.LogError("Bad AI type chosen");

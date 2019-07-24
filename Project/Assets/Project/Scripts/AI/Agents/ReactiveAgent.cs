@@ -1,11 +1,11 @@
 ﻿using UnityEngine;
 
-public class RandomAgent : AgentAI
+public class ReactiveAgent : AgentAI
 {
     private float LT, RT, A, B, m;
     private bool movementTendency;
 
-    public RandomAgent()
+    public ReactiveAgent()
     {
         LT = Time.realtimeSinceStartup + 1 + 3 * Random.value;
         RT = Time.realtimeSinceStartup + 1 + 3 * Random.value;

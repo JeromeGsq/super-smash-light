@@ -16,7 +16,7 @@ public class GameManagerView : BaseView<GameManager>
     public GameObject ProjectionReference2;
     public GameObject ProjectionReference3;
     public GameObject ProjectionReference4;
-
+     
     [SerializeField]
     private int debugLevel = 1;
 

@@ -251,7 +251,7 @@ public class GameManager : BaseViewModel
 
                 break;
 
-			case 2:
+			case 2:  
 				this.Team2.Score++;
                 Debug.Log("Teamadd1");
                 break;

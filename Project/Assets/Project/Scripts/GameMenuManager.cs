@@ -22,6 +22,8 @@ public class GameMenuManager : MonoBehaviour {
     public Sprite illuOption;
     public Sprite illuOption1;
 
+    public Sprite illuQuit;
+
     public GameObject BoutonPartie;
     public GameObject BoutonOption;
     public GameObject BoutonQuitter;
@@ -118,9 +120,9 @@ public class GameMenuManager : MonoBehaviour {
                 {
                     selecteur.GetComponent<Transform>().position = new Vector3(6.18f, -7.75f, selecteur.GetComponent<Transform>().position.z);
                     fond.GetComponent<SpriteRenderer>().sprite = fondQuitter;
-                    illu.GetComponent<SpriteRenderer>().sprite = illuOption;
+                    illu.GetComponent<SpriteRenderer>().sprite = illuQuit;
                     illu1.GetComponent<SpriteRenderer>().sprite = null;
-                    illu2.GetComponent<SpriteRenderer>().sprite = illuOption1;
+                    illu2.GetComponent<SpriteRenderer>().sprite = null;
                     illu2.GetComponent<Transform>().localPosition = new Vector3(-2.49f, 1.23f, -0.21f);
                     GameObject.Find("patern1").GetComponent<SpriteRenderer>().sprite = paternQuit;
                     GameObject.Find("patern2").GetComponent<SpriteRenderer>().sprite = paternQuit;
@@ -130,7 +132,7 @@ public class GameMenuManager : MonoBehaviour {
             if (gamepadState.Buttons.A == ButtonState.Pressed && pressedA == false)
             {
                 pressedA = true;
-                BoutonQuitter.GetComponent<Animator>().Play(Animator.StringToHash("OptionMenu"));
+                BoutonQuitter.GetComponent<Animator>().Play(Animator.StringToHash("QuitMenu"));
 
                 StartCoroutine(CoroutineUtils.DelaySeconds(() => {
                     MenuPrincipal.SetActive(false);

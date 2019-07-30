@@ -308,6 +308,11 @@ public class GameMenuManager2 : MonoBehaviour {
             //    dpad1L = true;
             //}
 
+            if(gamepad1team == 0)
+            {
+                gamepad1color = 0;
+            }
+
             if (gamepad1team == 0 && this.gamepadState1.DPad.Right == ButtonState.Pressed && dpad1R == false)
             {
                 gamepad1team = 2;

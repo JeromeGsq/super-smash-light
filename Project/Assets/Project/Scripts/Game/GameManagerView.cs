@@ -57,8 +57,11 @@ public class GameManagerView : BaseView<GameManager>
     private GameObject prefabModelT2;
 
     [SerializeField]
-    private GameObject prefabModelIA;
+    private GameObject prefabModelIAT1;
 
+    [SerializeField]
+    private GameObject prefabModelIAT2;
+    
     [Space(20)]
 
 	[SerializeField]
@@ -120,7 +123,7 @@ public class GameManagerView : BaseView<GameManager>
             switch (savedData.p1)
             {
                 case 0:
-                    playerPrefabTeam11 = prefabModelIA;
+                    Debug.Log("Clean Up saved team 0");
                     break;
                 case 1:
                     playerPrefabTeam11 = prefabModelT1;
@@ -136,13 +139,19 @@ public class GameManagerView : BaseView<GameManager>
             switch (savedData.p2)
             {
                 case 0:
-                    playerPrefabTeam12 = prefabModelIA;
+                    Debug.Log("Clean Up saved team 0");
                     break;
                 case 1:
                     playerPrefabTeam12 = prefabModelT1;
                     break;
                 case 2:
                     playerPrefabTeam12 = prefabModelT2;
+                    break;
+                case 3:
+                    playerPrefabTeam12 = prefabModelIAT1;
+                    break;
+                case 4:
+                    playerPrefabTeam12 = prefabModelIAT2;
                     break;
                 default:
                     Debug.LogError("Bad Data");
@@ -152,13 +161,19 @@ public class GameManagerView : BaseView<GameManager>
             switch (savedData.p3)
             {
                 case 0:
-                    playerPrefabTeam21 = prefabModelIA;
+                    Debug.Log("Clean Up saved team 0");
                     break;
                 case 1:
                     playerPrefabTeam21 = prefabModelT1;
                     break;
                 case 2:
                     playerPrefabTeam21 = prefabModelT2;
+                    break;
+                case 3:
+                    playerPrefabTeam12 = prefabModelIAT1;
+                    break;
+                case 4:
+                    playerPrefabTeam12 = prefabModelIAT2;
                     break;
                 default:
                     Debug.LogError("Bad Data");
@@ -168,13 +183,19 @@ public class GameManagerView : BaseView<GameManager>
             switch (savedData.p4)
             {
                 case 0:
-                    playerPrefabTeam22 = prefabModelIA;
+                    Debug.Log("Clean Up saved team 0");
                     break;
                 case 1:
                     playerPrefabTeam22 = prefabModelT1;
                     break;
                 case 2:
                     playerPrefabTeam22 = prefabModelT2;
+                    break;
+                case 3:
+                    playerPrefabTeam12 = prefabModelIAT1;
+                    break;
+                case 4:
+                    playerPrefabTeam12 = prefabModelIAT2;
                     break;
                 default:
                     Debug.LogError("Bad Data");

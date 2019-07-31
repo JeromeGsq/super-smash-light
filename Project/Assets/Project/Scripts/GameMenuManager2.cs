@@ -35,6 +35,14 @@ public class GameMenuManager2 : MonoBehaviour {
     private Color Orange = new Color(0.976f, 0.325f, 0.270f);
     private Color Red = new Color(0.854f, 0.137f, 0.152f);
 
+    private SpriteRenderer g1, g2, g3, g4, sg1, sg2, sg3, sg4;
+
+    bool g1left, g2left, g3left, g4left;
+    bool g1right, g2right, g3right, g4right;
+    bool g1up, g2up, g3up, g4up;
+    bool g1a, g2a, g3a, g4a;
+    bool g1y;
+
     [Space(10)]
     [SerializeField]
     private GameObject gamepad1;
@@ -90,34 +98,12 @@ public class GameMenuManager2 : MonoBehaviour {
     [SerializeField]
     private GameObject fade;
 
-    private bool dpad1Up; 
-    private bool dpad2Up; 
-    private bool dpad3Up; 
-    private bool dpad4Up;
-
-    private bool dpad1R;
-    private bool dpad2R;
-    private bool dpad3R;
-    private bool dpad4R;
-
-    private bool dpad1L;
-    private bool dpad2L;
-    private bool dpad3L;
-    private bool dpad4L;
-
-    private bool btn1A;
-    private bool btn2A;
-    private bool btn3A;
-    private bool btn4A;
-
-    private bool btn1Y;
-
     private bool pressedBack;
+
+    private bool rearrageAI;
 
     // Start is called before the first frame update
     void Start() {
-
-        btn1Y = false;
 
     gamepad1Validated = false;
     gamepad2Validated = false;
@@ -150,10 +136,14 @@ public class GameMenuManager2 : MonoBehaviour {
         gamepad3Validated = false;
         gamepad4Validated = false;
 
-        GameObject.Find("gamepad1").GetComponent<SpriteRenderer>().sprite = greyGamepad;
-        GameObject.Find("gamepad2").GetComponent<SpriteRenderer>().sprite = greyGamepad;
-        GameObject.Find("gamepad3").GetComponent<SpriteRenderer>().sprite = greyGamepad;
-        GameObject.Find("gamepad4").GetComponent<SpriteRenderer>().sprite = greyGamepad;
+        g1 = GameObject.Find("gamepad1").GetComponent<SpriteRenderer>();
+        g1.sprite = greyGamepad;
+        g2 = GameObject.Find("gamepad2").GetComponent<SpriteRenderer>();
+        g2.sprite = greyGamepad;
+        g3 = GameObject.Find("gamepad3").GetComponent<SpriteRenderer>();
+        g3.sprite = greyGamepad;
+        g4 = GameObject.Find("gamepad4").GetComponent<SpriteRenderer>();
+        g4.sprite = greyGamepad;
 
         gamepad1team = 0;
         gamepad2team = 0;
@@ -164,932 +154,588 @@ public class GameMenuManager2 : MonoBehaviour {
         gamepad3color = 0;
         gamepad4color = 0;
 
+        sg1 = GameObject.Find("gamepadColor1").GetComponent<SpriteRenderer>();
+        sg2 = GameObject.Find("gamepadColor2").GetComponent<SpriteRenderer>();
+        sg3 = GameObject.Find("gamepadColor3").GetComponent<SpriteRenderer>();
+        sg4 = GameObject.Find("gamepadColor4").GetComponent<SpriteRenderer>();
+
         StartCoroutine(CoroutineUtils.DelaySeconds(() => {
             AnimatedBandeau.SetActive(false);
             canvas.SetActive(true);
         }, 0.7f));
     }
+
     // Update is called once per frame
     void Update()
     {
-
         pressedBack = true;
 
-
-        this.gamepadState1 = GamePad.GetState(PlayerIndex.One);
-        this.gamepadState2 = GamePad.GetState(PlayerIndex.Two);
-        this.gamepadState3 = GamePad.GetState(PlayerIndex.Three);
-        this.gamepadState4 = GamePad.GetState(PlayerIndex.Four);
-
-
-        ///////////////////////////////////////////////////////////////////////////////
-
-        //old pad script
-
-        if (this.gamepadState1.DPad.Up == ButtonState.Released)
+        bool setToRearrange = rearrageAI;
+        if(rearrageAI)
         {
-            dpad1Up = false;
+            if (!gamepadState2.IsConnected) gamepad2team = 0;
+            if (!gamepadState3.IsConnected) gamepad3team = 0;
+            if (!gamepadState4.IsConnected) gamepad4team = 0;
+            rearrageAI = false;
         }
 
-        if (this.gamepadState2.DPad.Up == ButtonState.Released)
+        gamepadState1 = GamePad.GetState(PlayerIndex.One);
+        gamepadState2 = GamePad.GetState(PlayerIndex.Two);
+        gamepadState3 = GamePad.GetState(PlayerIndex.Three);
+        gamepadState4 = GamePad.GetState(PlayerIndex.Four);
+
+        // To only activate once per button press
+
+        if (gamepadState1.Buttons.A == ButtonState.Released) g1a = false;
+        if (gamepadState2.Buttons.A == ButtonState.Released) g2a = false;
+        if (gamepadState3.Buttons.A == ButtonState.Released) g3a = false;
+        if (gamepadState4.Buttons.A == ButtonState.Released) g4a = false;
+
+        if (gamepadState1.DPad.Left == ButtonState.Released) g1left = false;
+        if (gamepadState2.DPad.Left == ButtonState.Released) g2left = false;
+        if (gamepadState3.DPad.Left == ButtonState.Released) g3left = false;
+        if (gamepadState4.DPad.Left == ButtonState.Released) g4left = false;
+
+        if (gamepadState1.DPad.Right == ButtonState.Released) g1right = false;
+        if (gamepadState2.DPad.Right == ButtonState.Released) g2right = false;
+        if (gamepadState3.DPad.Right == ButtonState.Released) g3right = false;
+        if (gamepadState4.DPad.Right == ButtonState.Released) g4right = false;
+
+        if (gamepadState1.DPad.Up == ButtonState.Released) g1up = false;
+        if (gamepadState2.DPad.Up == ButtonState.Released) g2up = false;
+        if (gamepadState3.DPad.Up == ButtonState.Released) g3up = false;
+        if (gamepadState4.DPad.Up == ButtonState.Released) g4up = false;
+
+        if (gamepadState1.Buttons.Y == ButtonState.Released) g1y = false;
+
+        // GamePad 1 Controls
+        if (!gamepad1Validated)
         {
-            dpad2Up = false;
-        }
-
-        if (this.gamepadState3.DPad.Up == ButtonState.Released)
-        {
-            dpad3Up = false;
-        }
-
-        if (this.gamepadState4.DPad.Up == ButtonState.Released)
-        {
-            dpad4Up = false;
-        }
-
-
-
-        if (this.gamepadState1.DPad.Right == ButtonState.Released)
-        {
-            dpad1R = false;
-        }
-
-        if (this.gamepadState2.DPad.Right == ButtonState.Released)
-        {
-            dpad2R = false;
-        }
-
-        if (this.gamepadState3.DPad.Right == ButtonState.Released)
-        {
-            dpad3R = false;
-        }
-
-        if (this.gamepadState4.DPad.Right == ButtonState.Released)
-        {
-            dpad4R = false;
-        }
-
-
-
-        if (this.gamepadState1.DPad.Left == ButtonState.Released)
-        {
-            dpad1L = false;
-        }
-
-        if (this.gamepadState2.DPad.Left == ButtonState.Released)
-        {
-            dpad2L = false;
-        }
-
-        if (this.gamepadState3.DPad.Left == ButtonState.Released)
-        {
-            dpad3L = false;
-        }
-
-        if (this.gamepadState4.DPad.Left == ButtonState.Released)
-        {
-            dpad4L = false;
-        }
-
-
-
-        if (this.gamepadState1.Buttons.A == ButtonState.Released)
-        {
-            btn1A = false;
-        }
-
-        if (this.gamepadState2.Buttons.A == ButtonState.Released)
-        {
-            btn2A = false;
-        }
-
-        if (this.gamepadState3.Buttons.A == ButtonState.Released)
-        {
-            btn3A = false;
-        }
-
-        if (this.gamepadState4.Buttons.A == ButtonState.Released)
-        {
-            btn4A = false;
-        }
-
-
-        ///////////////////////////////////////////////////////////////////////////////
-
-
-
-
-        if (gamepad1team == 0)
-        {
-            gamepad1.GetComponent<Transform>().localPosition = new Vector3(0, 0, -2.3f);
-        }
-        if (gamepad2team == 0)
-        {
-            gamepad2.GetComponent<Transform>().localPosition = new Vector3(0, -2.5f, -2.3f);
-        }
-        if (gamepad3team == 0)
-        {
-            gamepad3.GetComponent<Transform>().localPosition = new Vector3(0, -5f, -2.3f);
-        }
-        if (gamepad4team == 0)
-        {
-            gamepad4.GetComponent<Transform>().localPosition = new Vector3(0, -7.5f, -2.3f);
-        }
-        if (gamepad3color == 0)
-        {
-            GameObject.Find("gamepadColor3").GetComponent<SpriteRenderer>().color = new Color(1, 1, 1);
-        }
-        if (gamepad4color == 0)
-        {
-            GameObject.Find("gamepadColor4").GetComponent<SpriteRenderer>().color = new Color(1, 1, 1);
-        }
-        if (gamepad2color == 0)
-        {
-            GameObject.Find("gamepadColor2").GetComponent<SpriteRenderer>().color = new Color(1, 1, 1);
-        }
-        if (gamepad1color == 0)
-        {
-            GameObject.Find("gamepadColor1").GetComponent<SpriteRenderer>().color = new Color(1, 1, 1);
-        }
-        if (this.gamepad1Validated == false)
-        {
-
-            //if (this.gamepadState1.DPad.Right == ButtonState.Pressed && dpad1R == false)
-            //{
-            //    gamepad1team = 2;
-            //    if (gamepad1color >= 20)
-            //    {
-            //        gamepad1color -= 20;
-            //    }
-            //    gamepad1.GetComponent<Transform>().localPosition = new Vector3(8.33f, 0, -2.3f);
-            //    dpad1R = true;
-            //}
-            //if (this.gamepadState1.DPad.Left == ButtonState.Pressed && dpad1L == false)
-            //{
-            //    gamepad1team = 1;
-            //    if (gamepad1color <= 21)
-            //    {
-            //        gamepad1color += 20;
-            //    }
-            //    gamepad1.GetComponent<Transform>().localPosition = new Vector3(-8.33f, 0, -2.3f);
-            //    dpad1L = true;
-            //}
-
-            if (gamepad1team == 0)
+            if (gamepadState1.DPad.Right == ButtonState.Pressed && !g1right)
             {
-                gamepad1color = 0;
-            }
-
-            if (gamepad1team == 0 && this.gamepadState1.DPad.Right == ButtonState.Pressed && dpad1R == false)
-            {
-                gamepad1team = 2;
-                if (gamepad1color >= 20)
+                g1right = true;
+                if (gamepad1team == 0)
                 {
-                    gamepad1color -= 20;
-                }
-                gamepad1.GetComponent<Transform>().localPosition = new Vector3(8.33f, 0f, -2.3f);
-                dpad1R = true;
-            }
-
-            if (gamepad1team == 2 && this.gamepadState3.DPad.Right == ButtonState.Pressed && dpad3R == false)
-            {
-                gamepad1team = 2;
-                if (gamepad1color >= 20)
-                {
-                    gamepad1color -= 20;
-                }
-                gamepad1.GetComponent<Transform>().localPosition = new Vector3(8.33f, 0f, -2.3f);
-                dpad1R = true;
-            }
-
-            if (gamepad1team == 2 && this.gamepadState1.DPad.Left == ButtonState.Pressed && dpad1L == false)
-            {
-                gamepad1team = 0;
-                if (gamepad1color <= 21)
-                {
-                    gamepad1color += 20;
-                }
-                gamepad1.GetComponent<Transform>().localPosition = new Vector3(0f, 0f, 0f);
-                dpad1L = true;
-            }
-
-            if (gamepad1team == 0 && this.gamepadState1.DPad.Left == ButtonState.Pressed && dpad1L == false)
-            {
-                gamepad1team = 1;
-                if (gamepad1color <= 21)
-                {
-                    gamepad1color += 20;
-                }
-                gamepad1.GetComponent<Transform>().localPosition = new Vector3(-8.33f, 0f, -2.3f);
-                dpad1L = true;
-            }
-
-            if (gamepad1team == 1 && this.gamepadState1.DPad.Right == ButtonState.Pressed && dpad1R == false)
-            {
-                gamepad1team = 0;
-                if (gamepad1color >= 20)
-                {
-                    gamepad1color -= 20;
-                }
-                gamepad1.GetComponent<Transform>().localPosition = new Vector3(0f, 0f, 0f);
-                dpad1R = true;
-            }
-
-        }
-        if (gamepad1team != 0 && this.gamepad1Validated == false)
-        {
-
-            if (this.gamepadState1.DPad.Up == ButtonState.Pressed && dpad1Up == false)
-            {
-                gamepad1color += 1;
-                dpad1Up = true;
-            }
-            if (gamepad1team == 2)
-            {
-
-                if (this.gamepadState1.Buttons.A == ButtonState.Pressed && btn1A == false && gamepad1color != 0)
-                {
-                    gamepad1Validated = true;
-                    GameObject.Find("gamepad1").GetComponent<SpriteRenderer>().sprite = whiteGamepad;
-                    btn1A = true;
-                }
-
-                if (gamepad1color > 4 && gamepad1color <= 5)
-                {
-                    gamepad1color = 1;
-                }
-            }
-            if (gamepad1team == 1)
-            {
-
-                if (this.gamepadState1.Buttons.A == ButtonState.Pressed && btn1A == false && gamepad1color != 20)
-                {
-                    gamepad1Validated = true;
-                    GameObject.Find("gamepad1").GetComponent<SpriteRenderer>().sprite = whiteGamepad;
-                    btn1A = true;
-                }
-
-                if (gamepad1color > 24 & gamepad1color <= 25)
-                {
+                    gamepad1team = 2;
                     gamepad1color = 21;
+                    rearrageAI = true;
                 }
-            }
-            if (gamepad3team == gamepad1team)
-            {
-                if (gamepad1color == gamepad3color)
+                if (gamepad1team == 1)
                 {
-                    gamepad1color += 1;
-                }
-            }
-            if (gamepad4team == gamepad1team)
-            {
-                if (gamepad1color == gamepad4color)
-                {
-                    gamepad1color += 1;
-                }
-            }
-            if (gamepad2team == gamepad1team)
-            {
-                if (gamepad1color == gamepad2color)
-                {
-                    gamepad1color += 1;
+                    gamepad1team = 0;
+                    gamepad1color = 0;
+                    rearrageAI = true;
                 }
             }
 
-            if (gamepad1color == 1)
+            if(gamepadState1.DPad.Left == ButtonState.Pressed && !g1left)
             {
-                GameObject.Find("gamepadColor1").GetComponent<SpriteRenderer>().color = Red;
+                g1left = true;
+                if (gamepad1team == 0)
+                {
+                    gamepad1team = 1;
+                    gamepad1color = 1;
+                    rearrageAI = true;
+                }
+                if (gamepad1team == 2)
+                {
+                    gamepad1team = 0;
+                    gamepad1color = 0;
+                    rearrageAI = true;
+                }
             }
-            if (gamepad1color == 2)
+
+            if (gamepad1team != 0)
             {
-                GameObject.Find("gamepadColor1").GetComponent<SpriteRenderer>().color = Orange;
-            }
-            if (gamepad1color == 3)
-            {
-                GameObject.Find("gamepadColor1").GetComponent<SpriteRenderer>().color = Yellow;
-            }
-            if (gamepad1color == 4)
-            {
-                GameObject.Find("gamepadColor1").GetComponent<SpriteRenderer>().color = Purple;
-            }
-            if (gamepad1color == 21)
-            {
-                GameObject.Find("gamepadColor1").GetComponent<SpriteRenderer>().color = Blue1;
-            }
-            if (gamepad1color == 22)
-            {
-                GameObject.Find("gamepadColor1").GetComponent<SpriteRenderer>().color = Blue2;
-            }
-            if (gamepad1color == 23)
-            {
-                GameObject.Find("gamepadColor1").GetComponent<SpriteRenderer>().color = Green;
-            }
-            if (gamepad1color == 24)
-            {
-                GameObject.Find("gamepadColor1").GetComponent<SpriteRenderer>().color = Violet;
-            }
-        }
-        if (this.gamepad1Validated == true)
-        {
-            if (this.gamepadState1.Buttons.A == ButtonState.Pressed && btn1A == false)
-            {
-                GameObject.Find("gamepad1").GetComponent<SpriteRenderer>().sprite = greyGamepad;
-                this.gamepad1Validated = false;
-                btn1A = true;
+                if(gamepadState1.DPad.Up == ButtonState.Pressed && !g1up)
+                {
+                    g1up = true;
+                    gamepad1color++;
+                    if (gamepad1color == 5) gamepad1color = 1;
+                    if (gamepad1color == 25) gamepad1color = 21;
+                }
+                SetSpriteColor(sg1, gamepad1color);
             }
         }
 
-
-        if (this.gamepad2Validated == false)
+        if (gamepadState1.Buttons.A == ButtonState.Pressed && !g1a)
         {
-            if (gamepad2team == 0)
+            g1a = true;
+            if (!gamepad1Validated && gamepad1color != 0)
             {
-                gamepad2color = 0;
+                gamepad1Validated = true;
+                g1.sprite = whiteGamepad;
             }
-            if (this.gamepadState2.DPad.Right == ButtonState.Pressed && dpad2R == false)
+            else if(gamepad1Validated)
             {
-                gamepad2team = 2;
-                if (gamepad2color >= 20)
-                {
-                    gamepad2color -= 20;
-                }
-                gamepad2.GetComponent<Transform>().localPosition = new Vector3(8.33f, -2.5f, -2.3f);
-                dpad2R = true;
+                gamepad1Validated = false;
+                g1.sprite = greyGamepad;
             }
-            else if (this.gamepadState2.DPad.Left == ButtonState.Pressed && dpad2L == false)
+        }
+
+        // ---------------------- Validation IA with Y ----------------------------------------
+
+        if (gamepadState1.Buttons.Y == ButtonState.Pressed && gamepad1Validated && !g1y)
+        {
+            g1y = true;
+            if (!gamepad2Validated && !gamepad3Validated && !gamepad4Validated)
             {
-                gamepad2team = 1;
-                if (gamepad2color <= 21)
-                {
-                    gamepad2color += 20;
-                }
-                gamepad2.GetComponent<Transform>().localPosition = new Vector3(-8.33f, -2.5f, -2.3f);
-                dpad2L = true;
+                gamepad2Validated = true;
+                g2.sprite = whiteGamepad;
+                gamepad3Validated = true;
+                g3.sprite = whiteGamepad;
+                gamepad4Validated = true;
+                g4.sprite = whiteGamepad;
             }
             else
             {
-                if (gamepad1team == 1)
+                gamepad2Validated = false;
+                g2.sprite = greyGamepad;
+                gamepad3Validated = false;
+                g3.sprite = greyGamepad;
+                gamepad4Validated = false;
+                g4.sprite = greyGamepad;
+            }
+        }
+
+        //GamePad 2 Controls
+
+        if (!gamepad2Validated)
+        {
+            if (gamepadState2.IsConnected)
+            {
+                if (gamepadState2.DPad.Right == ButtonState.Pressed && !g2right)
+                {
+                    g2right = true;
+                    if (gamepad2team == 0)
+                    {
+                        gamepad2team = 2;
+                        gamepad2color = 22;
+                        rearrageAI = true;
+                    }
+                    if (gamepad2team == 1)
+                    {
+                        gamepad2team = 0;
+                        gamepad2color = 0;
+                        rearrageAI = true;
+                    }
+                }
+
+                if (gamepadState2.DPad.Left == ButtonState.Pressed && !g2left)
+                {
+                    g2left = true;
+                    if (gamepad2team == 0)
+                    {
+                        gamepad2team = 1;
+                        gamepad2color = 2;
+                        rearrageAI = true;
+                    }
+                    if (gamepad2team == 2)
+                    {
+                        gamepad2team = 0;
+                        gamepad2color = 0;
+                        rearrageAI = true;
+                    }
+                }
+            }
+            else if (setToRearrange)
+            {
+                if (teamCounter(true) < 2)
                 {
                     gamepad2team = 3;
-                    if (gamepad2color <= 21)
-                    {
-                        gamepad2color += 20;
-                    }
-                    //gamepad2.GetComponent<Transform>().localPosition = new Vector3(-8.33f, -2.5f, -2.3f);
-                    dpad2L = true;
+                    gamepad2color = 2;
                 }
                 else
                 {
                     gamepad2team = 4;
-                    if (gamepad2color >= 20)
+                    gamepad2color = 22;
+                }
+            }
+
+            if (gamepad2team != 0)
+            {
+                if (gamepadState2.DPad.Up == ButtonState.Pressed && !g1up)
+                {
+                    g1up = true;
+                    gamepad2color++;
+                    if (gamepad2color == 5) gamepad2color = 1;
+                    if (gamepad2color == 25) gamepad2color = 21;
+                }
+                SetSpriteColor(sg2, gamepad2color);
+            }
+        }
+
+        if (gamepadState2.Buttons.A == ButtonState.Pressed && !g2a)
+        {
+            g2a = true;
+            if (!gamepad2Validated && gamepad2color != 0)
+            {
+                gamepad2Validated = true;
+                g2.sprite = whiteGamepad;
+            }
+            else if (gamepad2Validated)
+            {
+                gamepad2Validated = false;
+                g2.sprite = greyGamepad;
+            }
+        }
+
+        // GamePad 3 Controls
+        if (!gamepad3Validated)
+        {
+            if (gamepadState3.IsConnected)
+            {
+                if (gamepadState3.DPad.Right == ButtonState.Pressed && !g3right)
+                {
+                    g3right = true;
+                    if (gamepad3team == 0)
                     {
-                        gamepad2color -= 20;
+                        gamepad3team = 2;
+                        gamepad3color = 23;
+                        rearrageAI = true;
                     }
-                    //gamepad2.GetComponent<Transform>().localPosition = new Vector3(8.33f, -2.5f, -2.3f);
-                    dpad2R = true;
+                    if (gamepad3team == 1)
+                    {
+                        gamepad3team = 0;
+                        gamepad3color = 0;
+                        rearrageAI = true;
+                    }
                 }
+
+                if (gamepadState3.DPad.Left == ButtonState.Pressed && !g3left)
+                {
+                    g3left = true;
+                    if (gamepad3team == 0)
+                    {
+                        gamepad3team = 1;
+                        gamepad3color = 3;
+                        rearrageAI = true;
+                    }
+                    if (gamepad3team == 2)
+                    {
+                        gamepad3team = 0;
+                        gamepad3color = 0;
+                        rearrageAI = true;
+                    }
+                }
+            }
+            else if (setToRearrange)
+            {
+                if (teamCounter(true) < 2)
+                {
+                    gamepad3team = 3;
+                    gamepad3color = 3;
+                }
+                else
+                {
+                    gamepad3team = 4;
+                    gamepad3color = 23;
+                }
+            }
+
+            if (gamepad3team != 0)
+            {
+                if (gamepadState3.DPad.Up == ButtonState.Pressed && !g3up)
+                {
+                    g3up = true;
+                    gamepad3color++;
+                    if (gamepad3color == 5) gamepad3color = 1;
+                    if (gamepad3color == 25) gamepad3color = 21;
+                }
+                SetSpriteColor(sg3, gamepad3color);
             }
         }
 
-
-        if (gamepad2team != 0 && this.gamepad2Validated == false)
+        if (gamepadState3.Buttons.A == ButtonState.Pressed && !g3a)
         {
-
-
-            if (this.gamepadState2.DPad.Up == ButtonState.Pressed && dpad2Up == false)
+            g3a = true;
+            if (!gamepad3Validated && gamepad3color != 0)
             {
-                gamepad2color += 1;
-                dpad2Up = true;
+                gamepad3Validated = true;
+                g3.sprite = whiteGamepad;
             }
-            if (gamepad2team == 2)
+            else if (gamepad3Validated)
             {
-
-                if (this.gamepadState2.Buttons.A == ButtonState.Pressed && btn2A == false && gamepad2color != 0)
-                {
-                    gamepad2Validated = true;
-                    GameObject.Find("gamepad2").GetComponent<SpriteRenderer>().sprite = whiteGamepad;
-                    btn2A = true;
-                }
-
-                if (gamepad2color > 4 && gamepad2color <= 5)
-                {
-                    gamepad2color = 1;
-                }
-            }
-
-            if (gamepad2team == 1)
-            {
-
-                if (this.gamepadState2.Buttons.A == ButtonState.Pressed && btn2A == false && gamepad2color != 20)
-                {
-                    gamepad2Validated = true;
-                    GameObject.Find("gamepad2").GetComponent<SpriteRenderer>().sprite = whiteGamepad;
-                    btn2A = true;
-                }
-
-                if (gamepad2color <= 25)
-                {
-                    gamepad2color = 21;
-                }
-            }
-
-
-            if (gamepad2team == 0)
-            {
-                    gamepad2color = 0;
-
-                if (this.gamepadState1.Buttons.Y == ButtonState.Pressed && btn1Y == false && gamepad1color != 20)
-                {
-                    gamepad2Validated = true;
-                    GameObject.Find("gamepad2").GetComponent<SpriteRenderer>().sprite = whiteGamepad;
-                    btn2A = true;
-                }
-
-                if (gamepad2color > 24 & gamepad2color <= 25)
-                {
-                    gamepad2color = 21;
-                }
-            }
-
-            if (gamepad4team == gamepad2team)
-            {
-                if (gamepad2color == gamepad4color)
-                {
-                    gamepad2color += 1;
-                }
-            }
-            if (gamepad3team == gamepad2team)
-            {
-                if (gamepad2color == gamepad3color)
-                {
-                    gamepad2color += 1;
-                }
-            }
-            if (gamepad1team == gamepad2team)
-            {
-                if (gamepad2color == gamepad1color)
-                {
-                    gamepad2color += 1;
-                }
-            }
-
-            if (gamepad2color == 1)
-            {
-                GameObject.Find("gamepadColor2").GetComponent<SpriteRenderer>().color = Red;
-            }
-            if (gamepad2color == 2)
-            {
-                GameObject.Find("gamepadColor2").GetComponent<SpriteRenderer>().color = Orange;
-            }
-            if (gamepad2color == 3)
-            {
-                GameObject.Find("gamepadColor2").GetComponent<SpriteRenderer>().color = Yellow;
-            }
-            if (gamepad2color == 4)
-            {
-                GameObject.Find("gamepadColor2").GetComponent<SpriteRenderer>().color = Purple;
-            }
-            if (gamepad2color == 21)
-            {
-                GameObject.Find("gamepadColor2").GetComponent<SpriteRenderer>().color = Blue1;
-            }
-            if (gamepad2color == 22)
-            {
-                GameObject.Find("gamepadColor2").GetComponent<SpriteRenderer>().color = Blue2;
-            }
-            if (gamepad2color == 23)
-            {
-                GameObject.Find("gamepadColor2").GetComponent<SpriteRenderer>().color = Green;
-            }
-            if (gamepad2color == 24)
-            {
-                GameObject.Find("gamepadColor2").GetComponent<SpriteRenderer>().color = Violet;
-            }
-        }
-        if (this.gamepad2Validated == true)
-        {
-            if (this.gamepadState2.Buttons.A == ButtonState.Pressed && btn2A == false)
-            {
-                GameObject.Find("gamepad2").GetComponent<SpriteRenderer>().sprite = greyGamepad;
-                this.gamepad2Validated = false;
-                btn2A = true;
+                gamepad3Validated = false;
+                g3.sprite = greyGamepad;
             }
         }
 
-
-        if (this.gamepad3Validated == false)
+        //GamePad 4 controls
+        if (!gamepad4Validated)
         {
-            if (this.gamepadState3.DPad.Right == ButtonState.Pressed && dpad3R == false)
+            if (gamepadState4.IsConnected)
             {
-                gamepad3team = 2;
-                if (gamepad3color >= 20)
+                if (gamepadState4.DPad.Right == ButtonState.Pressed && !g4right)
                 {
-                    gamepad3color -= 20;
+                    g4right = true;
+                    if (gamepad4team == 0)
+                    {
+                        gamepad4team = 2;
+                        gamepad4color = 24;
+                        rearrageAI = true;
+                    }
+                    if (gamepad4team == 1)
+                    {
+                        gamepad4team = 0;
+                        gamepad4color = 0;
+                        rearrageAI = true;
+                    }
                 }
-                gamepad3.GetComponent<Transform>().localPosition = new Vector3(8.33f, -5f, -2.3f);
-                dpad3R = true;
+
+                if (gamepadState4.DPad.Left == ButtonState.Pressed && !g4left)
+                {
+                    g4left = true;
+                    if (gamepad4team == 0)
+                    {
+                        gamepad4team = 1;
+                        gamepad4color = 4;
+                        rearrageAI = true;
+                    }
+                    if (gamepad4team == 2)
+                    {
+                        gamepad4team = 0;
+                        gamepad4color = 0;
+                        rearrageAI = true;
+                    }
+                }
             }
-            else if (this.gamepadState3.DPad.Left == ButtonState.Pressed && dpad3L == false)
+            else if(setToRearrange)
             {
-                gamepad3team = 1;
-                if (gamepad3color <= 21)
+                if (teamCounter(true) < 2)
                 {
-                    gamepad3color += 20;
+                    gamepad4team = 3;
+                    gamepad4color = 4;
                 }
-                gamepad3.GetComponent<Transform>().localPosition = new Vector3(-8.33f, -5f, -2.3f);
-                dpad3L = true;
+                else
+                {
+                    gamepad4team = 4;
+                    gamepad4color = 24;
+                }
+            }
+
+            if (gamepad4team != 0)
+            {
+                if (gamepadState4.DPad.Up == ButtonState.Pressed && !g4up)
+                {
+                    g4up = true;
+                    gamepad4color++;
+                    if (gamepad4color == 5) gamepad4color = 1;
+                    if (gamepad4color == 25) gamepad4color = 21;
+                }
+                SetSpriteColor(sg4, gamepad4color);
+            }
+        }
+
+        if (gamepadState4.Buttons.A == ButtonState.Pressed && !g4a)
+        {
+            g4a = true;
+            if (!gamepad4Validated && gamepad4color != 0)
+            {
+                gamepad4Validated = true;
+                g4.sprite = whiteGamepad;
+            }
+            else if (gamepad4Validated)
+            {
+                gamepad4Validated = false;
+                g4.sprite = greyGamepad;
+            }
+        }
+
+        // Validation
+
+        if (gamepad1Validated && gamepad2Validated && gamepad3Validated && gamepad4Validated)
+        {
+            if (teamCounter(true) == 2 && teamCounter(false) == 2)
+            {
+                continueMessage.SetActive(true);
+                if (gamepadState1.Buttons.Start == ButtonState.Pressed ||
+                    gamepadState2.Buttons.Start == ButtonState.Pressed ||
+                    gamepadState3.Buttons.Start == ButtonState.Pressed ||
+                    gamepadState4.Buttons.Start == ButtonState.Pressed)
+                {
+                    this.gameObject.SetActive(false);
+                    Menu3.SetActive(true);
+                }
             }
             else
             {
-                if (teamCounter(true)==2)
-                {
-                    gamepad3team = 4;
-                    if (gamepad3color >= 20)
-                    {
-                        gamepad3color -= 20;
-                    }
-                    //gamepad3.GetComponent<Transform>().localPosition = new Vector3(8.33f, -5f, -2.3f);
-                    dpad3R = true;
-                    gamepad4team = 4;
-                    if (gamepad4color >= 20)
-                    {
-                        gamepad4color -= 20;
-                    }
-                    //gamepad4.GetComponent<Transform>().localPosition = new Vector3(8.33f, -7.5f, -2.3f);
-
-                    dpad4R = true;
-                }
-                else if (teamCounter(false)==2)
-                {
-                    gamepad3team = 3;
-                    if (gamepad3color <= 21)
-                    {
-                        gamepad3color += 20;
-                    }
-                    //gamepad3.GetComponent<Transform>().localPosition = new Vector3(-8.33f, -5f, -2.3f);
-                    dpad3L = true;
-
-                    gamepad4team = 3;
-                    if (gamepad4color >= 20)
-                    {
-                        gamepad4color -= 20;
-                    }
-                    //gamepad4.GetComponent<Transform>().localPosition = new Vector3(8.33f, -7.5f, -2.3f);
-
-                    dpad4R = true;
-                }
-                else
-                {
-                    gamepad3team = 3;
-                    if (gamepad3color <= 21)
-                    {
-                        gamepad3color += 20;
-                    }
-                    //gamepad3.GetComponent<Transform>().localPosition = new Vector3(-8.33f, -5f, -2.3f);
-
-                    dpad3L = true;
-
-                    gamepad4team = 4;
-                    if (gamepad4color <= 21)
-                    {
-                        gamepad4color += 20;
-                    }
-                    //gamepad4.GetComponent<Transform>().localPosition = new Vector3(-8.33f, -7.5f, -2.3f);
-
-                    dpad4L = true;
-                }
-
-            }
-        }
-        if (gamepad3team != 0 && this.gamepad3Validated == false)
-        {
-
-            if (this.gamepadState3.DPad.Up == ButtonState.Pressed && dpad3Up == false)
-            {
-                gamepad3color += 1;
-                dpad3Up = true;
-            }
-            if (gamepad3team == 2)
-            {
-
-                if (this.gamepadState3.Buttons.A == ButtonState.Pressed && btn3A == false && gamepad3color != 0)
-                {
-                    gamepad3Validated = true;
-                    GameObject.Find("gamepad3").GetComponent<SpriteRenderer>().sprite = whiteGamepad;
-                    btn3A = true;
-                }
-
-                if (gamepad3color > 4 && gamepad3color <= 5)
-                {
-                    gamepad3color = 1;
-                }
-
-            }
-            if (gamepad3team == 1)
-            {
-
-                if (this.gamepadState3.Buttons.A == ButtonState.Pressed && btn3A == false && gamepad3color != 20)
-                {
-                    gamepad3Validated = true;
-                    GameObject.Find("gamepad3").GetComponent<SpriteRenderer>().sprite = whiteGamepad;
-                    btn3A = true;
-                }
-
-                if (gamepad3color > 24 & gamepad3color <= 25)
-                {
-                    gamepad3color = 21;
-                }
-            }
-
-            if (gamepad4team == gamepad3team)
-            {
-                if (gamepad3color == gamepad4color)
-                {
-                    gamepad3color += 1;
-                }
-            }
-            if (gamepad2team == gamepad3team)
-            {
-                if (gamepad3color == gamepad2color)
-                {
-                    gamepad3color += 1;
-                }
-            }
-            if (gamepad1team == gamepad3team)
-            {
-                if (gamepad3color == gamepad1color)
-                {
-                    gamepad3color += 1;
-                }
-            }
-
-            if (gamepad3color == 1)
-            {
-                GameObject.Find("gamepadColor3").GetComponent<SpriteRenderer>().color = Red;
-            }
-            if (gamepad3color == 2)
-            {
-                GameObject.Find("gamepadColor3").GetComponent<SpriteRenderer>().color = Orange;
-            }
-            if (gamepad3color == 3)
-            {
-                GameObject.Find("gamepadColor3").GetComponent<SpriteRenderer>().color = Yellow;
-            }
-            if (gamepad3color == 4)
-            {
-                GameObject.Find("gamepadColor3").GetComponent<SpriteRenderer>().color = Purple;
-            }
-            if (gamepad3color == 21)
-            {
-                GameObject.Find("gamepadColor3").GetComponent<SpriteRenderer>().color = Blue1;
-            }
-            if (gamepad3color == 22)
-            {
-                GameObject.Find("gamepadColor3").GetComponent<SpriteRenderer>().color = Blue2;
-            }
-            if (gamepad3color == 23)
-            {
-                GameObject.Find("gamepadColor3").GetComponent<SpriteRenderer>().color = Green;
-            }
-            if (gamepad3color == 24)
-            {
-                GameObject.Find("gamepadColor3").GetComponent<SpriteRenderer>().color = Violet;
+                alerteMessage.SetActive(true);
             }
 
         }
-        if (this.gamepad3Validated == true)
+        else
         {
-            if (this.gamepadState3.Buttons.A == ButtonState.Pressed && btn3A == false)
-            {
-                GameObject.Find("gamepad3").GetComponent<SpriteRenderer>().sprite = greyGamepad;
-                this.gamepad3Validated = false;
-                btn3A = true;
-            }
+            continueMessage.SetActive(false);
+            alerteMessage.SetActive(false);
         }
 
-        if (this.gamepad4Validated == false)
+        if (gamepadState1.Buttons.Back == ButtonState.Pressed ||
+            gamepadState2.Buttons.Back == ButtonState.Pressed ||
+            gamepadState3.Buttons.Back == ButtonState.Pressed ||
+            gamepadState4.Buttons.Back == ButtonState.Pressed)
         {
-
-            //*
-                if(this.gamepadState4.DPad.Right == ButtonState.Pressed && dpad4R == false) {
-                    gamepad4team = 2;
-                    if(gamepad4color >= 20) {
-                        gamepad4color -= 20;
-                    }
-                    gamepad4.GetComponent<Transform>().localPosition = new Vector3(8.33f, -7.5f, -2.3f);
-                    dpad4R = true;
-                }
-                if(this.gamepadState4.DPad.Left == ButtonState.Pressed && dpad4L == false) {
-                    gamepad4team = 1;
-                    if(gamepad4color <= 21) {
-                        gamepad4color += 20;
-                    }
-                    gamepad4.GetComponent<Transform>().localPosition = new Vector3(-8.33f, -7.5f, -2.3f);
-                    dpad4L = true;
-                }
-            }
-            //*/
-            if (gamepad1team == 0)
+            canvas.SetActive(false);
+            fade.SetActive(false);
+            fade.SetActive(true);
+            pressedBack = false;
+            StartCoroutine(CoroutineUtils.DelaySeconds(() =>
             {
+                gamepad1team = 0;
+                gamepad2team = 0;
+                gamepad3team = 0;
+                gamepad4team = 0;
                 gamepad1color = 0;
-            }
-            if (gamepad4team != 0 && this.gamepad4Validated == false)
-            {
-
-                if (this.gamepadState4.DPad.Up == ButtonState.Pressed && dpad4Up == false)
-                {
-                    gamepad4color += 1;
-                    dpad4Up = true;
-                }
-
-                if (gamepad4team == 2)
-                {
-
-                    if (this.gamepadState4.Buttons.A == ButtonState.Pressed && btn4A == false && gamepad4color != 0)
-                    {
-                        gamepad4Validated = true;
-                        GameObject.Find("gamepad4").GetComponent<SpriteRenderer>().sprite = whiteGamepad;
-                        btn4A = true;
-                    }
-
-                    if (gamepad4color > 4 && gamepad4color <= 5)
-                    {
-                        gamepad4color = 1;
-                    }
-                }
-                if (gamepad4team == 1)
-                {
-
-                    if (this.gamepadState4.Buttons.A == ButtonState.Pressed && btn4A == false && gamepad4color != 20)
-                    {
-                        gamepad4Validated = true;
-                        GameObject.Find("gamepad4").GetComponent<SpriteRenderer>().sprite = whiteGamepad;
-                        btn4A = true;
-                    }
-
-                    if (gamepad4color > 24 & gamepad4color <= 25)
-                    {
-                        gamepad4color = 21;
-                    }
-                }
-                if (gamepad3team == gamepad4team)
-                {
-                    if (gamepad4color == gamepad3color)
-                    {
-                        gamepad4color += 1;
-                    }
-                }
-                if (gamepad2team == gamepad4team)
-                {
-                    if (gamepad4color == gamepad2color)
-                    {
-                        gamepad4color += 1;
-                    }
-                }
-                if (gamepad1team == gamepad4team)
-                {
-                    if (gamepad4color == gamepad1color)
-                    {
-                        gamepad4color += 1;
-                    }
-                }
-
-                if (gamepad4color == 1)
-                {
-                    GameObject.Find("gamepadColor4").GetComponent<SpriteRenderer>().color = Red;
-                }
-                if (gamepad4color == 2)
-                {
-                    GameObject.Find("gamepadColor4").GetComponent<SpriteRenderer>().color = Orange;
-                }
-                if (gamepad4color == 3)
-                {
-                    GameObject.Find("gamepadColor4").GetComponent<SpriteRenderer>().color = Yellow;
-                }
-                if (gamepad4color == 4)
-                {
-                    GameObject.Find("gamepadColor4").GetComponent<SpriteRenderer>().color = Purple;
-                }
-                if (gamepad4color == 21)
-                {
-                    GameObject.Find("gamepadColor4").GetComponent<SpriteRenderer>().color = Blue1;
-                }
-                if (gamepad4color == 22)
-                {
-                    GameObject.Find("gamepadColor4").GetComponent<SpriteRenderer>().color = Blue2;
-                }
-                if (gamepad4color == 23)
-                {
-                    GameObject.Find("gamepadColor4").GetComponent<SpriteRenderer>().color = Green;
-                }
-                if (gamepad4color == 24)
-                {
-                    GameObject.Find("gamepadColor4").GetComponent<SpriteRenderer>().color = Violet;
-                }
-            }
-            if (this.gamepad4Validated == true)
-            {
-                if (this.gamepadState4.Buttons.A == ButtonState.Pressed && btn4A == false)
-                {
-                    GameObject.Find("gamepad4").GetComponent<SpriteRenderer>().sprite = greyGamepad;
-                    this.gamepad4Validated = false;
-                    btn4A = true;
-                }
-            }
-            for (int i = 0; i < 4; ++i)
-            {
-                PlayerIndex index = (PlayerIndex)i;
-                this.gamepadState = GamePad.GetState(index);
-
-                if (gamepad1Validated && gamepad2Validated && gamepad3Validated && gamepad4Validated)
-                {
-                // if all is well
-                //Debug.Log("TEAAAAMS : " + gamepad1team + " " + gamepad2team + " " + gamepad3team + " " + gamepad4team + " " + teamCounter(true) + " " + teamCounter(false));
-                        if (teamCounter(true)==2 && teamCounter(false)==2)
-                        {
-                            continueMessage.SetActive(true);
-                            if (this.gamepadState.Buttons.Start == ButtonState.Pressed)
-                            {
-                                this.gameObject.SetActive(false);
-                                Menu3.SetActive(true);
-                            }
-                        }
-                        else
-                        {
-                            alerteMessage.SetActive(true);
-                        }
-                    
-                }
-                else
-                {
-                    continueMessage.SetActive(false);
-                    alerteMessage.SetActive(false);
-                }
-
-                if (this.gamepadState.Buttons.Back == ButtonState.Pressed && pressedBack == true)
-                {
-                    canvas.SetActive(false);
-                    fade.SetActive(false);
-                    fade.SetActive(true);
-                    pressedBack = false;
-                    StartCoroutine(CoroutineUtils.DelaySeconds(() =>
-                    {
-                        gamepad1team = 0;
-                        gamepad2team = 0;
-                        gamepad3team = 0;
-                        gamepad4team = 0;
-                        gamepad1color = 0;
-                        gamepad2color = 0;
-                        gamepad3color = 0;
-                        gamepad4color = 0;
-                        this.menu1.SetActive(true);
-                        this.gameObject.SetActive(false);
-                    }, 0.8f));
-                }
-            }
-
-            // for debug , appuyer sur espace pour passer directement au menu suivant avec les manettes pre-valider
-
-            if (Input.GetKeyDown(KeyCode.Space))
-            {
-                gamepad1team = 1;
-                gamepad2team = 1;
-                gamepad3team = 2;
-                gamepad4team = 2;
-                gamepad1color = 1;
-                gamepad2color = 3;
-                gamepad3color = 21;
-                gamepad4color = 23;
+                gamepad2color = 0;
+                gamepad3color = 0;
+                gamepad4color = 0;
+                this.menu1.SetActive(true);
                 this.gameObject.SetActive(false);
-                Menu3.SetActive(true);
-
-            }
-            // ---------------------- Validation IA with Y ----------------------------------------
-
-            if (gamepad1Validated == true && this.gamepadState1.Buttons.Y == ButtonState.Pressed)
-            {
-                btn1Y = true;
-                print("Validate Gamepad 2");
-                gamepad2Validated = true;
-                GameObject.Find("gamepad2").GetComponent<SpriteRenderer>().sprite = whiteGamepad;
-
-                print("Validate Gamepad 3");
-                gamepad3Validated = true;
-                GameObject.Find("gamepad3").GetComponent<SpriteRenderer>().sprite = whiteGamepad;
-
-                print("Validate Gamepad 4");
-                gamepad4Validated = true;
-                GameObject.Find("gamepad4").GetComponent<SpriteRenderer>().sprite = whiteGamepad;
-            }
-
-            TData savedData = FindObjectOfType<TData>();
-
-            savedData.p1 = gamepad1team;
-            savedData.p2 = gamepad2team;
-            savedData.p3 = gamepad3team;
-            savedData.p4 = gamepad4team;
-
-            DontDestroyOnLoad(savedData.gameObject);
+            }, 0.8f));
         }
+
+        // for debug , appuyer sur espace pour passer directement au menu suivant avec les manettes pre-valider
+
+        if (Input.GetKeyDown(KeyCode.Space))
+        {
+            gamepad1team = 1;
+            gamepad2team = 1;
+            gamepad3team = 2;
+            gamepad4team = 2;
+            gamepad1color = 1;
+            gamepad2color = 3;
+            gamepad3color = 21;
+            gamepad4color = 23;
+            this.gameObject.SetActive(false);
+            Menu3.SetActive(true);
+
+        }
+
+        SetControllerImagePositions();
+
+        TData savedData = FindObjectOfType<TData>();
+
+        savedData.p1 = gamepad1team;
+        savedData.p2 = gamepad2team;
+        savedData.p3 = gamepad3team;
+        savedData.p4 = gamepad4team;
+
+        DontDestroyOnLoad(savedData.gameObject);
+    }
+
+    private void SetControllerImagePositions()
+    {
+
+        switch (gamepad1team)
+        {
+            case 1:
+                gamepad1.GetComponent<Transform>().localPosition = new Vector3(-8.33f, 0f, -2.3f);
+                break;
+            case 2:
+                gamepad1.GetComponent<Transform>().localPosition = new Vector3(8.33f, 0f, -2.3f);
+                break;
+            case 3:
+                gamepad1.GetComponent<Transform>().localPosition = new Vector3(-8.33f, 0f, -2.3f);
+                break;
+            case 4:
+                gamepad1.GetComponent<Transform>().localPosition = new Vector3(8.33f, 0f, -2.3f);
+                break;
+            default:
+                gamepad1.GetComponent<Transform>().localPosition = new Vector3(0, 0, -2.3f);
+                break;
+        }
+        switch (gamepad2team)
+        {
+            case 1:
+                gamepad2.GetComponent<Transform>().localPosition = new Vector3(-8.33f, -2.5f, -2.3f);
+                break;
+            case 2:
+                gamepad2.GetComponent<Transform>().localPosition = new Vector3(8.33f, -2.5f, -2.3f);
+                break;
+            case 3:
+                gamepad2.GetComponent<Transform>().localPosition = new Vector3(-8.33f, -2.5f, -2.3f);
+                break;
+            case 4:
+                gamepad2.GetComponent<Transform>().localPosition = new Vector3(8.33f, -2.5f, -2.3f);
+                break;
+            default:
+                gamepad2.GetComponent<Transform>().localPosition = new Vector3(0, -2.5f, -2.3f);
+                break;
+        }
+        switch (gamepad3team)
+        {
+            case 1:
+                gamepad3.GetComponent<Transform>().localPosition = new Vector3(-8.33f, -5f, -2.3f);
+                break;
+            case 2:
+                gamepad3.GetComponent<Transform>().localPosition = new Vector3(8.33f, -5f, -2.3f);
+                break;
+            case 3:
+                gamepad3.GetComponent<Transform>().localPosition = new Vector3(-8.33f, -5f, -2.3f);
+                break;
+            case 4:
+                gamepad3.GetComponent<Transform>().localPosition = new Vector3(8.33f, -5f, -2.3f);
+                break;
+            default:
+                gamepad3.GetComponent<Transform>().localPosition = new Vector3(0, -5f, -2.3f);
+                break;
+        }
+        switch (gamepad4team)
+        {
+            case 1:
+                gamepad4.GetComponent<Transform>().localPosition = new Vector3(-8.33f, -7.5f, -2.3f);
+                break;
+            case 2:
+                gamepad4.GetComponent<Transform>().localPosition = new Vector3(8.33f, -7.5f, -2.3f);
+                break;
+            case 3:
+                gamepad4.GetComponent<Transform>().localPosition = new Vector3(-8.33f, -7.5f, -2.3f);
+                break;
+            case 4:
+                gamepad4.GetComponent<Transform>().localPosition = new Vector3(8.33f, -7.5f, -2.3f);
+                break;
+            default:
+                gamepad4.GetComponent<Transform>().localPosition = new Vector3(0, -7.5f, -2.3f);
+                break;
+        }
+    }
+
+    private void SetSpriteColor(SpriteRenderer s, int index)
+    {
+        switch (index)
+        {
+            case 0:
+                s.color = Color.white;
+                break;
+            case 1:
+                s.color = Red;
+                break;
+            case 2:
+                s.color = Orange;
+                break;
+            case 3:
+                s.color = Yellow;
+                break;
+            case 4:
+                s.color = Purple;
+                break;
+            case 21:
+                s.color = Blue1;
+                break;
+            case 22:
+                s.color = Blue2;
+                break;
+            case 23:
+                s.color = Green;
+                break;
+            case 24:
+                s.color = Violet;
+                break;
+            default:
+                s.color = Color.white;
+                break;
+        }
+    }
 
     private int teamCounter(bool team1)
     {

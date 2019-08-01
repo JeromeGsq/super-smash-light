@@ -40,6 +40,7 @@ public class GameMenuManager2 : MonoBehaviour {
     bool g1left, g2left, g3left, g4left;
     bool g1right, g2right, g3right, g4right;
     bool g1up, g2up, g3up, g4up;
+    bool g1down, g2down, g3down, g4down;
     bool g1a, g2a, g3a, g4a;
     bool g1y;
 
@@ -206,6 +207,11 @@ public class GameMenuManager2 : MonoBehaviour {
         if (gamepadState3.DPad.Up == ButtonState.Released) g3up = false;
         if (gamepadState4.DPad.Up == ButtonState.Released) g4up = false;
 
+        if (gamepadState1.DPad.Down == ButtonState.Released) g1down = false;
+        if (gamepadState2.DPad.Down == ButtonState.Released) g2down = false;
+        if (gamepadState3.DPad.Down == ButtonState.Released) g3down = false;
+        if (gamepadState4.DPad.Down == ButtonState.Released) g4down = false;
+
         if (gamepadState1.Buttons.Y == ButtonState.Released) g1y = false;
 
         // GamePad 1 Controls
@@ -253,6 +259,14 @@ public class GameMenuManager2 : MonoBehaviour {
                     gamepad1color++;
                     if (gamepad1color == 5) gamepad1color = 1;
                     if (gamepad1color == 25) gamepad1color = 21;
+                }
+
+                if (gamepadState1.DPad.Down == ButtonState.Pressed && !g1down)
+                {
+                    g1down = true;
+                    gamepad1color--;
+                    if (gamepad1color == 0) gamepad1color = 4;
+                    if (gamepad1color == 20) gamepad1color = 24;
                 }
             }
 
@@ -355,12 +369,20 @@ public class GameMenuManager2 : MonoBehaviour {
 
             if (gamepad2team != 0)
             {
-                if (gamepadState2.DPad.Up == ButtonState.Pressed && !g1up)
+                if (gamepadState2.DPad.Up == ButtonState.Pressed && !g2up)
                 {
-                    g1up = true;
+                    g2up = true;
                     gamepad2color++;
                     if (gamepad2color == 5) gamepad2color = 1;
                     if (gamepad2color == 25) gamepad2color = 21;
+                }
+
+                if (gamepadState2.DPad.Down == ButtonState.Pressed && !g2down)
+                {
+                    g2down = true;
+                    gamepad2color--;
+                    if (gamepad2color == 0) gamepad2color = 4;
+                    if (gamepad2color == 20) gamepad2color = 24;
                 }
             }
 
@@ -444,6 +466,14 @@ public class GameMenuManager2 : MonoBehaviour {
                     if (gamepad3color == 5) gamepad3color = 1;
                     if (gamepad3color == 25) gamepad3color = 21;
                 }
+
+                if (gamepadState3.DPad.Down == ButtonState.Pressed && !g3down)
+                {
+                    g3down = true;
+                    gamepad3color--;
+                    if (gamepad3color == 0) gamepad3color = 4;
+                    if (gamepad3color == 20) gamepad3color = 24;
+                }
             }
             SetSpriteColor(sg3, gamepad3color);
         }
@@ -524,6 +554,14 @@ public class GameMenuManager2 : MonoBehaviour {
                     gamepad4color++;
                     if (gamepad4color == 5) gamepad4color = 1;
                     if (gamepad4color == 25) gamepad4color = 21;
+                }
+
+                if (gamepadState4.DPad.Down == ButtonState.Pressed && !g4down)
+                {
+                    g4down = true;
+                    gamepad4color--;
+                    if (gamepad4color == 0) gamepad4color = 4;
+                    if (gamepad4color == 20) gamepad4color = 24;
                 }
             }
             SetSpriteColor(sg4, gamepad4color);
@@ -709,28 +747,28 @@ public class GameMenuManager2 : MonoBehaviour {
             case 0:
                 s.color = Color.white;
                 break;
-            case 1:
+            case 21:
                 s.color = Red;
                 break;
-            case 2:
+            case 22:
                 s.color = Orange;
                 break;
-            case 3:
+            case 23:
                 s.color = Yellow;
                 break;
-            case 4:
+            case 24:
                 s.color = Purple;
                 break;
-            case 21:
+            case 1:
                 s.color = Blue1;
                 break;
-            case 22:
+            case 2:
                 s.color = Blue2;
                 break;
-            case 23:
+            case 3:
                 s.color = Green;
                 break;
-            case 24:
+            case 4:
                 s.color = Violet;
                 break;
             default:

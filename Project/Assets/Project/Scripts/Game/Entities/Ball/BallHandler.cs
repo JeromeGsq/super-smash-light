@@ -84,7 +84,7 @@ public class BallHandler : SceneSingleton<BallHandler>
 
     private void Update()
     {
-        Debug.Log("Ball : " + index);
+        //Debug.Log("Ball : " + index);
         //this.myteam = Team.GetTeam(this.Index);
         this.rigidbody.bodyType = this.isGrabbed ? RigidbodyType2D.Static : RigidbodyType2D.Dynamic;
     }

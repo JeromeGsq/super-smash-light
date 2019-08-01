@@ -254,8 +254,9 @@ public class GameMenuManager2 : MonoBehaviour {
                     if (gamepad1color == 5) gamepad1color = 1;
                     if (gamepad1color == 25) gamepad1color = 21;
                 }
-                SetSpriteColor(sg1, gamepad1color);
             }
+
+            SetSpriteColor(sg1, gamepad1color);
         }
 
         if (gamepadState1.Buttons.A == ButtonState.Pressed && !g1a)
@@ -361,8 +362,9 @@ public class GameMenuManager2 : MonoBehaviour {
                     if (gamepad2color == 5) gamepad2color = 1;
                     if (gamepad2color == 25) gamepad2color = 21;
                 }
-                SetSpriteColor(sg2, gamepad2color);
             }
+
+            SetSpriteColor(sg2, gamepad2color);
         }
 
         if (gamepadState2.Buttons.A == ButtonState.Pressed && !g2a)
@@ -442,8 +444,8 @@ public class GameMenuManager2 : MonoBehaviour {
                     if (gamepad3color == 5) gamepad3color = 1;
                     if (gamepad3color == 25) gamepad3color = 21;
                 }
-                SetSpriteColor(sg3, gamepad3color);
             }
+            SetSpriteColor(sg3, gamepad3color);
         }
 
         if (gamepadState3.Buttons.A == ButtonState.Pressed && !g3a)
@@ -523,8 +525,8 @@ public class GameMenuManager2 : MonoBehaviour {
                     if (gamepad4color == 5) gamepad4color = 1;
                     if (gamepad4color == 25) gamepad4color = 21;
                 }
-                SetSpriteColor(sg4, gamepad4color);
             }
+            SetSpriteColor(sg4, gamepad4color);
         }
 
         if (gamepadState4.Buttons.A == ButtonState.Pressed && !g4a)

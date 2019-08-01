@@ -56,12 +56,6 @@ public class PlayerMovementHandler : MovementHandler
 
     [Space(20)]
 
-    [Tooltip("Cet index permet de choisir via quelle manette ce joueur va être controllé")]
-    [SerializeField]
-    internal PlayerIndex index = PlayerIndex.One;
-
-    [Space(20)]
-
     [SerializeField]
     private Animator animator;
 
@@ -211,7 +205,7 @@ public class PlayerMovementHandler : MovementHandler
             // Get ball from enemy
             if (BallHandler.Get.Index == enemyHandler.Index)
             {
-                BallHandler.Get.SetGrabbed(ballAnchor, index, myteam);
+                BallHandler.Get.SetGrabbed(ballAnchor, Index, myteam);
             }
 
             // Apply collision on enemy
@@ -240,7 +234,7 @@ public class PlayerMovementHandler : MovementHandler
             }
             else if (canGrab && BallHandler.Get.IsGrabbed == false)
             {
-                BallHandler.Get.SetGrabbed(ballAnchor, index, myteam);
+                BallHandler.Get.SetGrabbed(ballAnchor, Index, myteam);
             }
         }
     }
@@ -305,7 +299,7 @@ public class PlayerMovementHandler : MovementHandler
 
         gamepadState = GamePad.GetState(Index);
 
-        if(BallHandler.Get.isGrabbed && BallHandler.Get.Index == index) {
+        if(BallHandler.Get.isGrabbed && BallHandler.Get.Index == Index) {
             // Pass controlset
             if(RBreleased || RTreleased) {
                 if(RBreleased && RBtime > 1.5f) {

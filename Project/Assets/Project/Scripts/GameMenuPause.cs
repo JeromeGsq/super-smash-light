@@ -102,9 +102,9 @@ public class GameMenuPause : MonoBehaviour {
 
             if (this.gamepadState.Buttons.A == ButtonState.Pressed && pauseMenuUI == true && Position == 0)
         {
-            print("Resume");
+            //print("Resume");
             GameIsPaused = false;
-            Debug.Log("Return Game");
+            //Debug.Log("Return Game");
             pauseMenuUI.SetActive(false);
             Time.timeScale = 1f;
             GameIsAlreadyInPaused = false;

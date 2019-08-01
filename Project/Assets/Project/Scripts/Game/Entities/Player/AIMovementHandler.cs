@@ -222,7 +222,7 @@ public class AIMovementHandler : MovementHandler
             if (enemyPlayerHandler != null)
             {
                 // Get ball from enemy
-                if (BallHandler.Get.Index == enemyPlayerHandler.index)
+                if (BallHandler.Get.Index == enemyPlayerHandler.Index)
                 {
                     BallHandler.Get.SetGrabbed(ballAnchor, Index, myteam);
                 }

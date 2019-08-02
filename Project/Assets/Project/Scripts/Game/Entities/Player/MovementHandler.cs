@@ -84,41 +84,41 @@ public class MovementHandler : MonoBehaviour
         ColorYellow = Resources.Load<RuntimeAnimatorController>("Animations/PlayerYellow");
         ColorPurple = Resources.Load<RuntimeAnimatorController>("Animations/PlayerPurple");
 
-        if (GameMenuManager2.gamepad1color == 1) { color1 = ColorRed; }
-        if (GameMenuManager2.gamepad1color == 2) { color1 = ColorOrange; }
-        if (GameMenuManager2.gamepad1color == 3) { color1 = ColorYellow; }
-        if (GameMenuManager2.gamepad1color == 4) { color1 = ColorPurple; }
-        if (GameMenuManager2.gamepad1color == 21) { color1 = ColorBlue; }
-        if (GameMenuManager2.gamepad1color == 22) { color1 = ColorBlue2; }
-        if (GameMenuManager2.gamepad1color == 23) { color1 = ColorGreen; }
-        if (GameMenuManager2.gamepad1color == 24) { color1 = ColorViolet; }
+        if (GameMenuManager2.gamepad1color == 21) { color1 = ColorRed; }
+        if (GameMenuManager2.gamepad1color == 22) { color1 = ColorOrange; }
+        if (GameMenuManager2.gamepad1color == 23) { color1 = ColorYellow; }
+        if (GameMenuManager2.gamepad1color == 24) { color1 = ColorPurple; }
+        if (GameMenuManager2.gamepad1color == 1) { color1 = ColorBlue; }
+        if (GameMenuManager2.gamepad1color == 2) { color1 = ColorBlue2; }
+        if (GameMenuManager2.gamepad1color == 3) { color1 = ColorGreen; }
+        if (GameMenuManager2.gamepad1color == 4) { color1 = ColorViolet; }
 
-        if (GameMenuManager2.gamepad2color == 1) { color2 = ColorRed; }
-        if (GameMenuManager2.gamepad2color == 2) { color2 = ColorOrange; }
-        if (GameMenuManager2.gamepad2color == 3) { color2 = ColorYellow; }
-        if (GameMenuManager2.gamepad2color == 4) { color2 = ColorPurple; }
-        if (GameMenuManager2.gamepad2color == 21) { color2 = ColorBlue; }
-        if (GameMenuManager2.gamepad2color == 22) { color2 = ColorBlue2; }
-        if (GameMenuManager2.gamepad2color == 23) { color2 = ColorGreen; }
-        if (GameMenuManager2.gamepad2color == 24) { color2 = ColorViolet; }
+        if (GameMenuManager2.gamepad2color == 21) { color2 = ColorRed; }
+        if (GameMenuManager2.gamepad2color == 22) { color2 = ColorOrange; }
+        if (GameMenuManager2.gamepad2color == 23) { color2 = ColorYellow; }
+        if (GameMenuManager2.gamepad2color == 24) { color2 = ColorPurple; }
+        if (GameMenuManager2.gamepad2color == 1) { color2 = ColorBlue; }
+        if (GameMenuManager2.gamepad2color == 2) { color2 = ColorBlue2; }
+        if (GameMenuManager2.gamepad2color == 3) { color2 = ColorGreen; }
+        if (GameMenuManager2.gamepad2color == 4) { color2 = ColorViolet; }
 
-        if (GameMenuManager2.gamepad3color == 1) { color3 = ColorRed; }
-        if (GameMenuManager2.gamepad3color == 2) { color3 = ColorOrange; }
-        if (GameMenuManager2.gamepad3color == 3) { color3 = ColorYellow; }
-        if (GameMenuManager2.gamepad3color == 4) { color3 = ColorPurple; }
-        if (GameMenuManager2.gamepad3color == 21) { color3 = ColorBlue; }
-        if (GameMenuManager2.gamepad3color == 22) { color3 = ColorBlue2; }
-        if (GameMenuManager2.gamepad3color == 23) { color3 = ColorGreen; }
-        if (GameMenuManager2.gamepad3color == 24) { color3 = ColorViolet; }
+        if (GameMenuManager2.gamepad3color == 21) { color3 = ColorRed; }
+        if (GameMenuManager2.gamepad3color == 22) { color3 = ColorOrange; }
+        if (GameMenuManager2.gamepad3color == 23) { color3 = ColorYellow; }
+        if (GameMenuManager2.gamepad3color == 24) { color3 = ColorPurple; }
+        if (GameMenuManager2.gamepad3color == 1) { color3 = ColorBlue; }
+        if (GameMenuManager2.gamepad3color == 2) { color3 = ColorBlue2; }
+        if (GameMenuManager2.gamepad3color == 3) { color3 = ColorGreen; }
+        if (GameMenuManager2.gamepad3color == 4) { color3 = ColorViolet; }
 
-        if (GameMenuManager2.gamepad4color == 1) { color4 = ColorRed; }
-        if (GameMenuManager2.gamepad4color == 2) { color4 = ColorOrange; }
-        if (GameMenuManager2.gamepad4color == 3) { color4 = ColorYellow; }
-        if (GameMenuManager2.gamepad4color == 4) { color4 = ColorPurple; }
-        if (GameMenuManager2.gamepad4color == 21) { color4 = ColorBlue; }
-        if (GameMenuManager2.gamepad4color == 22) { color4 = ColorBlue2; }
-        if (GameMenuManager2.gamepad4color == 23) { color4 = ColorGreen; }
-        if (GameMenuManager2.gamepad4color == 24) { color4 = ColorViolet; }
+        if (GameMenuManager2.gamepad4color == 21) { color4 = ColorRed; }
+        if (GameMenuManager2.gamepad4color == 22) { color4 = ColorOrange; }
+        if (GameMenuManager2.gamepad4color == 23) { color4 = ColorYellow; }
+        if (GameMenuManager2.gamepad4color == 24) { color4 = ColorPurple; }
+        if (GameMenuManager2.gamepad4color == 1) { color4 = ColorBlue; }
+        if (GameMenuManager2.gamepad4color == 2) { color4 = ColorBlue2; }
+        if (GameMenuManager2.gamepad4color == 3) { color4 = ColorGreen; }
+        if (GameMenuManager2.gamepad4color == 4) { color4 = ColorViolet; }
     }
 
     // Messages
@@ -126,7 +126,7 @@ public class MovementHandler : MonoBehaviour
     {
         if (isPushed == false)
         {
-            Debug.Log($"PlayerMovementHandler : Push() : pushed by {sender.name}");
+            //Debug.Log($"PlayerMovementHandler : Push() : pushed by {sender.name}");
 
             pushSender = sender;
             pushPower = power;

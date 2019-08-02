@@ -74,14 +74,6 @@ public class AIMovementHandler : MovementHandler
     [SerializeField]
     private Transform friendTransform;
 
-    [Tooltip("Le transform de l'ancre de la mire. Ce transform sera tourné en fonction du stick. Il ne sera pas déplacé et sert juste d'ancre")]
-    [SerializeField]
-    private Transform sightAnchor;
-
-    [Tooltip("Le transform de la mire. Ce transform sera déplacé selon l'axe X en fonction de la position du trigger L. Il doit être enfant de sightAnchor")]
-    [SerializeField]
-    private Transform sight;
-
     [Space(20)]
 
     
@@ -148,7 +140,7 @@ public class AIMovementHandler : MovementHandler
     [SerializeField]
     private float pushPowerOnMe = 50f;
 
-    
+    public Transform virtualSight;
 
 
     public bool IsTargeting
@@ -316,9 +308,9 @@ public class AIMovementHandler : MovementHandler
             // Pass controlset
             if(RBreleased || RTreleased) {
                 if(RBreleased && RBtime > 1.5f) {
-                    BallHandler.Get.Shoot(sight, passPower, ShootType.Pass);
+                    BallHandler.Get.Shoot(virtualSight, passPower, ShootType.Pass);
                 } else if(RTreleased && RTtime > 1.5f) {
-                    BallHandler.Get.Shoot(sight, passPower, ShootType.Pass);
+                    BallHandler.Get.Shoot(virtualSight, passPower, ShootType.Pass);
                 } else {
                     BallHandler.Get.Shoot(FriendTransform, passPower, ShootType.Pass);
                 }
@@ -333,7 +325,7 @@ public class AIMovementHandler : MovementHandler
             // Shoot control
             if(LBreleased || LTreleased) {
                 if(GameManager.Get.CanShoot(myteam)) {
-                    BallHandler.Get.Shoot(sight, shootPower, ShootType.Shoot);
+                    BallHandler.Get.Shoot(virtualSight, shootPower, ShootType.Shoot);
                 }
 
                 canGrab = false;
@@ -351,27 +343,25 @@ public class AIMovementHandler : MovementHandler
             if(agent.shootOn) {
 
                 if(LBtime < 1.2f && player.transform.localScale.x < 0f) {
-                    sight.transform.localPosition = Vector3.left * 2.5f;
+                    virtualSight.localPosition = Vector3.left * 2.5f;
                 } else {
-                    sight.transform.localPosition = Vector3.right * 2.5f;
+                    virtualSight.transform.localPosition = Vector3.right * 2.5f;
                 }
             }
         }
 
 
         if(IsTargeting) {
-            sightAnchor.gameObject.SetActive(true);
             if((Mathf.Atan2(agent.targetingX, agent.targetingY) > 0) || (Mathf.Atan2(agent.targetingY, agent.targetingX) < 0)) {
 
                 stickY = agent.targetingY;
                 stickX = agent.targetingX;
             }
-            sightAnchor.eulerAngles = new Vector3(0, 0, Mathf.Atan2(stickY, stickX) * 180 / Mathf.PI);
+            virtualSight.eulerAngles = new Vector3(0, 0, Mathf.Atan2(stickY, stickX) * 180 / Mathf.PI);
         } else {
             stickY = 0;
             stickX = 0;
             StartCoroutine(CoroutineUtils.DelaySeconds(() => {
-                sightAnchor.gameObject.SetActive(false);
             }, 0.0001f));
         }
 

@@ -117,7 +117,6 @@ public class GameManagerView : BaseView<GameManager>
 		base.Start();
 
         TData savedData = FindObjectOfType<TData>();
-
         if (savedData != null)
         {
             switch (savedData.p1)
@@ -149,6 +148,7 @@ public class GameManagerView : BaseView<GameManager>
                     break;
                 case 3:
                     playerPrefabTeam12 = prefabModelIAT1;
+                    Debug.Log("check");
                     break;
                 case 4:
                     playerPrefabTeam12 = prefabModelIAT2;
@@ -170,10 +170,10 @@ public class GameManagerView : BaseView<GameManager>
                     playerPrefabTeam21 = prefabModelT2;
                     break;
                 case 3:
-                    playerPrefabTeam12 = prefabModelIAT1;
+                    playerPrefabTeam21 = prefabModelIAT1;
                     break;
                 case 4:
-                    playerPrefabTeam12 = prefabModelIAT2;
+                    playerPrefabTeam21 = prefabModelIAT2;
                     break;
                 default:
                     Debug.LogError("Bad Data");
@@ -192,10 +192,10 @@ public class GameManagerView : BaseView<GameManager>
                     playerPrefabTeam22 = prefabModelT2;
                     break;
                 case 3:
-                    playerPrefabTeam12 = prefabModelIAT1;
+                    playerPrefabTeam22 = prefabModelIAT1;
                     break;
                 case 4:
-                    playerPrefabTeam12 = prefabModelIAT2;
+                    playerPrefabTeam22 = prefabModelIAT2;
                     break;
                 default:
                     Debug.LogError("Bad Data");
@@ -226,15 +226,16 @@ public class GameManagerView : BaseView<GameManager>
         
 
         this.InitBall();
+
         GameObject countdown = Instantiate(this.countdownPrefab);
         StartCoroutine(CoroutineUtils.DelaySeconds(() =>
         {
             gamemanager.timerStart = true;
-            this.InitTeam(this.ViewModel?.Team1, 1);
-            this.InitTeam(this.ViewModel?.Team2, 2);
+            InitTeam(ViewModel.Team1, 1);
+
+            InitTeam(ViewModel.Team2, 2);
             Destroy(countdown);
         }, 4));
-        
 	}
     /*
     public override void OnPropertyChanged(object sender, PropertyChangedEventArgs property)
@@ -277,16 +278,24 @@ public class GameManagerView : BaseView<GameManager>
             MovementHandler player1, player2;
 
             if (playerPrefabTeam11.GetComponent<PlayerMovementHandler>() != null)
+            {
                 player1 = InitPlayer(playerPrefabTeam11, this.spanwnPlayer1Anchor, team.FirstPlayerIndex, Tags.Player1, 1);
+            }
             else
+            {
                 player1 = InitAIPlayer(playerPrefabTeam11, this.spanwnPlayer1Anchor, team.FirstPlayerIndex, Tags.Player1, 1);
+            }
 
             if (playerPrefabTeam12.GetComponent<PlayerMovementHandler>() != null)
+            {
                 player2 = InitPlayer(playerPrefabTeam12, this.spanwnPlayer2Anchor, team.SecondPlayerIndex, Tags.Player2, 1);
+            }
             else
+            {
                 player2 = InitAIPlayer(playerPrefabTeam12, this.spanwnPlayer2Anchor, team.SecondPlayerIndex, Tags.Player2, 1);
+            }
 
-			player1.FriendTransform = player2.gameObject.transform;
+            player1.FriendTransform = player2.gameObject.transform;
 			player2.FriendTransform = player1.gameObject.transform;
 
 			this.players.Add(player1.gameObject);
@@ -300,16 +309,24 @@ public class GameManagerView : BaseView<GameManager>
             MovementHandler player3, player4;
 
             if (playerPrefabTeam21.GetComponent<PlayerMovementHandler>() != null)
+            {
                 player3 = InitPlayer(playerPrefabTeam21, this.spanwnPlayer3Anchor, team.FirstPlayerIndex, Tags.Player3, 2);
+            }
             else
+            {
                 player3 = InitAIPlayer(playerPrefabTeam21, this.spanwnPlayer3Anchor, team.FirstPlayerIndex, Tags.Player3, 2);
+            }
 
             if (playerPrefabTeam21.GetComponent<PlayerMovementHandler>() != null)
+            {
                 player4 = InitPlayer(playerPrefabTeam22, this.spanwnPlayer4Anchor, team.SecondPlayerIndex, Tags.Player4, 2);
+            }
             else
+            {
                 player4 = InitAIPlayer(playerPrefabTeam22, this.spanwnPlayer4Anchor, team.SecondPlayerIndex, Tags.Player4, 2);
+            }
 
-			player3.FriendTransform = player4.gameObject.transform;
+                player3.FriendTransform = player4.gameObject.transform;
 			player4.FriendTransform = player3.gameObject.transform;
 
 			this.players.Add(player3.gameObject);

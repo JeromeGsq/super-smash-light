@@ -5,15 +5,9 @@ using UnityEngine;
 public class TData : MonoBehaviour
 {
     public int p1, p2, p3, p4;
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
-    void Update()
+    public override string ToString()
     {
-        
+        return "Saved data : " + p1 + " " + p2 + " " + p3 + " " + p4 + "\n";
     }
 }

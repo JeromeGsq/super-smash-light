@@ -55,6 +55,7 @@ public class BallHandler : SceneSingleton<BallHandler>
         {
             this.index = value;
             this.UpdateGameManagerBallIndex();
+            Debug.Log("BH Changed " + Index);
         }
     }
 

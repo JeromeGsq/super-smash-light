@@ -44,7 +44,7 @@ public class GameManager : BaseViewModel
     public Team team1;
 	public Team team2;
 
-    public bool forTest;
+    //public bool forTest;
 
 	private PlayerIndex ballIndex;
 
@@ -94,14 +94,11 @@ public class GameManager : BaseViewModel
     public string theTime {
         get => $" {this.minutes} : {this.seconds}";
     }
-    private PlayerIndex team1Player1;
-    private PlayerIndex team1Player2;
-    private PlayerIndex team2Player1;
-    private PlayerIndex team2Player2;
 
     private void Awake()
 	{
-        if(!forTest) {
+        /*
+        if (!forTest) {
 
             if((GameMenuManager2.gamepad1team + GameMenuManager2.gamepad2team) == 2) {
                 team1Player1 = PlayerIndex.One;
@@ -162,25 +159,28 @@ public class GameManager : BaseViewModel
                 FirstPlayerIndex = team2Player1,
                 SecondPlayerIndex = team2Player2,
             };
-        }
-    
+        //}
+
         if(forTest) 
             {
-            this.Team1 = new Team() 
-            {
-
-                FirstPlayerIndex = PlayerIndex.One,
-                SecondPlayerIndex = PlayerIndex.Three,
-            };
-
-            this.Team2 = new Team() 
-            {
-                FirstPlayerIndex = PlayerIndex.Two,
-                SecondPlayerIndex = PlayerIndex.Four,
-            };
+            
         }
+        */
 
-            this.team1.BarLevel = 0f;
+        this.Team1 = new Team()
+        {
+
+            FirstPlayerIndex = PlayerIndex.One,
+            SecondPlayerIndex = PlayerIndex.Two,
+        };
+
+        this.Team2 = new Team()
+        {
+            FirstPlayerIndex = PlayerIndex.Three,
+            SecondPlayerIndex = PlayerIndex.Four,
+        };
+
+        this.team1.BarLevel = 0f;
 		this.team2.BarLevel = 0f;
 
 		this.RaisePropertyChanged(nameof(this.Team1BarLevel));
@@ -213,7 +213,7 @@ public class GameManager : BaseViewModel
     public void AddBarLevel(float amount, int teamIndex)
 	{
 		amount = (float)Math.Round(amount, 2);
-		Debug.Log($"GameManager : AddBarLevel() : {amount})");
+		//Debug.Log($"GameManager : AddBarLevel() : {amount})");
 
 		if(teamIndex == 1)
 		{

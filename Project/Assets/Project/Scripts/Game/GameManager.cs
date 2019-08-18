@@ -95,10 +95,14 @@ public class GameManager : BaseViewModel
         get => $" {this.minutes} : {this.seconds}";
     }
 
+    private PlayerIndex team1Player1;
+    private PlayerIndex team1Player2;
+    private PlayerIndex team2Player1;
+    private PlayerIndex team2Player2;
+
+
     private void Awake()
 	{
-        /*
-        if (!forTest) {
 
             if((GameMenuManager2.gamepad1team + GameMenuManager2.gamepad2team) == 2) {
                 team1Player1 = PlayerIndex.One;
@@ -159,26 +163,7 @@ public class GameManager : BaseViewModel
                 FirstPlayerIndex = team2Player1,
                 SecondPlayerIndex = team2Player2,
             };
-        //}
-
-        if(forTest) 
-            {
-            
-        }
-        */
-
-        this.Team1 = new Team()
-        {
-
-            FirstPlayerIndex = PlayerIndex.One,
-            SecondPlayerIndex = PlayerIndex.Two,
-        };
-
-        this.Team2 = new Team()
-        {
-            FirstPlayerIndex = PlayerIndex.Three,
-            SecondPlayerIndex = PlayerIndex.Four,
-        };
+      
 
         this.team1.BarLevel = 0f;
 		this.team2.BarLevel = 0f;

@@ -54,7 +54,191 @@ public class GridMaker : MonoBehaviour
                     }
                 }
             }
+        }
+    }
 
+    public void BuildJPSData()
+    {
+        CalcPrimaryJumpPoints();
+        CalcJumpDistances();
+        CalcDiagonalDistances();
+    }
+
+    private void CalcPrimaryJumpPoints()
+    {
+        for (int i = 0; i < grid.GetLength(0); i++)
+        {
+            for (int j = 0; j < grid.GetLength(1); j++)
+            {
+                if (i > 0 && j > 0 && !grid[i, j].isSolid && !grid[i - 1, j].isSolid && !grid[i, j - 1].isSolid && grid[i - 1, j - 1].isSolid)
+                {
+                    grid[i, j].jumpPoints[1] = true;
+                    grid[i, j].jumpPoints[2] = true;
+                }
+                if (i < grid.GetLength(0) - 1 && j > 0 && !grid[i, j].isSolid && !grid[i + 1, j].isSolid && !grid[i, j - 1].isSolid && grid[i + 1, j - 1].isSolid)
+                {
+                    grid[i, j].jumpPoints[2] = true;
+                    grid[i, j].jumpPoints[3] = true;
+                }
+                if (i < grid.GetLength(0) - 1 && j < grid.GetLength(1) - 1 && !grid[i, j].isSolid && !grid[i + 1, j].isSolid && !grid[i, j + 1].isSolid && grid[i + 1, j + 1].isSolid)
+                {
+                    grid[i, j].jumpPoints[3] = true;
+                    grid[i, j].jumpPoints[0] = true;
+                }
+                if (i > 0 && j < grid.GetLength(1) - 1 && !grid[i, j].isSolid && !grid[i - 1, j].isSolid && !grid[i, j + 1].isSolid && grid[i - 1, j + 1].isSolid)
+                {
+                    grid[i, j].jumpPoints[0] = true;
+                    grid[i, j].jumpPoints[1] = true;
+                }
+            }
+        }
+    }
+
+    private void CalcJumpDistances()
+    {
+        int score = 0;
+        bool foundJP = false;
+
+        for (int i = 0; i < grid.GetLength(0); i++)
+        {
+            for (int j = 0; j < grid.GetLength(1); j++)
+            {
+                CheckGrid(i, j, 2, score, foundJP);
+            }
+            score = 0;
+            foundJP = false;
+
+            for (int j = grid.GetLength(1) - 1; j >= 0; j--)
+            {
+                CheckGrid(i, j, 0, score, foundJP);
+            }
+            score = 0;
+            foundJP = false;
+        }
+        for (int j = 0; j < grid.GetLength(1); j++)
+        {
+            for (int i = 0; i < grid.GetLength(0); i++)
+            {
+                CheckGrid(i, j, 1, score, foundJP);
+            }
+            score = 0;
+            foundJP = false;
+
+            for (int i = grid.GetLength(0) - 1; i >= 0; i--)
+            {
+                CheckGrid(i, j, 3, score, foundJP);
+            }
+            score = 0;
+            foundJP = false;
+        }
+    }
+
+    private void CheckGrid(int i, int j, int direction, int score, bool foundJumpPoint)
+    {
+        if (grid[i, j].isSolid)
+        {
+            score = 0;
+            foundJumpPoint = false;
+        }
+        else
+        {
+            if (foundJumpPoint) grid[i, j].jumpDistances[direction] = score;
+            else grid[i, j].jumpDistances[direction] = -score;
+
+            score++;
+
+            if (grid[i, j].jumpPoints[direction])
+            {
+                score = 1;
+                foundJumpPoint = true;
+            }
+        }
+
+    }
+
+    private void CalcDiagonalDistances()
+    {
+        for (int i = 0; i < grid.GetLength(0); i++)
+        {
+            for (int j = 0; j < grid.GetLength(1); j++)
+            {
+                if (!grid[i, j].isSolid)
+                {
+                    if (i == 0 || j == 0 || grid[i - 1, j].isSolid || grid[i, j - 1].isSolid || grid[i - 1, j - 1].isSolid)
+                    {
+                        grid[i, j].diagonalDistances[3] = 0;
+                    }
+                    else if (grid[i - 1, j - 1].jumpDistances[0] > 1 || grid[i - 1, j - 1].jumpDistances[3] > 1)
+                    {
+                        grid[i, j].diagonalDistances[3] = 1;
+                    }
+                    else
+                    {
+                        grid[i, j].diagonalDistances[3] = grid[i - 1, j - 1].diagonalDistances[3] + grid[i - 1, j - 1].diagonalDistances[3] > 0? 1:-1;
+                    }
+                }
+            }
+
+            for (int j = grid.GetLength(1) - 1; j >= 0; j--)
+            {
+                if (!grid[i, j].isSolid)
+                {
+                    if (i == 0 || j == grid.GetLength(1) - 1 || grid[i - 1, j].isSolid || grid[i, j + 1].isSolid || grid[i - 1, j + 1].isSolid)
+                    {
+                        grid[i, j].diagonalDistances[2] = 0;
+                    }
+                    else if (grid[i - 1, j + 1].jumpDistances[2] > 1 || grid[i - 1, j + 1].jumpDistances[3] > 1)
+                    {
+                        grid[i, j].diagonalDistances[2] = 1;
+                    }
+                    else
+                    {
+                        grid[i, j].diagonalDistances[2] = grid[i - 1, j + 1].diagonalDistances[2] + grid[i - 1, j + 1].diagonalDistances[2] > 0 ? 1 : -1;
+                    }
+                }
+            }
+        }
+
+        for (int i = grid.GetLength(0) - 1; i >= 0; i--)
+        {
+            for (int j = 0; j < grid.GetLength(1); j++)
+            {
+                if (!grid[i, j].isSolid)
+                {
+                    if (i == grid.GetLength(0) - 1 || j == 0 || grid[i + 1, j].isSolid || grid[i, j - 1].isSolid || grid[i + 1, j - 1].isSolid)
+                    {
+                        grid[i, j].diagonalDistances[0] = 0;
+                    }
+                    else if (grid[i + 1, j - 1].jumpDistances[0] > 1 || grid[i + 1, j - 1].jumpDistances[1] > 1)
+                    {
+                        grid[i, j].diagonalDistances[0] = 1;
+                    }
+                    else
+                    {
+                        grid[i, j].diagonalDistances[0] = grid[i + 1, j - 1].diagonalDistances[0] + grid[i + 1, j - 1].diagonalDistances[0] > 0 ? 1 : -1;
+                    }
+                }
+            }
+
+
+            for (int j = grid.GetLength(1) - 1; j >= 0; j--)
+            {
+                if (!grid[i, j].isSolid)
+                {
+                    if (i == grid.GetLength(0) - 1 || j == grid.GetLength(1) - 1 || grid[i + 1, j].isSolid || grid[i, j + 1].isSolid || grid[i + 1, j + 1].isSolid)
+                    {
+                        grid[i, j].diagonalDistances[1] = 0;
+                    }
+                    else if (grid[i + 1, j + 1].jumpDistances[2] > 1 || grid[i + 1, j + 1].jumpDistances[1] > 1)
+                    {
+                        grid[i, j].diagonalDistances[1] = 1;
+                    }
+                    else
+                    {
+                        grid[i, j].diagonalDistances[1] = grid[i + 1, j + 1].diagonalDistances[1] + grid[i + 1, j + 1].diagonalDistances[1] > 0 ? 1 : -1;
+                    }
+                }
+            }
         }
     }
 

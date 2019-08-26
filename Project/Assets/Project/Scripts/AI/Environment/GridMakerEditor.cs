@@ -10,9 +10,13 @@ public class GridMakerEditor : Editor
         DrawDefaultInspector();
 
         GridMaker gm = (GridMaker)target;
-        if (GUILayout.Button("Build JSP Data"))
+        if (GUILayout.Button("Build JPS Data"))
         {
             gm.BuildJPSData();
+        }
+        if (GUILayout.Button("JPS Path Test"))
+        {
+            gm.JSPTest();
         }
     }
 }

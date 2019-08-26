@@ -43,17 +43,27 @@ public class GridDisplay : MonoBehaviour
                 if (displayJSPData)
                 {
                     Gizmos.color = Color.red;
-                    if (ourGrid[i, j].jumpPoints[0] || ourGrid[i, j].jumpPoints[1] || ourGrid[i, j].jumpPoints[2] || ourGrid[i, j].jumpPoints[3])
+                    if (ourGrid[i, j].jumpPoints[0] || ourGrid[i, j].jumpPoints[2] || ourGrid[i, j].jumpPoints[4] || ourGrid[i, j].jumpPoints[6])
                         Gizmos.DrawCube(new Vector3(maker.startPos.x + i * maker.incrX + maker.incrX / 2, maker.startPos.y + j * maker.incrY + maker.incrY / 2, 0), new Vector3(0.2f, 0.2f, 0.2f));
 
                     if (ourGrid[i, j].jumpPoints[0])
                         Gizmos.DrawCube(new Vector3(maker.startPos.x + i * maker.incrX + maker.incrX / 2, maker.startPos.y + j * maker.incrY + maker.incrY / 2 - 0.25f, 0), new Vector3(0.15f, 0.15f, 0.15f));
-                    if (ourGrid[i, j].jumpPoints[1])
-                        Gizmos.DrawCube(new Vector3(maker.startPos.x + i * maker.incrX + maker.incrX / 2 - 0.25f, maker.startPos.y + j * maker.incrY + maker.incrY / 2, 0), new Vector3(0.15f, 0.15f, 0.15f));
                     if (ourGrid[i, j].jumpPoints[2])
+                        Gizmos.DrawCube(new Vector3(maker.startPos.x + i * maker.incrX + maker.incrX / 2 - 0.25f, maker.startPos.y + j * maker.incrY + maker.incrY / 2, 0), new Vector3(0.15f, 0.15f, 0.15f));
+                    if (ourGrid[i, j].jumpPoints[4])
                         Gizmos.DrawCube(new Vector3(maker.startPos.x + i * maker.incrX + maker.incrX / 2, maker.startPos.y + j * maker.incrY + maker.incrY / 2 + 0.25f, 0), new Vector3(0.15f, 0.15f, 0.15f));
-                    if (ourGrid[i, j].jumpPoints[3])
+                    if (ourGrid[i, j].jumpPoints[6])
                         Gizmos.DrawCube(new Vector3(maker.startPos.x + i * maker.incrX + maker.incrX / 2 + 0.25f, maker.startPos.y + j * maker.incrY + maker.incrY / 2, 0), new Vector3(0.15f, 0.15f, 0.15f));
+
+                    Gizmos.color = Color.green;
+                    if (ourGrid[i, j].hasTestStart)
+                        Gizmos.DrawCube(new Vector3(maker.startPos.x + i * maker.incrX + maker.incrX / 2, maker.startPos.y + j * maker.incrY + maker.incrY / 2, 0), new Vector3(0.6f, 0.6f, 0.6f));
+                    Gizmos.color = Color.cyan;
+                    if (ourGrid[i, j].hasTestEnd)
+                        Gizmos.DrawCube(new Vector3(maker.startPos.x + i * maker.incrX + maker.incrX / 2, maker.startPos.y + j * maker.incrY + maker.incrY / 2, 0), new Vector3(0.6f, 0.6f, 0.6f));
+                    Gizmos.color = Color.white;
+                    if (ourGrid[i, j].hasTestPath)
+                        Gizmos.DrawCube(new Vector3(maker.startPos.x + i * maker.incrX + maker.incrX / 2, maker.startPos.y + j * maker.incrY + maker.incrY / 2, 0), new Vector3(0.4f, 0.4f, 0.4f));
                 }
             }
         }

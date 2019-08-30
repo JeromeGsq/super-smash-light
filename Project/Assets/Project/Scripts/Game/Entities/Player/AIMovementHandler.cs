@@ -6,7 +6,7 @@ using DG.Tweening;
 public enum AIControllerType
 {
     Random = 0,
-    Reactive = 1
+    JPS = 1
 }
 
 [RequireComponent(typeof(CharacterController2D))]
@@ -52,7 +52,6 @@ public class AIMovementHandler : MovementHandler
     public float stickX;
 
     public bool oldpadForJump;
-    public int myteam;
 
     [SerializeField]
     private GameObject deathPrefab;
@@ -142,6 +141,8 @@ public class AIMovementHandler : MovementHandler
 
     public Transform virtualSight;
 
+    private GridMaker maker;
+
 
     public bool IsTargeting
     {
@@ -183,13 +184,15 @@ public class AIMovementHandler : MovementHandler
             case AIControllerType.Random:
                 agent = new RandomAgent();
                 break;
-            case AIControllerType.Reactive:
-                agent = new ReactiveAgent();
+            case AIControllerType.JPS:
+                agent = new JPSAgent();
                 break;
             default:
                 Debug.LogError("Bad AI type chosen");
                 break;
         }
+
+        maker = FindObjectOfType<GridMaker>();
     }
 
     private void OnEnable()
@@ -268,7 +271,7 @@ public class AIMovementHandler : MovementHandler
 
     private void Update() {
 
-        agent.Update(new GridCase[0,0], gameObject);
+        agent.Update(maker, gameObject);
 
         //myteam = Team.GetTeam(Index);
 

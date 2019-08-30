@@ -35,6 +35,7 @@ public class MovementHandler : MonoBehaviour
     [Tooltip("Le transform visuel du joueur qui sera flippé selon l'axe 'LocalScaleX'. Ce n'est que visuel")]
     public Transform player;
 
+    public int myteam;
 
     protected RuntimeAnimatorController color1;
     protected RuntimeAnimatorController color2;

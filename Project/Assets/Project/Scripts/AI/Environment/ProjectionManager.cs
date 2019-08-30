@@ -27,10 +27,12 @@ public class ProjectionManager : MonoBehaviour
             entities.Add(manager.ProjectionReference2);
             entities.Add(manager.ProjectionReference3);
             entities.Add(manager.ProjectionReference4);
+            entities.Add(manager.BallProjectionReference);
             lastPositions.Add(manager.ProjectionReference1.transform.position);
             lastPositions.Add(manager.ProjectionReference2.transform.position);
             lastPositions.Add(manager.ProjectionReference3.transform.position);
             lastPositions.Add(manager.ProjectionReference4.transform.position);
+            lastPositions.Add(manager.BallProjectionReference.transform.position);
             hasLoaded = true;
         }
 
@@ -55,9 +57,17 @@ public class ProjectionManager : MonoBehaviour
                 Vector3 newPos = entities[i].transform.position;
                 float gravity = -60 * projectionDelay;
 
-                for (int j = 0; j < numberProjections; j++)
+                int sx = (int)((newPos.x - GetComponent<GridMaker>().startPos.x) / GetComponent<GridMaker>().incrX);
+                int sy = (int)((newPos.y - GetComponent<GridMaker>().startPos.y) / GetComponent<GridMaker>().incrY);
+                if (sx >= 0 && sx < GetComponent<GridMaker>().grid.GetLength(0) &&
+                        sy >= 0 && sy < GetComponent<GridMaker>().grid.GetLength(1) &&
+                        !GetComponent<GridMaker>().grid[sx, sy].isSolid)
                 {
+                    GetComponent<GridMaker>().grid[sx, sy].projections.Add(new GridProjection(entities[i], 0));
+                }
 
+                for (int j = 1; j < numberProjections; j++)
+                {
                     newPos += new Vector3(xSpeed * projectionDelay, ySpeed * projectionDelay, 0);
 
                     int xIndex = (int)((newPos.x - GetComponent<GridMaker>().startPos.x) / GetComponent<GridMaker>().incrX);

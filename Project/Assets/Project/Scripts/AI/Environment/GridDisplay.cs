@@ -7,9 +7,12 @@ public class GridDisplay : MonoBehaviour
 {
     public bool displayLockedCases;
     public bool displayProjections;
-    public bool displayJSPData;
+    public bool displayJPSData;
+    public bool displayAgentData;
 
     GridMaker maker;
+    public List<List<Vector3>> searchPaths = new List<List<Vector3>>();
+    public List<Color> searchColors = new List<Color>();
 
     private void OnDrawGizmos()
     {
@@ -40,7 +43,7 @@ public class GridDisplay : MonoBehaviour
                         Gizmos.DrawCube(new Vector3(maker.startPos.x + i * maker.incrX + maker.incrX / 2, maker.startPos.y + j * maker.incrY + maker.incrY / 2, 0), new Vector3(0.5f, 0.5f, 0.5f));
                 }
 
-                if (displayJSPData)
+                if (displayJPSData)
                 {
                     Gizmos.color = Color.red;
                     if (ourGrid[i, j].jumpPoints[0] || ourGrid[i, j].jumpPoints[2] || ourGrid[i, j].jumpPoints[4] || ourGrid[i, j].jumpPoints[6])
@@ -64,6 +67,21 @@ public class GridDisplay : MonoBehaviour
                     Gizmos.color = Color.white;
                     if (ourGrid[i, j].hasTestPath)
                         Gizmos.DrawCube(new Vector3(maker.startPos.x + i * maker.incrX + maker.incrX / 2, maker.startPos.y + j * maker.incrY + maker.incrY / 2, 0), new Vector3(0.4f, 0.4f, 0.4f));
+                }
+            }
+        }
+
+        if (displayAgentData)
+        {
+            foreach (var list in searchPaths)
+            {
+                if (list != null && list.Count >= 2)
+                {
+                    for (int k = 1; k < list.Count; k++)
+                    {
+                        Gizmos.color = Color.yellow;
+                        Gizmos.DrawLine(list[k - 1], list[k]);
+                    }
                 }
             }
         }

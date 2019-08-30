@@ -16,13 +16,14 @@ public class GameManagerView : BaseView<GameManager>
     public GameObject ProjectionReference2;
     public GameObject ProjectionReference3;
     public GameObject ProjectionReference4;
-     
+    public GameObject BallProjectionReference;
+
     [SerializeField]
     private int debugLevel = 1;
 
     [Space(20)]
     [SerializeField]
-    private GameManager gamemanager;
+    public GameManager gamemanager;
 
 	[Space(20)]
     [SerializeField]
@@ -148,7 +149,6 @@ public class GameManagerView : BaseView<GameManager>
                     break;
                 case 3:
                     playerPrefabTeam12 = prefabModelIAT1;
-                    Debug.Log("check");
                     break;
                 case 4:
                     playerPrefabTeam12 = prefabModelIAT2;
@@ -235,6 +235,8 @@ public class GameManagerView : BaseView<GameManager>
 
             InitTeam(ViewModel.Team2, 2);
             Destroy(countdown);
+
+            FindObjectOfType<GridMaker>().BuildJPSData();
         }, 4));
 	}
     /*
@@ -261,6 +263,7 @@ public class GameManagerView : BaseView<GameManager>
 	{
 		var ball = Instantiate(this.ballPrefab);
 		ball.transform.position = this.spawnBallAnchor.position;
+        BallProjectionReference = ball;
 
 		SmoothFollow.Get.Targets.Add(ball.transform);
 	}

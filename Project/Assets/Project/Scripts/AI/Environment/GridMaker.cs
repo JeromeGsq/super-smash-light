@@ -18,13 +18,22 @@ public class GridMaker : MonoBehaviour
     private Vector3 o_startPos, o_endPos, o_test_start, o_test_end;
 
     internal GridCase[,] grid;
+    public GridDisplay display;
+
+    public GameManagerView view;
 
     static readonly float SQRT_2 = Mathf.Sqrt(2);
     static readonly float SQRT_2_MINUS_1 = Mathf.Sqrt(2) - 1.0f;
 
+    void Awake()
+    {
+        display = GetComponent<GridDisplay>();
+        view = FindObjectOfType<GameManagerView>();
+    }
+
     void Start()
     {
-        Debug.Log("Pos : " + startPos.ToString() + " " + endPos.ToString() + "\n" + (endPos.x - startPos.x) + " : " + (endPos.y - startPos.y));
+        //Debug.Log("Pos : " + startPos.ToString() + " " + endPos.ToString() + "\n" + (endPos.x - startPos.x) + " : " + (endPos.y - startPos.y));
     }
 
     void Update()
@@ -40,27 +49,7 @@ public class GridMaker : MonoBehaviour
             o_startPos = startPos;
             o_endPos = endPos;
 
-            grid = new GridCase[(int)Mathf.Abs((endPos.x - startPos.x) * (1 / incrX)), (int)Mathf.Abs((endPos.y - startPos.y) * (1 / incrY))];
-
-            for (int i = 0; i < grid.GetLength(0); i++)
-            {
-                for (int j = 0; j < grid.GetLength(1); j++)
-                {
-                    grid[i, j] = new GridCase();
-                    grid[i, j].myX = i;
-                    grid[i, j].myY = j;
-
-                    Vector3 localPos = new Vector3(startPos.x + i * incrX + incrX / 2, startPos.y + j * incrY + incrY / 2, 0);
-                    foreach (BoxCollider2D collider in wallParent.GetComponentsInChildren<BoxCollider2D>())
-                    {
-                        if (collider.bounds.Contains(localPos)) grid[i, j].isSolid = true;
-                    }
-                    foreach (BoxCollider2D collider in platformParent.GetComponentsInChildren<BoxCollider2D>())
-                    {
-                        if (collider.bounds.Contains(localPos)) grid[i, j].isSolid = true;
-                    }
-                }
-            }
+            MakeGrid();
         }
 
         if ((test_startPos != o_test_start || test_endPos != o_test_end) && grid!=null)
@@ -91,8 +80,34 @@ public class GridMaker : MonoBehaviour
         }
     }
 
+    public void MakeGrid()
+    {
+        grid = new GridCase[(int)Mathf.Abs((endPos.x - startPos.x) * (1 / incrX)), (int)Mathf.Abs((endPos.y - startPos.y) * (1 / incrY))];
+
+        for (int i = 0; i < grid.GetLength(0); i++)
+        {
+            for (int j = 0; j < grid.GetLength(1); j++)
+            {
+                grid[i, j] = new GridCase();
+                grid[i, j].myX = i;
+                grid[i, j].myY = j;
+
+                Vector3 localPos = new Vector3(startPos.x + i * incrX + incrX / 2, startPos.y + j * incrY + incrY / 2, 0);
+                foreach (BoxCollider2D collider in wallParent.GetComponentsInChildren<BoxCollider2D>())
+                {
+                    if (collider.bounds.Contains(localPos)) grid[i, j].isSolid = true;
+                }
+                foreach (BoxCollider2D collider in platformParent.GetComponentsInChildren<BoxCollider2D>())
+                {
+                    if (collider.bounds.Contains(localPos)) grid[i, j].isSolid = true;
+                }
+            }
+        }
+    }
+
     public void BuildJPSData()
     {
+        if (grid == null) MakeGrid();
         CalcPrimaryJumpPoints();
         CalcJumpDistances();
         CalcDiagonalDistances();

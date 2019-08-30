@@ -10,14 +10,14 @@ public abstract class AgentAI
     public bool shootOn;
     public bool diveOn;
 
-    public void Update(GridCase[,] env, GameObject me)
+    public void Update(GridMaker gm, GameObject me)
     {
         jumpOn = false;
         dashOn = false;
         diveOn = false;
 
-        UpdateAgent(env, me);
+        UpdateAgent(gm, me);
     }
 
-    protected abstract void UpdateAgent(GridCase[,] env, GameObject me);
+    protected abstract void UpdateAgent(GridMaker gm, GameObject me);
 }

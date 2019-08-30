@@ -45,9 +45,6 @@ public class PlayerMovementHandler : MovementHandler
     public float stickX;
 
     public bool oldpadForJump;
-    public int myteam;
-
-
 
     private GamePadState gamepadState;
 

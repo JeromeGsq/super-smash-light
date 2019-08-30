@@ -14,7 +14,7 @@ public class RandomAgent : AgentAI
         m = Time.realtimeSinceStartup + 3 * Random.value;
     }
 
-    protected override void UpdateAgent(GridCase[,] env, GameObject me)
+    protected override void UpdateAgent(GridMaker gm, GameObject me)
     {
         horizontalSpeed += 0.1f * (Random.value - 0.5f);
         if (Mathf.Abs(me.transform.position.x) > 10) horizontalSpeed -= me.transform.position.x / 30;

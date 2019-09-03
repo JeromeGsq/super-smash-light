@@ -5,44 +5,89 @@ using UnityEngine.SceneManagement;
 using System;
 
 public class GameMenuManager : MonoBehaviour {
+    [SerializeField]
     public int positions;
+
+    [SerializeField]
     public GameObject fond;
+
+    [SerializeField]
     public GameObject illu;
+
+    [SerializeField]
     public GameObject illu1;
+
+    [SerializeField]
     public GameObject illu2;
 
+    [SerializeField]
     public Sprite fondPartie;
+
+    [SerializeField]
     public Sprite fondOption;
+
+    [SerializeField]
     public Sprite fondQuitter;
 
+    [SerializeField]
     public Sprite illuPartie;
+
+    [SerializeField]
     public Sprite illuPartie1;
+
+    [SerializeField]
     public Sprite illuPartie2;
 
+    [SerializeField]
     public Sprite illuOption;
+
+    [SerializeField]
     public Sprite illuOption1;
 
+    [SerializeField]
     public Sprite illuQuit;
 
+    [SerializeField]
     public GameObject BoutonPartie;
+
+    [SerializeField]
     public GameObject BoutonOption;
+
+    [SerializeField]
     public GameObject BoutonQuitter;
 
+    [SerializeField]
     public GameObject paternHolder;
+
+    [SerializeField]
     public Sprite paternPartie;
+
+    [SerializeField]
     public Sprite paternOption;
+
+    [SerializeField]
     public Sprite paternQuit;
 
+    [SerializeField]
     public GameObject selecteur;
 
+    [SerializeField]
     private GamePadState gamepadState;
 
+    [SerializeField]
     public GameObject MenuPrincipal;
+    [SerializeField]
+    public GameObject MenuOption;
+    [SerializeField]
     public GameObject SelectPlayerMenu;
+    [SerializeField]
     public GameObject AnimatedBandeau;
 
+    [SerializeField]
     public bool pressedUp;
+    [SerializeField]
     public bool pressedDown;
+    [SerializeField]
     private bool pressedBack = true;
     [SerializeField]
     public bool pressedA = true;
@@ -55,6 +100,10 @@ public class GameMenuManager : MonoBehaviour {
         positions = 1;
         pressedA = true;
 
+        if (!MenuPrincipal.activeSelf)
+        {
+            MenuPrincipal.SetActive(true);
+        }
     }
 
     void OnEnable() 
@@ -111,11 +160,19 @@ public class GameMenuManager : MonoBehaviour {
                 GameObject.Find("patern2").GetComponent<SpriteRenderer>().sprite = paternOption;
                 GameObject.Find("patern3").GetComponent<SpriteRenderer>().sprite = paternOption;
                 GameObject.Find("patern4").GetComponent<SpriteRenderer>().sprite = paternOption;
-                if(this.gamepadState.Buttons.A == ButtonState.Pressed && pressedA == false) {
-                    BoutonOption.GetComponent<Animator>().Play(Animator.StringToHash("OptionMenu"));
-                }
+            //Menu d'options
+            if (this.gamepadState.Buttons.A == ButtonState.Pressed && pressedA == false) {
 
-        }
+                    BoutonOption.GetComponent<Animator>().Play(Animator.StringToHash("OptionMenu"));
+
+                StartCoroutine(CoroutineUtils.DelaySeconds(() => {
+                    MenuPrincipal.SetActive(false);
+                    MenuOption.SetActive(true);
+                }, 0.7f));
+            }
+
+        
+                }
             else if (positions == 3)
                 {
                     selecteur.GetComponent<Transform>().position = new Vector3(6.18f, -7.75f, selecteur.GetComponent<Transform>().position.z);

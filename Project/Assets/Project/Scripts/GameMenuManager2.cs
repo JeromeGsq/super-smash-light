@@ -675,10 +675,10 @@ public class GameMenuManager2 : MonoBehaviour {
                 gamepad1.GetComponent<Transform>().localPosition = new Vector3(8.33f, 0f, -2.3f);
                 break;
             case 3:
-                gamepad1.GetComponent<Transform>().localPosition = new Vector3(-8.33f, 0f, -2.3f);
+                gamepad1.GetComponent<Transform>().localPosition = new Vector3(0, 0, -2.3f);
                 break;
             case 4:
-                gamepad1.GetComponent<Transform>().localPosition = new Vector3(8.33f, 0f, -2.3f);
+                gamepad1.GetComponent<Transform>().localPosition = new Vector3(0, 0, -2.3f);
                 break;
             default:
                 gamepad1.GetComponent<Transform>().localPosition = new Vector3(0, 0, -2.3f);
@@ -693,11 +693,9 @@ public class GameMenuManager2 : MonoBehaviour {
                 gamepad2.GetComponent<Transform>().localPosition = new Vector3(8.33f, -2.5f, -2.3f);
                 break;
             case 3:
-                gamepad2.GetComponent<Transform>().localPosition = new Vector3(-8.33f, -2.5f, -2.3f);
-                break;
+                gamepad2.GetComponent<Transform>().localPosition = new Vector3(0, -2.5f, -2.3f); break;
             case 4:
-                gamepad2.GetComponent<Transform>().localPosition = new Vector3(8.33f, -2.5f, -2.3f);
-                break;
+                gamepad2.GetComponent<Transform>().localPosition = new Vector3(0, -2.5f, -2.3f); break;
             default:
                 gamepad2.GetComponent<Transform>().localPosition = new Vector3(0, -2.5f, -2.3f);
                 break;
@@ -711,10 +709,10 @@ public class GameMenuManager2 : MonoBehaviour {
                 gamepad3.GetComponent<Transform>().localPosition = new Vector3(8.33f, -5f, -2.3f);
                 break;
             case 3:
-                gamepad3.GetComponent<Transform>().localPosition = new Vector3(-8.33f, -5f, -2.3f);
+                gamepad3.GetComponent<Transform>().localPosition = new Vector3(0, -5f, -2.3f);
                 break;
             case 4:
-                gamepad3.GetComponent<Transform>().localPosition = new Vector3(8.33f, -5f, -2.3f);
+                gamepad3.GetComponent<Transform>().localPosition = new Vector3(0, -5f, -2.3f);
                 break;
             default:
                 gamepad3.GetComponent<Transform>().localPosition = new Vector3(0, -5f, -2.3f);
@@ -729,10 +727,10 @@ public class GameMenuManager2 : MonoBehaviour {
                 gamepad4.GetComponent<Transform>().localPosition = new Vector3(8.33f, -7.5f, -2.3f);
                 break;
             case 3:
-                gamepad4.GetComponent<Transform>().localPosition = new Vector3(-8.33f, -7.5f, -2.3f);
+                gamepad4.GetComponent<Transform>().localPosition = new Vector3(0, -7.5f, -2.3f);
                 break;
             case 4:
-                gamepad4.GetComponent<Transform>().localPosition = new Vector3(8.33f, -7.5f, -2.3f);
+                gamepad4.GetComponent<Transform>().localPosition = new Vector3(0, -7.5f, -2.3f);
                 break;
             default:
                 gamepad4.GetComponent<Transform>().localPosition = new Vector3(0, -7.5f, -2.3f);

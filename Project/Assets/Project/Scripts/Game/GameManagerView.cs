@@ -39,6 +39,7 @@ public class GameManagerView : BaseView<GameManager>
 	[SerializeField]
 	private GameObject playerPrefab;
 
+    /*
     [SerializeField]
     private GameObject playerPrefabTeam11;
 
@@ -50,6 +51,7 @@ public class GameManagerView : BaseView<GameManager>
 
     [SerializeField]
     private GameObject playerPrefabTeam22;
+    */
 
     [SerializeField]
     private GameObject prefabModelT1;
@@ -101,15 +103,13 @@ public class GameManagerView : BaseView<GameManager>
     [SerializeField]
     private GameObject lv3;
 
-    private List<GameObject> players;
+    private MovementHandler player1, player2, player3, player4;
 
 
 
     public override void Awake()
 	{
 		base.Awake();
-
-		this.players = new List<GameObject>();
 	}
 
 	public override void Start()
@@ -117,91 +117,7 @@ public class GameManagerView : BaseView<GameManager>
         
 		base.Start();
 
-        TData savedData = FindObjectOfType<TData>();
-        if (savedData != null)
-        {
-            switch (savedData.p1)
-            {
-                case 0:
-                    Debug.Log("Clean Up saved team 0");
-                    break;
-                case 1:
-                    playerPrefabTeam11 = prefabModelT1;
-                    break;
-                case 2:
-                    playerPrefabTeam11 = prefabModelT2;
-                    break;
-                default:
-                    Debug.LogError("Bad Data");
-                    break;
-            }
-
-            switch (savedData.p2)
-            {
-                case 0:
-                    Debug.Log("Clean Up saved team 0");
-                    break;
-                case 1:
-                    playerPrefabTeam12 = prefabModelT1;
-                    break;
-                case 2:
-                    playerPrefabTeam12 = prefabModelT2;
-                    break;
-                case 3:
-                    playerPrefabTeam12 = prefabModelIAT1;
-                    break;
-                case 4:
-                    playerPrefabTeam12 = prefabModelIAT2;
-                    break;
-                default:
-                    Debug.LogError("Bad Data");
-                    break;
-            }
-
-            switch (savedData.p3)
-            {
-                case 0:
-                    Debug.Log("Clean Up saved team 0");
-                    break;
-                case 1:
-                    playerPrefabTeam21 = prefabModelT1;
-                    break;
-                case 2:
-                    playerPrefabTeam21 = prefabModelT2;
-                    break;
-                case 3:
-                    playerPrefabTeam21 = prefabModelIAT1;
-                    break;
-                case 4:
-                    playerPrefabTeam21 = prefabModelIAT2;
-                    break;
-                default:
-                    Debug.LogError("Bad Data");
-                    break;
-            }
-
-            switch (savedData.p4)
-            {
-                case 0:
-                    Debug.Log("Clean Up saved team 0");
-                    break;
-                case 1:
-                    playerPrefabTeam22 = prefabModelT1;
-                    break;
-                case 2:
-                    playerPrefabTeam22 = prefabModelT2;
-                    break;
-                case 3:
-                    playerPrefabTeam22 = prefabModelIAT1;
-                    break;
-                case 4:
-                    playerPrefabTeam22 = prefabModelIAT2;
-                    break;
-                default:
-                    Debug.LogError("Bad Data");
-                    break;
-            }
-        }
+        
         GameObject currentLevel = null;
         if (GameMenuManager3.selectedLevel == 0)
             GameMenuManager3.selectedLevel = debugLevel;
@@ -231,9 +147,9 @@ public class GameManagerView : BaseView<GameManager>
         StartCoroutine(CoroutineUtils.DelaySeconds(() =>
         {
             gamemanager.timerStart = true;
-            InitTeam(ViewModel.Team1, 1);
 
-            InitTeam(ViewModel.Team2, 2);
+            InitTeam();
+
             Destroy(countdown);
 
             FindObjectOfType<GridMaker>().BuildJPSData();
@@ -268,87 +184,129 @@ public class GameManagerView : BaseView<GameManager>
 		SmoothFollow.Get.Targets.Add(ball.transform);
 	}
 
-	private void InitTeam(Team team, int index)
-	{
-		if(team == null)
-		{
-			Debug.Log("GameManagerView : InitTeam() : team is null");
-			return;
-		}
-
-        if (index == 1)
-		{
-            MovementHandler player1, player2;
-
-            if (playerPrefabTeam11.GetComponent<PlayerMovementHandler>() != null)
+    private void InitTeam()
+    {
+        TData savedData = FindObjectOfType<TData>();
+        if (savedData != null)
+        {
+            switch (savedData.p1)
             {
-                player1 = InitPlayer(playerPrefabTeam11, this.spanwnPlayer1Anchor, team.FirstPlayerIndex, Tags.Player1, 1);
-            }
-            else
-            {
-                player1 = InitAIPlayer(playerPrefabTeam11, this.spanwnPlayer1Anchor, team.FirstPlayerIndex, Tags.Player1, 1);
-            }
-
-            if (playerPrefabTeam12.GetComponent<PlayerMovementHandler>() != null)
-            {
-                player2 = InitPlayer(playerPrefabTeam12, this.spanwnPlayer2Anchor, team.SecondPlayerIndex, Tags.Player2, 1);
-            }
-            else
-            {
-                player2 = InitAIPlayer(playerPrefabTeam12, this.spanwnPlayer2Anchor, team.SecondPlayerIndex, Tags.Player2, 1);
+                case 0:
+                    Debug.Log("Clean Up saved team 0");
+                    break;
+                case 1:
+                    player1 = InitPlayer(prefabModelT1, this.spanwnPlayer1Anchor, ViewModel.team1.NextIndex(), Tags.Player1, ViewModel.team1);
+                    ViewModel.team1.AddPlayer(player1);
+                    break;
+                case 2:
+                    player1 = InitPlayer(prefabModelT2, this.spanwnPlayer1Anchor, ViewModel.team2.NextIndex(), Tags.Player1, ViewModel.team2);
+                    ViewModel.team2.AddPlayer(player1);
+                    break;
+                default:
+                    Debug.LogError("Bad Data");
+                    break;
             }
 
-            player1.FriendTransform = player2.gameObject.transform;
-			player2.FriendTransform = player1.gameObject.transform;
+            switch (savedData.p2)
+            {
+                case 0:
+                    Debug.Log("Clean Up saved team 0");
+                    break;
+                case 1:
+                    player2 = InitPlayer(prefabModelT1, this.spanwnPlayer2Anchor, ViewModel.team1.NextIndex(), Tags.Player2, ViewModel.team1);
+                    ViewModel.team1.AddPlayer(player2);
+                    break;
+                case 2:
+                    player2 = InitPlayer(prefabModelT2, this.spanwnPlayer2Anchor, ViewModel.team2.NextIndex(), Tags.Player2, ViewModel.team2);
+                    ViewModel.team2.AddPlayer(player2);
+                    break;
+                case 3:
+                    player2 = InitPlayer(prefabModelIAT1, this.spanwnPlayer2Anchor, ViewModel.team1.NextIndex(), Tags.Player2, ViewModel.team1);
+                    ViewModel.team1.AddPlayer(player2);
+                    break;
+                case 4:
+                    player2 = InitPlayer(prefabModelIAT2, this.spanwnPlayer2Anchor, ViewModel.team2.NextIndex(), Tags.Player2, ViewModel.team2);
+                    ViewModel.team2.AddPlayer(player2);
+                    break;
+                default:
+                    Debug.LogError("Bad Data");
+                    break;
+            }
 
-			this.players.Add(player1.gameObject);
-			this.players.Add(player2.gameObject);
-            this.ProjectionReference1 = player1.gameObject;
-            this.ProjectionReference2 = player2.gameObject;
+            switch (savedData.p3)
+            {
+                case 0:
+                    Debug.Log("Clean Up saved team 0");
+                    break;
+                case 1:
+                    player3 = InitPlayer(prefabModelT1, this.spanwnPlayer3Anchor, ViewModel.team1.NextIndex(), Tags.Player3, ViewModel.team1);
+                    ViewModel.team1.AddPlayer(player3);
+                    break;
+                case 2:
+                    player3 = InitPlayer(prefabModelT2, this.spanwnPlayer3Anchor, ViewModel.team2.NextIndex(), Tags.Player3, ViewModel.team2);
+                    ViewModel.team2.AddPlayer(player3);
+                    break;
+                case 3:
+                    player3 = InitPlayer(prefabModelIAT1, this.spanwnPlayer3Anchor, ViewModel.team1.NextIndex(), Tags.Player3, ViewModel.team1);
+                    ViewModel.team1.AddPlayer(player3);
+                    break;
+                case 4:
+                    player3 = InitPlayer(prefabModelIAT2, this.spanwnPlayer3Anchor, ViewModel.team2.NextIndex(), Tags.Player3, ViewModel.team2);
+                    ViewModel.team2.AddPlayer(player3);
+                    break;
+                default:
+                    Debug.LogError("Bad Data");
+                    break;
+            }
+
+            switch (savedData.p4)
+            {
+                case 0:
+                    Debug.Log("Clean Up saved team 0");
+                    break;
+                case 1:
+                    player4 = InitPlayer(prefabModelT1, this.spanwnPlayer4Anchor, ViewModel.team1.NextIndex(), Tags.Player4, ViewModel.team1);
+                    ViewModel.team1.AddPlayer(player4);
+                    break;
+                case 2:
+                    player4 = InitPlayer(prefabModelT2, this.spanwnPlayer4Anchor, ViewModel.team2.NextIndex(), Tags.Player4, ViewModel.team2);
+                    ViewModel.team2.AddPlayer(player4);
+                    break;
+                case 3:
+                    player4 = InitPlayer(prefabModelIAT1, this.spanwnPlayer4Anchor, ViewModel.team1.NextIndex(), Tags.Player4, ViewModel.team1);
+                    ViewModel.team1.AddPlayer(player4);
+                    break;
+                case 4:
+                    player4 = InitPlayer(prefabModelIAT2, this.spanwnPlayer4Anchor, ViewModel.team2.NextIndex(), Tags.Player4, ViewModel.team2);
+                    ViewModel.team2.AddPlayer(player4);
+                    break;
+                default:
+                    Debug.LogError("Bad Data");
+                    break;
+            }
         }
 
-		if(index == 2)
-		{
-            MovementHandler player3, player4;
+        player1.FriendTransform = player1.myteam.GetOther(player1).transform;
+        player2.FriendTransform = player2.myteam.GetOther(player2).transform;
+        player3.FriendTransform = player3.myteam.GetOther(player3).transform;
+        player4.FriendTransform = player4.myteam.GetOther(player4).transform;
 
-            if (playerPrefabTeam21.GetComponent<PlayerMovementHandler>() != null)
-            {
-                player3 = InitPlayer(playerPrefabTeam21, this.spanwnPlayer3Anchor, team.FirstPlayerIndex, Tags.Player3, 2);
-            }
-            else
-            {
-                player3 = InitAIPlayer(playerPrefabTeam21, this.spanwnPlayer3Anchor, team.FirstPlayerIndex, Tags.Player3, 2);
-            }
+        this.ProjectionReference1 = player1.gameObject;
+        this.ProjectionReference2 = player2.gameObject;
+        this.ProjectionReference3 = player3.gameObject;
+        this.ProjectionReference4 = player4.gameObject;
+    }
 
-            if (playerPrefabTeam21.GetComponent<PlayerMovementHandler>() != null)
-            {
-                player4 = InitPlayer(playerPrefabTeam22, this.spanwnPlayer4Anchor, team.SecondPlayerIndex, Tags.Player4, 2);
-            }
-            else
-            {
-                player4 = InitAIPlayer(playerPrefabTeam22, this.spanwnPlayer4Anchor, team.SecondPlayerIndex, Tags.Player4, 2);
-            }
-
-                player3.FriendTransform = player4.gameObject.transform;
-			player4.FriendTransform = player3.gameObject.transform;
-
-			this.players.Add(player3.gameObject);
-			this.players.Add(player4.gameObject);
-            this.ProjectionReference3 = player3.gameObject;
-            this.ProjectionReference4 = player4.gameObject;
-        }
-        
-	}
-
-	private PlayerMovementHandler InitPlayer(GameObject prefab, Transform anchor, PlayerIndex index, string tag,int team)
+	private MovementHandler InitPlayer(GameObject prefab, Transform anchor, PlayerIndex index, string tag,Team team)
 	{
 		GameObject player = Instantiate(prefab, null);
 		player.transform.position = anchor.position;
 
-		var playerHandler = player.GetComponent<PlayerMovementHandler>();
+		var playerHandler = player.GetComponent<MovementHandler>();
 
         if (playerHandler != null)
         {
+            //Debug.LogWarning("player " + index);
             playerHandler.Index = index;
             playerHandler.myteam = team;
             player.tag = tag;
@@ -361,7 +319,8 @@ public class GameManagerView : BaseView<GameManager>
 		return playerHandler;
 	}
 
-    private AIMovementHandler InitAIPlayer(GameObject prefab, Transform anchor, PlayerIndex index, string tag, int team)
+    /*
+    private AIMovementHandler InitAIPlayer(GameObject prefab, Transform anchor, PlayerIndex index, string tag, Team team)
     {
         GameObject player = Instantiate(prefab, null);
         player.transform.position = anchor.position;
@@ -370,6 +329,7 @@ public class GameManagerView : BaseView<GameManager>
 
         if (AIHandler != null)
         {
+            //Debug.LogWarning("ai " + index);
             AIHandler.Index = index;
             AIHandler.myteam = team;
             player.tag = tag;
@@ -381,6 +341,7 @@ public class GameManagerView : BaseView<GameManager>
 
         return AIHandler;
     }
+    */
 
     //private void UpdateBallColor(PlayerIndex ballIndex)
     //{

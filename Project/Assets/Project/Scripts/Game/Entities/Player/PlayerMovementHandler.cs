@@ -144,14 +144,6 @@ public class PlayerMovementHandler : MovementHandler
         private set;
     }
 
-    public Vector3 MainPosition
-    {
-        get => mainPosition;
-        set => mainPosition = value;
-    }
-
-
-
     protected override void Awake()
         
     {
@@ -175,6 +167,7 @@ public class PlayerMovementHandler : MovementHandler
         }
 
         trigger2D.isTrigger = true;
+
     }
 
     private void OnEnable()
@@ -187,7 +180,7 @@ public class PlayerMovementHandler : MovementHandler
     private void OnControllerCollider(RaycastHit2D cast)
     {
         if (isDashing && isPushed == false &&
-            (myteam == 2 ?
+            (myteam.number == 2 ?
                 (cast.collider.CompareTag(Tags.Player1) || cast.collider.CompareTag(Tags.Player2)) :
                 (cast.collider.CompareTag(Tags.Player3) || cast.collider.CompareTag(Tags.Player4)))
            )
@@ -202,7 +195,7 @@ public class PlayerMovementHandler : MovementHandler
             // Get ball from enemy
             if (BallHandler.Get.Index == enemyHandler.Index)
             {
-                BallHandler.Get.SetGrabbed(ballAnchor, Index, myteam);
+                BallHandler.Get.SetGrabbed(ballAnchor, Index, myteam.number);
             }
 
             // Apply collision on enemy
@@ -231,7 +224,7 @@ public class PlayerMovementHandler : MovementHandler
             }
             else if (canGrab && BallHandler.Get.IsGrabbed == false)
             {
-                BallHandler.Get.SetGrabbed(ballAnchor, Index, myteam);
+                BallHandler.Get.SetGrabbed(ballAnchor, Index, myteam.number);
             }
         }
     }
@@ -316,7 +309,7 @@ public class PlayerMovementHandler : MovementHandler
 
             // Shoot control
             if(LBreleased || LTreleased) {
-                if(GameManager.Get.CanShoot(myteam)) {
+                if(GameManager.Get.CanShoot(myteam.number)) {
                     BallHandler.Get.Shoot(sight, shootPower, ShootType.Shoot);
                 }
 
@@ -511,11 +504,11 @@ public class PlayerMovementHandler : MovementHandler
         CameraHandler.Get.Rumble();
 
         // Add point to the other team
-        if(BallHandler.Get.lastShooterTeam != myteam)
+        if(BallHandler.Get.lastShooterTeam != myteam.number)
         {
             var otherTeamIndex = myteam;
             Debug.Log("Teamadd1");
-            GameManager.Get.AddPoint(otherTeamIndex);
+            GameManager.Get.AddPoint(otherTeamIndex.number);
         }
 
         var particles = Instantiate(deathPrefab);
@@ -538,7 +531,7 @@ public class PlayerMovementHandler : MovementHandler
             canGrab = true;
         }, 1f));
 
-        GameManager.Get.ResetBarLevel(myteam);
+        GameManager.Get.ResetBarLevel(myteam.number);
         player.gameObject.SetActive(false);
         trigger2D.enabled = false;
         controller.boxCollider.enabled = false;

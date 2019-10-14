@@ -27,7 +27,7 @@ public class JPSAgent : AgentAI
         List<int[]> foes = new List<int[]>();
         int[] ball = null;
 
-        int team = me.GetComponent<MovementHandler>().myteam;
+        Team team = me.GetComponent<MovementHandler>().myteam;
 
         for (int i = 0; i < gm.grid.GetLength(0); i++)
         {
@@ -134,7 +134,7 @@ public class JPSAgent : AgentAI
 
             bool hasBall = ballRef.isGrabbed && ballRef.LastShooter == me.GetComponent<AIMovementHandler>().Index;
             bool friendBall = ballRef.isGrabbed && ballRef.LastShooter == me.GetComponent<AIMovementHandler>().FriendTransform.gameObject.GetComponent<MovementHandler>().Index;
-            bool enemyBall = ballRef.isGrabbed && ballRef.lastShooterTeam != me.GetComponent<AIMovementHandler>().myteam;
+            bool enemyBall = ballRef.isGrabbed && ballRef.lastShooterTeam != me.GetComponent<AIMovementHandler>().myteam.number;
 
             bool seeFriend = false;
             if(pathFriend.Count > 0) seeFriend = !Physics.Raycast(me.transform.position, pathFriend[1], (pathFriend[1] - me.transform.position).magnitude);
@@ -148,11 +148,11 @@ public class JPSAgent : AgentAI
             //if (me.gameObject.GetComponent<AIMovementHandler>().Index == XInputDotNetPure.PlayerIndex.One) Debug.Log("Yo " + seeFriend + " " + seeEnemy1 + " " + seeEnemy2);
 
             bool canAttack = 
-                (gm.view.gamemanager.Team1.BarLevel == 1 && me.GetComponent<AIMovementHandler>().myteam == 1) || 
-                (gm.view.gamemanager.Team2.BarLevel == 1 && me.GetComponent<AIMovementHandler>().myteam == 2);
+                (gm.view.gamemanager.Team1.BarLevel == 1 && me.GetComponent<AIMovementHandler>().myteam.number == 1) || 
+                (gm.view.gamemanager.Team2.BarLevel == 1 && me.GetComponent<AIMovementHandler>().myteam.number == 2);
             bool enemyCanAttack =
-                (gm.view.gamemanager.Team1.BarLevel == 1 && me.GetComponent<AIMovementHandler>().myteam == 2) ||
-                (gm.view.gamemanager.Team2.BarLevel == 1 && me.GetComponent<AIMovementHandler>().myteam == 1);
+                (gm.view.gamemanager.Team1.BarLevel == 1 && me.GetComponent<AIMovementHandler>().myteam.number == 2) ||
+                (gm.view.gamemanager.Team2.BarLevel == 1 && me.GetComponent<AIMovementHandler>().myteam.number == 1);
 
             Vector3 targetVector = new Vector3();
 

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using UnityWeld.Binding;
 using XInputDotNetPure;
@@ -103,63 +104,33 @@ public class GameManager : BaseViewModel
 
     private void Awake()
 	{
+        List<PlayerIndex> t1 = new List<PlayerIndex>();
+        List<PlayerIndex> t2 = new List<PlayerIndex>();
 
-            if((GameMenuManager2.gamepad1team + GameMenuManager2.gamepad2team) == 2) {
-                team1Player1 = PlayerIndex.One;
-                team1Player2 = PlayerIndex.Two;
-            }
-            if((GameMenuManager2.gamepad1team + GameMenuManager2.gamepad2team) == 4) {
-                team2Player1 = PlayerIndex.One;
-                team2Player2 = PlayerIndex.Two;
-            }
-            if((GameMenuManager2.gamepad1team + GameMenuManager2.gamepad3team) == 2) {
-                team1Player1 = PlayerIndex.One;
-                team1Player2 = PlayerIndex.Three;
-            }
-            if((GameMenuManager2.gamepad1team + GameMenuManager2.gamepad3team) == 4) {
-                team2Player1 = PlayerIndex.One;
-                team2Player2 = PlayerIndex.Three;
-            }
-            if((GameMenuManager2.gamepad1team + GameMenuManager2.gamepad4team) == 2) {
-                team1Player1 = PlayerIndex.One;
-                team1Player2 = PlayerIndex.Four;
-            }
-            if((GameMenuManager2.gamepad1team + GameMenuManager2.gamepad4team) == 4) {
-                team2Player1 = PlayerIndex.One;
-                team2Player2 = PlayerIndex.Four;
-            }
-            if((GameMenuManager2.gamepad2team + GameMenuManager2.gamepad3team) == 2) {
-                team1Player1 = PlayerIndex.Two;
-                team1Player2 = PlayerIndex.Three;
-            }
-            if((GameMenuManager2.gamepad2team + GameMenuManager2.gamepad3team) == 4) {
-                team2Player1 = PlayerIndex.Two;
-                team2Player2 = PlayerIndex.Three;
-            }
-            if((GameMenuManager2.gamepad2team + GameMenuManager2.gamepad4team) == 2) {
-                team1Player1 = PlayerIndex.Two;
-                team1Player2 = PlayerIndex.Four;
-            }
-            if((GameMenuManager2.gamepad2team + GameMenuManager2.gamepad4team) == 4) {
-                team2Player1 = PlayerIndex.Two;
-                team2Player2 = PlayerIndex.Four;
-            }
-            if((GameMenuManager2.gamepad3team + GameMenuManager2.gamepad4team) == 2) {
-                team1Player1 = PlayerIndex.Three;
-                team1Player2 = PlayerIndex.Four;
-            }
-            if((GameMenuManager2.gamepad3team + GameMenuManager2.gamepad4team) == 4) {
-                team2Player1 = PlayerIndex.Three;
-                team2Player2 = PlayerIndex.Four;
-            }
+        if (GameMenuManager2.gamepad1team == 1 || GameMenuManager2.gamepad1team == 3) t1.Add(PlayerIndex.One);
+        else t2.Add(PlayerIndex.One);
 
-            this.Team1 = new Team() {
+        if (GameMenuManager2.gamepad2team == 1 || GameMenuManager2.gamepad2team == 3) t1.Add(PlayerIndex.Two);
+        else t2.Add(PlayerIndex.Two);
+
+        if (GameMenuManager2.gamepad3team == 1 || GameMenuManager2.gamepad3team == 3) t1.Add(PlayerIndex.Three);
+        else t2.Add(PlayerIndex.Three);
+
+        if (GameMenuManager2.gamepad4team == 1 || GameMenuManager2.gamepad4team == 3) t1.Add(PlayerIndex.Four);
+        else t2.Add(PlayerIndex.Four);
+
+        team1Player1 = t1[0];
+        team1Player2 = t1[1];
+        team2Player1 = t2[0];
+        team2Player2 = t2[1];
+
+            this.Team1 = new Team(1) {
 
                 FirstPlayerIndex = team1Player1,
                 SecondPlayerIndex = team1Player2,
             };
 
-            this.Team2 = new Team() {
+            this.Team2 = new Team(2) {
                 FirstPlayerIndex = team2Player1,
                 SecondPlayerIndex = team2Player2,
             };

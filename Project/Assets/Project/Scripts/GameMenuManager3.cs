@@ -111,8 +111,10 @@ public class GameMenuManager3 : BaseViewModel {
 
             ///////////////////////////////////////////////////////////////////////////////
 
-            //old pad script
+            //Selection du menu des manettes
 
+
+        //Pour pas compter l'appui d'un bouton plusieurs frames de suite
             if(this.gamepadState.DPad.Up == ButtonState.Released) {
                 dpadUp = false;
             }

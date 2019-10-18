@@ -1,63 +1,91 @@
-﻿using UnityEngine;
-using Prime31;
+﻿using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
 using XInputDotNetPure;
+using Prime31;
 using UnityEngine.SceneManagement;
 using System;
-using System.Collections.Generic;
 
 public class OptionMenuManager : MonoBehaviour
 {
-    static public int Position = 0;
-
-     [SerializeField]
-    private GameObject languageEn;
+    [SerializeField]
+    private int Horizontal = 0;
 
     [SerializeField]
-    public GameObject easy;
+    private int Vertical = 0;
+
+    [SerializeField]
+    private bool Dpad_Down;
+
+    [SerializeField]
+    private bool Dpad_Up;
+
+
+    [SerializeField]
+    public GameObject Easy;
+
     [SerializeField]
     public GameObject medium;
+
     [SerializeField]
     public GameObject hard;
-    [SerializeField]
-    public bool pressedUp;
-    [SerializeField]
-    public bool pressedDown;
-    [SerializeField]
-    private bool pressedBack = true;
-    [SerializeField]
-    public bool pressedA = true;
-    [SerializeField]
-    public GameObject selecteur;
 
+    [SerializeField]
+    private GamePadState gamepadState;
 
-    // Start is called before the first frame update
+    [SerializeField]
+    public GameObject selecteurPos1;
+
+    [SerializeField]
+    public GameObject selecteurPos2;
+
+    [SerializeField]
+    public GameObject selecteurPos3;
+
+    //[SerializeField]
+    //public int PositionV = 1;
+
+   // Start is called before the first frame update
     void Start()
     {
-        easy.SetActive(true);
-        languageEn.SetActive(true);
+        Easy.SetActive(true);
+        selecteurPos1.SetActive(true);
+        Dpad_Down = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-            if (Position == 1)
+            if (this.gamepadState.DPad.Down == ButtonState.Pressed)
             {
-                selecteur.GetComponent<Transform>().position = new Vector3(6.18f, -4.5f, selecteur.GetComponent<Transform>().position.z);
-            }
+                Dpad_Down = true;
 
-            else if (Position == 2)
-            {
-                selecteur.GetComponent<Transform>().position = new Vector3(6.18f, -4.5f, selecteur.GetComponent<Transform>().position.z);
             }
+                if(Dpad_Down == true)
+            {
+                Vertical = 1;
+                selecteurPos1.SetActive(false);
+                selecteurPos2.SetActive(true);
+                Debug.Log(Vertical);
+                //selecteur.GetComponent<Transform>().position = new Vector3(6.18f, -1.25f, selecteur.GetComponent<Transform>().position.z);
+            }
+        
 
-          else if (Position == 3)
+        if (Horizontal == 1)
+        {
+            if (this.gamepadState.DPad.Left == ButtonState.Pressed)
             {
-                selecteur.GetComponent<Transform>().position = new Vector3(6.18f, -4.5f, selecteur.GetComponent<Transform>().position.z);
+                Easy.SetActive(false);
+                medium.SetActive(true);
             }
+            
+        }
 
-            else if (Position == 4)
-            {
-                selecteur.GetComponent<Transform>().position = new Vector3(6.18f, -4.5f, selecteur.GetComponent<Transform>().position.z);
-            }
+
+        //if(this.gamepadState.Dpad.Down == ButtonState.Pressed && PositionH == 1)
+        //{
+        //    PositionH = 2;
+        //    selecteur.GetComponent<Transform>().position = new Vector3(6.18f, -1.25f, selecteur.GetComponent<Transform>().position.z);
+        //}
     }
 }

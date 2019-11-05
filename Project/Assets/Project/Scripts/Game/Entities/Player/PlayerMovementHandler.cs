@@ -121,7 +121,7 @@ public class PlayerMovementHandler : MovementHandler
 
     [Tooltip("Puissance de la balle lors d'une passe")]
     [SerializeField]
-    private float passPower = 50f;
+    private float passPower = 30f;
 
     [Tooltip("Puissance de la balle lors d'un tir")]
     [SerializeField]

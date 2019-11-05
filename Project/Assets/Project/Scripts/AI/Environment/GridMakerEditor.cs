@@ -1,6 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
+#if UNITY_EDITOR
 using UnityEditor;
+
 
 [CustomEditor(typeof(GridMaker))]
 public class GridMakerEditor : Editor
@@ -20,3 +22,4 @@ public class GridMakerEditor : Editor
         }
     }
 }
+#endif

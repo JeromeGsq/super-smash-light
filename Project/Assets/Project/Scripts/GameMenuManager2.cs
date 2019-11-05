@@ -253,12 +253,49 @@ public class GameMenuManager2 : MonoBehaviour {
 
             if (gamepad1team != 0)
             {
-                if(gamepadState1.DPad.Up == ButtonState.Pressed && !g1up)
+                
+                if (gamepadState1.DPad.Up == ButtonState.Pressed && !g1up)
                 {
                     g1up = true;
                     gamepad1color++;
                     if (gamepad1color == 5) gamepad1color = 1;
                     if (gamepad1color == 25) gamepad1color = 21;
+
+                    if (gamepad1color == gamepad2color)
+                        { gamepad2color++;
+                         if (gamepad2color == 5) gamepad2color = 1;
+                         if (gamepad2color == 25) gamepad2color = 21;
+                    }
+
+                    if (gamepad1color == gamepad3color)
+                    {
+                        gamepad3color++;
+                        if (gamepad3color == 5) gamepad3color = 1;
+                        if (gamepad3color == 25) gamepad3color = 21;
+                    }
+
+                    if (gamepad1color == gamepad4color)
+                    {
+                        gamepad4color++;
+                        if (gamepad4color == 5) gamepad4color = 1;
+                        if (gamepad4color == 25) gamepad4color = 21;
+                    }
+
+                    /*if (!gamepadState2.IsConnected && gamepad1team == 1)
+                    {
+                        gamepad2color++;
+                        if (gamepad2color == 5) gamepad2color = 1;
+                        gamepad2team = 0;
+                        gamepad2color = 0;
+                    }
+
+                    if (!gamepadState2.IsConnected && gamepad1team == 2)
+                   {
+                       gamepad2color++;
+                       if (gamepad2color == 25) gamepad2color = 21;
+                        gamepad2team = 0;
+                        gamepad2color = 0;
+                    }*/
                 }
 
                 if (gamepadState1.DPad.Down == ButtonState.Pressed && !g1down)

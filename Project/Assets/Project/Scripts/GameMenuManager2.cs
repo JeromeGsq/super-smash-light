@@ -75,9 +75,14 @@ public class GameMenuManager2 : MonoBehaviour {
     [Space(10)]
     [SerializeField]
     private GameObject continueMessage;
+
     [Space(10)]
     [SerializeField]
     private GameObject alerteMessage;
+
+    [Space(10)]
+    [SerializeField]
+    private GameObject alerteMessageSolo;
 
     [Space(10)]
     [SerializeField]
@@ -323,6 +328,8 @@ public class GameMenuManager2 : MonoBehaviour {
                 gamepad1Validated = false;
                 g1.sprite = greyGamepad;
             }
+
+            alerteMessageSolo.SetActive(true);
         }
 
         // ---------------------- Validation IA with Y ----------------------------------------
@@ -332,6 +339,7 @@ public class GameMenuManager2 : MonoBehaviour {
             g1y = true;
             if (!gamepad2Validated && !gamepad3Validated && !gamepad4Validated)
             {
+                alerteMessageSolo.SetActive(false);
                 gamepad2Validated = true;
                 g2.sprite = whiteGamepad;
                 gamepad3Validated = true;
@@ -341,6 +349,7 @@ public class GameMenuManager2 : MonoBehaviour {
             }
             else
             {
+                alerteMessageSolo.SetActive(true);
                 gamepad2Validated = false;
                 g2.sprite = greyGamepad;
                 gamepad3Validated = false;

@@ -43,6 +43,13 @@ public class OptionMenuManager : MonoBehaviour
    // Start is called before the first frame update
     void Start()
     {
+        
+        easy.SetActive(true);
+        selecteurPos1.SetActive(true);
+    }
+
+    void Update()
+    {
         for (int i = 0; i < 4; i++)
         {
             this.gamepadState = GamePad.GetState((PlayerIndex)i);
@@ -51,16 +58,10 @@ public class OptionMenuManager : MonoBehaviour
                 break;
             }
         }
-        Debug.Log("gamepad: " + gamepadState.IsConnected);
-        easy.SetActive(true);
-        selecteurPos1.SetActive(true);
-    }
-
-    void Update()
-    {
-        dpadDown = this.gamepadState.DPad.Down == ButtonState.Pressed;        
-        if (dpadDown)
+        //dpadDown = ;
+        if (this.gamepadState.DPad.Down == ButtonState.Pressed)
         {
+            Debug.Log("Test");
             switch (Vertical)
             {
                 case 0:
@@ -151,7 +152,8 @@ public class OptionMenuManager : MonoBehaviour
         //}
 
         Debug.Log(Vertical);
-        Debug.Log(dpadDown);
+       // Debug.Log(dpadDown);
+        Debug.Log("Connceted Update"+ gamepadState.IsConnected);
 
     }
 }

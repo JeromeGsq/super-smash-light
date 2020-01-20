@@ -8,7 +8,7 @@ using System;
 
 public class OptionMenuManager : MonoBehaviour
 {
-    private int Vertical = 0;
+    private int Vertical = 1;
 
     [SerializeField]
     private GamePadState gamepadState;
@@ -17,6 +17,12 @@ public class OptionMenuManager : MonoBehaviour
 
     bool dpadUp;
     bool dpadDown = false;
+    bool DownIsPressed;
+    bool DownIsAlreadyPressed = false;
+    bool UpIsPressed;
+    bool UpIsAlreadyPressed =false;
+
+
 
     [SerializeField]
     private GameObject easy;
@@ -61,27 +67,120 @@ public class OptionMenuManager : MonoBehaviour
         //dpadDown = ;
         if (this.gamepadState.DPad.Down == ButtonState.Pressed)
         {
-            Debug.Log("Test");
-            switch (Vertical)
-            {
-                case 0:
-                    selecteurPos1.SetActive(true);
-                    Vertical = 1;
-                    break;
-                case 1:
-                    selecteurPos1.SetActive(false);
-                    selecteurPos2.SetActive(true);
-                    Vertical = 2;
-                    break;
-                case 2:
-                    selecteurPos2.SetActive(false);
-                    selecteurPos3.SetActive(true);
-                    break;
-                default:
-                    throw new Exception("Vertical Position is not valid: " + Vertical);
-            }
+            Debug.Log("Down Pressed");
+            DownIsPressed = true;
+            DownIsAlreadyPressed = true;
+
+        }
+        if (this.gamepadState.DPad.Down == ButtonState.Released || DownIsAlreadyPressed == true)
+        {
+            Debug.Log("Down Released");
+            DownIsPressed = false;
+            DownIsAlreadyPressed = false;
         }
 
+
+        if(Vertical == 1)
+        {
+            selecteurPos1.SetActive(true);
+            selecteurPos2.SetActive(false);
+            selecteurPos3.SetActive(false);
+            DownIsAlreadyPressed = false;
+        }
+
+        if (DownIsPressed == true && Vertical == 1)
+        {  
+            selecteurPos1.SetActive(false);
+            selecteurPos2.SetActive(true);
+            selecteurPos3.SetActive(false);
+            Vertical = 2;
+            if(DownIsAlreadyPressed == true)
+            { DownIsPressed = false; }
+        }
+
+        if (DownIsPressed == true && Vertical == 2)
+        {
+            selecteurPos1.SetActive(false);
+            selecteurPos2.SetActive(false);
+            selecteurPos3.SetActive(true);
+            Vertical = 3;
+        }
+
+        //dpadUp = ;
+        if (this.gamepadState.DPad.Up == ButtonState.Pressed)
+        {
+            Debug.Log("Up Pressed");
+            UpIsPressed = true;
+
+        }
+        if (this.gamepadState.DPad.Up == ButtonState.Released)
+        {
+            Debug.Log("Up Released");
+            UpIsPressed = false;
+        }
+
+        if(Vertical == 3)
+        {
+            selecteurPos1.SetActive(false);
+            selecteurPos2.SetActive(false);
+            selecteurPos3.SetActive(true);
+        }
+
+        if (UpIsPressed == true && Vertical == 3)
+        {
+            selecteurPos1.SetActive(false);
+            selecteurPos2.SetActive(true);
+            selecteurPos3.SetActive(false);
+            Vertical = 2;
+        }
+
+        if (UpIsPressed == true && Vertical == 2)
+        {
+            selecteurPos1.SetActive(true);
+            selecteurPos2.SetActive(false);
+            selecteurPos3.SetActive(false);
+            Vertical = 1;
+        }
+
+
+
+
+
+
+
+
+
+        //switch (Vertical)
+        //{
+        //    case 0:
+        //        selecteurPos1.SetActive(true);
+        //        Vertical = 1;
+        //        break;
+        //    case 1:
+        //        selecteurPos1.SetActive(false);
+        //        selecteurPos2.SetActive(true);
+        //        Vertical = 2;
+        //        break;
+        //    case 2:
+        //        selecteurPos2.SetActive(false);
+        //        selecteurPos3.SetActive(true);
+        //        break;
+        //    default:
+        //        throw new Exception("Vertical Position is not valid: " + Vertical);
+        //}
+        else
+        {
+            Debug.Log (Vertical);
+        }
+
+
+
+
+
+
+
+
+        //dpadUp = ;
         dpadUp = this.gamepadState.DPad.Up == ButtonState.Pressed;
         if (dpadUp)
         {

@@ -46,12 +46,26 @@ public class OptionMenuManager : MonoBehaviour
 
     private enum PositionVertical {One, Two, Three}
     private PositionVertical actualVertical = PositionVertical.One;
+    private enum Difficulties { Easy, Medium, Hard}
+    private Difficulties actualDifficulties = Difficulties.Easy;
+    private enum Languages { English, French, Spanish, German }
+    private Languages actualLanguage = Languages.English;
+
     bool downReleased = true;
     bool upReleased = true;
+    bool aReleased = true;
     [SerializeField]
     public GameObject menuPrincipal;
     [SerializeField]
     public GameObject menuOption;
+    [SerializeField]
+    public GameObject English;
+    [SerializeField]
+    public GameObject French;
+    [SerializeField]
+    public GameObject Spanish;
+    [SerializeField]
+    public GameObject German;
 
 
 
@@ -120,6 +134,78 @@ public class OptionMenuManager : MonoBehaviour
 
         }
     }
+    void GetInputA()
+    {
+        if (this.gamepadState.Buttons.A == ButtonState.Pressed && aReleased == true)
+        {
+            aReleased = false;
+            switch (actualVertical)
+            {
+                case PositionVertical.One:
+                    ChangeDifficulty();
+                    break;
+                case PositionVertical.Two:
+                    ChangeLanguage();
+                    break;
+                case PositionVertical.Three:
+                    menuPrincipal.SetActive(true);
+                    menuOption.SetActive(false);
+                    break;
+                default:
+                    throw new Exception("Vertical Position is not valid: " + Vertical);
+            }
+        }
+    }
+
+    void ChangeDifficulty()
+    {
+        switch(actualDifficulties)
+        {
+            case Difficulties.Easy:
+                actualDifficulties = Difficulties.Medium;
+                easy.SetActive(false);
+                medium.SetActive(true);
+                break;
+            case Difficulties.Medium:
+                actualDifficulties = Difficulties.Hard;
+                medium.SetActive(false);
+                hard.SetActive(true);
+                break;
+            case Difficulties.Hard:
+                actualDifficulties = Difficulties.Easy;
+                hard.SetActive(false);
+                easy.SetActive(true);
+                break;
+
+        }
+    }
+
+    void ChangeLanguage()
+    {
+        switch (actualLanguage)
+        {
+            case Languages.English:
+                actualLanguage = Languages.French;
+                English.SetActive(false);
+                French.SetActive(true);
+                break;
+            case Languages.French:
+                actualLanguage = Languages.Spanish;
+                French.SetActive(false);
+                Spanish.SetActive(true);
+                break;
+            case Languages.Spanish:
+                actualLanguage = Languages.German;
+                Spanish.SetActive(false);
+                German.SetActive(true);
+                break;
+            case Languages.German:
+                actualLanguage = Languages.English;
+                German.SetActive(false);
+                English.SetActive(true);
+                break;
+        }
+    }
 
     void DisplayCursor()
     {
@@ -158,9 +244,11 @@ public class OptionMenuManager : MonoBehaviour
 
         GetInputDown();
         GetInputUp();
+        GetInputA();
         GetInputBack();
         DisplayCursor();
         downReleased = this.gamepadState.DPad.Down == ButtonState.Released;
         upReleased = this.gamepadState.DPad.Up == ButtonState.Released;
+        aReleased = this.gamepadState.Buttons.A == ButtonState.Released;
     }
 }

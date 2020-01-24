@@ -1,23 +1,23 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-//public class GameManager()
-//{
-//    public enum ELanguage { Français, English, Spanish }
-
-//    public static ELanguage Language { get; set; } = ELanguage.English;
-//}
-
 /// <summary>
 /// Replace the text key of the GameObject and replace it by it's content in the json file.
 /// </summary>
 public class LoadText : MonoBehaviour
 {
+    private Text text;
+    private string key;
     // Start is called before the first frame update
     void Start()
     {
-        Text text = GetComponent<Text>();
+        text = GetComponent<Text>();
+        key = text.text;
         // Change Français by the language chosen by the configurator or something else.
-        text.text = JSONAccessAPI.GetContentText(text.text, "English"/*GameManager.Language.ToString()*/);
+    }
+
+    private void Update()
+    {
+        text.text = JSONAccessAPI.GetContentText(key, GameParameter.Language.ToString());       
     }
 }

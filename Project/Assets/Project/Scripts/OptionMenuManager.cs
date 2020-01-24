@@ -54,6 +54,7 @@ public class OptionMenuManager : MonoBehaviour
     bool downReleased = true;
     bool upReleased = true;
     bool aReleased = true;
+    bool backReleased = true;
     [SerializeField]
     public GameObject menuPrincipal;
     [SerializeField]
@@ -66,6 +67,8 @@ public class OptionMenuManager : MonoBehaviour
     public GameObject Spanish;
     [SerializeField]
     public GameObject German;
+    [SerializeField]
+    public GameObject Fade;
 
 
 
@@ -123,17 +126,30 @@ public class OptionMenuManager : MonoBehaviour
 
     void GetInputBack()
     {
-        if (this.gamepadState.Buttons.Back == ButtonState.Pressed)
+        if (this.gamepadState.Buttons.Back == ButtonState.Pressed && backReleased == true)
         {
+            Fade.SetActive(false);
+            Fade.SetActive(true);
+            StartCoroutine(WaitMainMenu());
+            StartCoroutine(WaitFadeOut());
             actualVertical = PositionVertical.One;
-            menuPrincipal.SetActive(true);
-            menuOption.SetActive(false);
             downReleased = false;
             upReleased = false;
-
-
         }
     }
+
+    IEnumerator WaitFadeOut()
+    {
+        yield return new WaitForSeconds(0.7f);
+        menuOption.SetActive(false);
+    }
+
+    IEnumerator WaitMainMenu()
+    {
+        yield return new WaitForSeconds(0.6f);
+        menuPrincipal.SetActive(true);
+    }
+
     void GetInputA()
     {
         if (this.gamepadState.Buttons.A == ButtonState.Pressed && aReleased == true)
@@ -159,52 +175,53 @@ public class OptionMenuManager : MonoBehaviour
 
     void ChangeDifficulty()
     {
-        switch(actualDifficulties)
+        switch(GameParameter.Difficulty)
         {
-            case Difficulties.Easy:
-                actualDifficulties = Difficulties.Medium;
+            case DifficultyEnum.Easy:
+                GameParameter.Difficulty = DifficultyEnum.Medium;
                 easy.SetActive(false);
                 medium.SetActive(true);
                 break;
-            case Difficulties.Medium:
-                actualDifficulties = Difficulties.Hard;
+            case DifficultyEnum.Medium:
+                GameParameter.Difficulty = DifficultyEnum.Hard;
                 medium.SetActive(false);
                 hard.SetActive(true);
                 break;
-            case Difficulties.Hard:
-                actualDifficulties = Difficulties.Easy;
+            case DifficultyEnum.Hard:
+                GameParameter.Difficulty = DifficultyEnum.Easy;
                 hard.SetActive(false);
                 easy.SetActive(true);
                 break;
-
         }
+        PlayerPrefs.SetInt("Diffculty", (int)GameParameter.Difficulty);
     }
 
     void ChangeLanguage()
     {
-        switch (actualLanguage)
+        switch (GameParameter.Language)
         {
-            case Languages.English:
-                actualLanguage = Languages.French;
+            case LanguageEnum.English:
+                GameParameter.Language = LanguageEnum.French;
                 English.SetActive(false);
                 French.SetActive(true);
                 break;
-            case Languages.French:
-                actualLanguage = Languages.Spanish;
+            case LanguageEnum.French:
+                GameParameter.Language = LanguageEnum.Spanish;
                 French.SetActive(false);
                 Spanish.SetActive(true);
                 break;
-            case Languages.Spanish:
-                actualLanguage = Languages.German;
+            case LanguageEnum.Spanish:
+                GameParameter.Language = LanguageEnum.German;
                 Spanish.SetActive(false);
                 German.SetActive(true);
                 break;
-            case Languages.German:
-                actualLanguage = Languages.English;
+            case LanguageEnum.German:
+                GameParameter.Language = LanguageEnum.English;
                 German.SetActive(false);
                 English.SetActive(true);
                 break;
         }
+        PlayerPrefs.SetInt("Language", (int)GameParameter.Language);
     }
 
     void DisplayCursor()
@@ -250,5 +267,6 @@ public class OptionMenuManager : MonoBehaviour
         downReleased = this.gamepadState.DPad.Down == ButtonState.Released;
         upReleased = this.gamepadState.DPad.Up == ButtonState.Released;
         aReleased = this.gamepadState.Buttons.A == ButtonState.Released;
+        backReleased = this.gamepadState.Buttons.Back == ButtonState.Released;
     }
 }

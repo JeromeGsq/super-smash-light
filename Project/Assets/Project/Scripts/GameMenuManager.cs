@@ -96,6 +96,8 @@ public class GameMenuManager : MonoBehaviour {
 
     // Start is called before the first frame update
     void Awake() {
+        GameParameter.Language = (LanguageEnum)PlayerPrefs.GetInt("Language", (int)LanguageEnum.English);
+        GameParameter.Difficulty = (DifficultyEnum)PlayerPrefs.GetInt("Difficulty", (int)DifficultyEnum.Easy);
         AnimatedBandeau.SetActive(false);
         positions = 1;
         pressedA = true;
@@ -125,7 +127,7 @@ public class GameMenuManager : MonoBehaviour {
 
             this.gamepadState = GamePad.GetState(index);
             if(positions == 1) {
-                selecteur.GetComponent<Transform>().position = new Vector3(6.18f, -1.25f, selecteur.GetComponent<Transform>().position.z);
+                selecteur.GetComponent<Transform>().position = new Vector3(9f, -1.25f, selecteur.GetComponent<Transform>().position.z);
                 fond.GetComponent<SpriteRenderer>().sprite = fondPartie;
                 illu.GetComponent<SpriteRenderer>().sprite = illuPartie;
                 illu1.GetComponent<SpriteRenderer>().sprite = illuPartie1;
@@ -150,7 +152,7 @@ public class GameMenuManager : MonoBehaviour {
                 }
 
             } else if(positions == 2) {
-                selecteur.GetComponent<Transform>().position = new Vector3(6.18f, -4.5f, selecteur.GetComponent<Transform>().position.z);
+                selecteur.GetComponent<Transform>().position = new Vector3(9f, -4.5f, selecteur.GetComponent<Transform>().position.z);
                 fond.GetComponent<SpriteRenderer>().sprite = fondOption;
                 illu.GetComponent<SpriteRenderer>().sprite = illuOption;
                 illu1.GetComponent<SpriteRenderer>().sprite = null;
@@ -166,6 +168,11 @@ public class GameMenuManager : MonoBehaviour {
                     BoutonOption.GetComponent<Animator>().Play(Animator.StringToHash("OptionMenu"));
 
                 StartCoroutine(CoroutineUtils.DelaySeconds(() => {
+                    AnimatedBandeau.SetActive(false);
+                    AnimatedBandeau.SetActive(true);
+                }, 0.1f));
+
+                StartCoroutine(CoroutineUtils.DelaySeconds(() => {
                     MenuPrincipal.SetActive(false);
                     MenuOption.SetActive(true);
                 }, 0.7f));
@@ -175,7 +182,7 @@ public class GameMenuManager : MonoBehaviour {
                 }
             else if (positions == 3)
                 {
-                    selecteur.GetComponent<Transform>().position = new Vector3(6.18f, -7.75f, selecteur.GetComponent<Transform>().position.z);
+                    selecteur.GetComponent<Transform>().position = new Vector3(9f, -7.75f, selecteur.GetComponent<Transform>().position.z);
                     fond.GetComponent<SpriteRenderer>().sprite = fondQuitter;
                     illu.GetComponent<SpriteRenderer>().sprite = illuQuit;
                     illu1.GetComponent<SpriteRenderer>().sprite = null;
@@ -190,6 +197,11 @@ public class GameMenuManager : MonoBehaviour {
             {
                 pressedA = true;
                 BoutonQuitter.GetComponent<Animator>().Play(Animator.StringToHash("QuitMenu"));
+
+                StartCoroutine(CoroutineUtils.DelaySeconds(() => {
+                    AnimatedBandeau.SetActive(false);
+                    AnimatedBandeau.SetActive(true);
+                }, 0.1f));
 
                 StartCoroutine(CoroutineUtils.DelaySeconds(() => {
                     MenuPrincipal.SetActive(false);

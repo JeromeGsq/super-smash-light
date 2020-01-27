@@ -51,6 +51,9 @@ public class BackToWindows : MonoBehaviour
     [SerializeField]
     public GameObject fadeQuit;
 
+    [SerializeField]
+    public GameObject fadeMainMenu;
+
 
     // Start is called before the first frame update
     void Start()
@@ -100,11 +103,22 @@ public class BackToWindows : MonoBehaviour
         if (stateNo == true && cursorPosNo == true && this.gamepadState.Buttons.A == ButtonState.Pressed)
         {
             fadeQuit.SetActive(false);
-            returnWindows.SetActive(false);
-            MenuPrincipal.SetActive(true);
-            Debug.Log("Retour menu");
-            
-
+            fadeMainMenu.SetActive(false);
+            fadeMainMenu.SetActive(true);
+            StartCoroutine(WaitMainMenu());
+            StartCoroutine(WaitFadeOut());
         }
+
     }
+        IEnumerator WaitFadeOut()
+        {
+            yield return new WaitForSeconds(0.7f);
+            returnWindows.SetActive(false);
+        }
+
+        IEnumerator WaitMainMenu()
+        {
+            yield return new WaitForSeconds(0.6f);
+            MenuPrincipal.SetActive(true);
+        }
 }

@@ -327,9 +327,9 @@ public class GameMenuManager2 : MonoBehaviour {
             {
                 gamepad1Validated = false;
                 g1.sprite = greyGamepad;
+                alerteMessageSolo.SetActive(true);
             }
 
-            alerteMessageSolo.SetActive(true);
         }
 
         // ---------------------- Validation IA with Y ----------------------------------------
@@ -346,7 +346,17 @@ public class GameMenuManager2 : MonoBehaviour {
                 g3.sprite = whiteGamepad;
                 gamepad4Validated = true;
                 g4.sprite = whiteGamepad;
+
+                gamepad1team = 1;
+                gamepad2team = 1;
+                gamepad3team = 2;
+                gamepad4team = 2;
+                gamepad1color = 1;
+                gamepad2color = 3;
+                gamepad3color = 21;
+                gamepad4color = 23;
             }
+
             else
             {
                 alerteMessageSolo.SetActive(true);

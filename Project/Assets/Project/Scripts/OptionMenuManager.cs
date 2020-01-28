@@ -132,7 +132,6 @@ public class OptionMenuManager : MonoBehaviour
             Fade.SetActive(true);
             StartCoroutine(WaitMainMenu());
             StartCoroutine(WaitFadeOut());
-            actualVertical = PositionVertical.One;
             downReleased = false;
             upReleased = false;
         }
@@ -142,6 +141,7 @@ public class OptionMenuManager : MonoBehaviour
     {
         yield return new WaitForSeconds(0.7f);
         menuOption.SetActive(false);
+        actualVertical = PositionVertical.One;
     }
 
     IEnumerator WaitMainMenu()

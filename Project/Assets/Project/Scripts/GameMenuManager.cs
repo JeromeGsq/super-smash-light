@@ -16,9 +16,13 @@ public class GameMenuManager : MonoBehaviour {
 
     [SerializeField]
     public GameObject illu1;
+    [SerializeField]
+    public GameObject TextIllu1;
 
     [SerializeField]
     public GameObject illu2;
+    [SerializeField]
+    public GameObject TextIllu2;
 
     [SerializeField]
     public Sprite fondPartie;
@@ -137,7 +141,11 @@ public class GameMenuManager : MonoBehaviour {
                 GameObject.Find("patern2").GetComponent<SpriteRenderer>().sprite = paternPartie;
                 GameObject.Find("patern3").GetComponent<SpriteRenderer>().sprite = paternPartie;
                 GameObject.Find("patern4").GetComponent<SpriteRenderer>().sprite = paternPartie;
-                if(this.gamepadState.Buttons.A == ButtonState.Pressed && pressedA == false) {
+                TextIllu1.SetActive(false);
+                TextIllu2.SetActive(false);
+
+
+            if (this.gamepadState.Buttons.A == ButtonState.Pressed && pressedA == false) {
                 pressedA = true;
                     BoutonPartie.GetComponent<Animator>().Play(Animator.StringToHash("PartieRapideMenu"));
                     StartCoroutine(CoroutineUtils.DelaySeconds(() => {
@@ -162,6 +170,9 @@ public class GameMenuManager : MonoBehaviour {
                 GameObject.Find("patern2").GetComponent<SpriteRenderer>().sprite = paternOption;
                 GameObject.Find("patern3").GetComponent<SpriteRenderer>().sprite = paternOption;
                 GameObject.Find("patern4").GetComponent<SpriteRenderer>().sprite = paternOption;
+                TextIllu1.SetActive(true);
+                TextIllu2.SetActive(false);
+
             //Menu d'options
             if (this.gamepadState.Buttons.A == ButtonState.Pressed && pressedA == false) {
 
@@ -192,6 +203,11 @@ public class GameMenuManager : MonoBehaviour {
                     GameObject.Find("patern2").GetComponent<SpriteRenderer>().sprite = paternQuit;
                     GameObject.Find("patern3").GetComponent<SpriteRenderer>().sprite = paternQuit;
                     GameObject.Find("patern4").GetComponent<SpriteRenderer>().sprite = paternQuit;
+                    TextIllu1.SetActive(false);
+                    TextIllu2.SetActive(true);
+
+
+
             //Quitter le jeu
             if (gamepadState.Buttons.A == ButtonState.Pressed && pressedA == false)
             {

@@ -60,6 +60,8 @@ public class OptionMenuManager : MonoBehaviour
     [SerializeField]
     public GameObject menuOption;
     [SerializeField]
+    public GameObject menuCredits;
+    [SerializeField]
     public GameObject English;
     [SerializeField]
     public GameObject French;
@@ -74,13 +76,13 @@ public class OptionMenuManager : MonoBehaviour
 
 
     // Start is called before the first frame update
-    void Start()
+   void Start()
     {
         
         easy.SetActive(true);
         selecteurPos1.SetActive(true);
     }
-    void GetInputDown()
+   private void GetInputDown()
     {
         if (this.gamepadState.DPad.Down == ButtonState.Pressed && downReleased == true)
         {
@@ -102,7 +104,7 @@ public class OptionMenuManager : MonoBehaviour
         }
     }
 
-    void GetInputUp()
+   private void GetInputUp()
     {
         if (this.gamepadState.DPad.Up == ButtonState.Pressed && upReleased == true)
         {
@@ -124,7 +126,7 @@ public class OptionMenuManager : MonoBehaviour
         }
     }
 
-    void GetInputBack()
+    private void GetInputBack()
     {
         if (this.gamepadState.Buttons.Back == ButtonState.Pressed && backReleased == true)
         {
@@ -150,7 +152,7 @@ public class OptionMenuManager : MonoBehaviour
         menuPrincipal.SetActive(true);
     }
 
-    void GetInputA()
+    private void GetInputA()
     {
         if (this.gamepadState.Buttons.A == ButtonState.Pressed && aReleased == true)
         {
@@ -164,7 +166,7 @@ public class OptionMenuManager : MonoBehaviour
                     ChangeLanguage();
                     break;
                 case PositionVertical.Three:
-                    menuPrincipal.SetActive(true);
+                    menuCredits.SetActive(true);
                     menuOption.SetActive(false);
                     break;
                 default:
@@ -173,7 +175,7 @@ public class OptionMenuManager : MonoBehaviour
         }
     }
 
-    void ChangeDifficulty()
+    private void ChangeDifficulty()
     {
         switch(GameParameter.Difficulty)
         {
@@ -196,7 +198,7 @@ public class OptionMenuManager : MonoBehaviour
         PlayerPrefs.SetInt("Diffculty", (int)GameParameter.Difficulty);
     }
 
-    void ChangeLanguage()
+   private void ChangeLanguage()
     {
         switch (GameParameter.Language)
         {
@@ -224,7 +226,7 @@ public class OptionMenuManager : MonoBehaviour
         PlayerPrefs.SetInt("Language", (int)GameParameter.Language);
     }
 
-    void DisplayCursor()
+   private void DisplayCursor()
     {
         switch (actualVertical)
         {
@@ -248,7 +250,7 @@ public class OptionMenuManager : MonoBehaviour
 
         }
     }
-    void Update()
+   private void Update()
     {
         for (int i = 0; i < 4; i++)
         {

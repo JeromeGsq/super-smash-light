@@ -52,8 +52,6 @@ public class PlayerMovementHandler : MonoBehaviour
     public bool oldpadForJump;
     public int myteam;
 
-
-
     private GamePadState gamepadState;
 
     [SerializeField]
@@ -275,7 +273,6 @@ public class PlayerMovementHandler : MonoBehaviour
     private void OnEnable()
 
     {
-
         this.mainPosition = this.transform.position;
     }
 
@@ -413,6 +410,8 @@ public class PlayerMovementHandler : MonoBehaviour
                 }
 
                 this.canGrab = false;
+                //succesfullPass.Play();
+                //succesfullPass.Stop();
                 StartCoroutine(CoroutineUtils.DelaySeconds(() => {
                     this.canGrab = true;
                 }, this.deltaTimeGrab));

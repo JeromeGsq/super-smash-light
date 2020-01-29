@@ -323,6 +323,7 @@ public class PlayerMovementHandler : MonoBehaviour
             else if (this.canGrab && BallHandler.Get.IsGrabbed == false)
             {
                 BallHandler.Get.SetGrabbed(this.ballAnchor, this.index, myteam);
+                this.canGrab = false;
             }
         }
     }

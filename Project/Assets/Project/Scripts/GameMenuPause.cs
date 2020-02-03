@@ -37,6 +37,13 @@ public class GameMenuPause : MonoBehaviour {
     public GameObject selecteur1;
     public GameObject selecteur2;
 
+    [SerializeField]
+    public AudioSource backMenu;
+    [SerializeField]
+    public AudioSource selectMenu;
+    [SerializeField]
+    public AudioSource validMenu;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -65,6 +72,7 @@ public class GameMenuPause : MonoBehaviour {
                     pauseMenuUI.SetActive(false);
                     Time.timeScale = 1f;
                     GameIsAlreadyInPaused = false;
+                    backMenu.Play();
                 }
                 else
                 {
@@ -89,6 +97,7 @@ public class GameMenuPause : MonoBehaviour {
             Position = 0;
             selecteur2.SetActive(false);
             selecteur1.SetActive(true);
+            selectMenu.Play();
             Debug.Log(Position);
         }
 
@@ -97,6 +106,7 @@ public class GameMenuPause : MonoBehaviour {
             Position = 3;
             selecteur1.SetActive(false);
             selecteur2.SetActive(true);
+            selectMenu.Play();
             Debug.Log(Position);
         }
 
@@ -108,10 +118,12 @@ public class GameMenuPause : MonoBehaviour {
             pauseMenuUI.SetActive(false);
             Time.timeScale = 1f;
             GameIsAlreadyInPaused = false;
+            validMenu.Play();
         } 
             
             if (this.gamepadState.Buttons.A == ButtonState.Pressed && pauseMenuUI == true && Position == 3)
         {
+            validMenu.Play();
             print("QuitGame");
             Time.timeScale = 1f;
             SceneManager.LoadScene("_mainmenu");

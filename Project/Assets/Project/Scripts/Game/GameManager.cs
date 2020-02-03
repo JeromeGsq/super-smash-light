@@ -40,6 +40,13 @@ public class GameManager : BaseViewModel
     [SerializeField]
     public bool timerStart;
 
+    [SerializeField]
+    public AudioSource addPoint;
+    [SerializeField]
+    public AudioSource chargedBar;
+    [SerializeField]
+    public AudioSource startTimer;
+
 
     public Team team1;
 	public Team team2;
@@ -102,8 +109,9 @@ public class GameManager : BaseViewModel
     private void Awake()
 	{
         if(!forTest) {
+           startTimer.Play();
 
-            if((GameMenuManager2.gamepad1team + GameMenuManager2.gamepad2team) == 2) {
+            if ((GameMenuManager2.gamepad1team + GameMenuManager2.gamepad2team) == 2) {
                 team1Player1 = PlayerIndex.One;
                 team1Player2 = PlayerIndex.Two;
             }
@@ -164,9 +172,10 @@ public class GameManager : BaseViewModel
             };
         }
     
-        if(forTest) 
-            {
-            this.Team1 = new Team() 
+        if(forTest)
+           startTimer.Play();
+        {
+            this.Team1 = new Team()
             {
 
                 FirstPlayerIndex = PlayerIndex.One,
@@ -193,7 +202,6 @@ public class GameManager : BaseViewModel
         //this.team1.BarLevel = 1;
         //this.team2.BarLevel = 1;
         if(timerStart && timer > 1) {
-
             timer -= Time.deltaTime;
         }
         this.RaisePropertyChanged(nameof(this.theTime));
@@ -214,6 +222,7 @@ public class GameManager : BaseViewModel
 	{
 		amount = (float)Math.Round(amount, 2);
 		Debug.Log($"GameManager : AddBarLevel() : {amount})");
+        chargedBar.Play();   
 
 		if(teamIndex == 1)
 		{
@@ -242,6 +251,7 @@ public class GameManager : BaseViewModel
 
 	public void AddPoint(int teamIndex)
 	{
+        addPoint.Play();
 		switch(teamIndex)
 		{
             

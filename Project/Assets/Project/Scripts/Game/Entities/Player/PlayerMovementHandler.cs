@@ -57,6 +57,13 @@ public class PlayerMovementHandler : MonoBehaviour
     [SerializeField]
     private GameObject deathPrefab;
 
+    [SerializeField]
+    public GameObject audioData;
+    private AudioSource dash;
+    private AudioSource shoot;
+    private AudioSource jump;
+    private AudioSource runningDirt;
+
     [Space(20)]
 
     [Tooltip("Cet index permet de choisir via quelle manette ce joueur va être controllé")]
@@ -339,6 +346,21 @@ public class PlayerMovementHandler : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        InstanciatedSound();
+    }
+
+    private void InstanciatedSound()
+    {
+        audioData = GameObject.Find("AudioDatas");
+        dash = audioData.transform.GetChild(5).GetComponent<AudioSource>();
+        shoot = audioData.transform.GetChild(2).GetComponent<AudioSource>();
+        jump = audioData.transform.GetChild(6).GetComponent<AudioSource>();
+        runningDirt = audioData.transform.GetChild(7).GetComponent<AudioSource>();
+
+    }
+
     private void Update() {
 
         //this.myteam = Team.GetTeam(this.Index);
@@ -410,8 +432,7 @@ public class PlayerMovementHandler : MonoBehaviour
                 }
 
                 this.canGrab = false;
-                //succesfullPass.Play();
-                //succesfullPass.Stop();
+                
                 StartCoroutine(CoroutineUtils.DelaySeconds(() => {
                     this.canGrab = true;
                 }, this.deltaTimeGrab));
@@ -483,16 +504,23 @@ public class PlayerMovementHandler : MonoBehaviour
             }
             if(this.player.transform.localScale.x < 0f) {
                 this.player.transform.localScale = new Vector3(-this.player.transform.localScale.x, this.player.transform.localScale.y, this.player.transform.localScale.z);
+                runningDirt.Play();
             }
-        } else if(this.gamepadState.ThumbSticks.Left.X < -0.1f) {
+        } 
+        
+        else if(this.gamepadState.ThumbSticks.Left.X < -0.1f) {
             this.normalizedHorizontalSpeed = -1;
-            if(this.controller.isGrounded) {
+            if (this.controller.isGrounded) {
                 this.animator.Play(Animator.StringToHash("Run"));
             }
             if(this.player.transform.localScale.x > 0f) {
                 this.player.transform.localScale = new Vector3(-this.player.transform.localScale.x, this.player.transform.localScale.y, this.player.transform.localScale.z);
+            runningDirt.Play();
             }
-        } else {
+        }
+        
+        else {
+            runningDirt.Stop();
             this.normalizedHorizontalSpeed = 0;
             if(this.controller.isGrounded) {
                 this.animator.Play(Animator.StringToHash("Idle"));
@@ -504,6 +532,7 @@ public class PlayerMovementHandler : MonoBehaviour
             && this.gamepadState.Buttons.A == ButtonState.Pressed
             && this.oldpadForJump == false
             ) {
+            jump.Play();
             this.jumpsCount++;
             this.velocity.y = Mathf.Sqrt(2f * this.jumpHeight * -this.gravity);
             this.animator.Play(Animator.StringToHash("Jump"));
@@ -521,6 +550,7 @@ public class PlayerMovementHandler : MonoBehaviour
             && this.gamepadState.Buttons.B == ButtonState.Pressed
             && new Vector2(this.gamepadState.ThumbSticks.Left.X, this.gamepadState.ThumbSticks.Left.Y).magnitude > 0.5f
             && this.canDash) {
+                dash.Play();
                 this.canDash = false;
                 this.isDashing = true;
 

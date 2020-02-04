@@ -110,18 +110,18 @@ public class GameMenuPause : MonoBehaviour {
             Debug.Log(Position);
         }
 
-            if (this.gamepadState.Buttons.A == ButtonState.Pressed && pauseMenuUI == true && Position == 0)
+            if (this.gamepadState.Buttons.A == ButtonState.Pressed && pauseMenuUI == true && GameIsAlreadyInPaused == true && Position == 0)
         {
+            validMenu.Play();
             print("Resume");
             GameIsPaused = false;
             Debug.Log("Return Game");
             pauseMenuUI.SetActive(false);
             Time.timeScale = 1f;
             GameIsAlreadyInPaused = false;
-            validMenu.Play();
         } 
             
-            if (this.gamepadState.Buttons.A == ButtonState.Pressed && pauseMenuUI == true && Position == 3)
+            if (this.gamepadState.Buttons.A == ButtonState.Pressed && pauseMenuUI == true && GameIsAlreadyInPaused == true && Position == 3)
         {
             validMenu.Play();
             print("QuitGame");

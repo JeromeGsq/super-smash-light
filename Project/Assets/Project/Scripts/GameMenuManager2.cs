@@ -90,6 +90,9 @@ public class GameMenuManager2 : MonoBehaviour {
     [SerializeField]
     private GameObject fade;
 
+    [SerializeField]
+    private AudioSource menuBack;
+
     private bool dpad1Up; 
     private bool dpad2Up; 
     private bool dpad3Up; 
@@ -704,6 +707,7 @@ public class GameMenuManager2 : MonoBehaviour {
             }
 
             if(this.gamepadState.Buttons.Back == ButtonState.Pressed && pressedBack == true) {
+                menuBack.Play();
                 canvas.SetActive(false);
                 fade.SetActive(false);
                 fade.SetActive(true);

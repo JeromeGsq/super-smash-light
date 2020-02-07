@@ -54,6 +54,11 @@ public class BackToWindows : MonoBehaviour
     [SerializeField]
     public GameObject fadeMainMenu;
 
+    [SerializeField]
+    private AudioSource menuValidate;
+    [SerializeField]
+    private AudioSource menuSelect;
+
 
     // Start is called before the first frame update
     void Start()
@@ -69,6 +74,7 @@ public class BackToWindows : MonoBehaviour
         this.gamepadState = GamePad.GetState(index);
         if (this.gamepadState.DPad.Left == ButtonState.Pressed)
             {
+            menuSelect.Play();
             stateYes = true;
             stateNo = false;
             cursorPosYes.SetActive(true);
@@ -78,6 +84,7 @@ public class BackToWindows : MonoBehaviour
 
         if (this.gamepadState.DPad.Right == ButtonState.Pressed)
         {
+            menuSelect.Play();
             stateNo = true;
             stateYes = false;
             cursorPosNo.SetActive(true);
@@ -87,6 +94,7 @@ public class BackToWindows : MonoBehaviour
 
         if(stateYes == true && cursorPosYes == true && this.gamepadState.Buttons.A == ButtonState.Pressed)
         {
+            menuValidate.Play();
             returnWindows.SetActive(true);
             MenuPrincipal.SetActive(false);
             Debug.Log("Quit");
@@ -102,6 +110,7 @@ public class BackToWindows : MonoBehaviour
 
         if (stateNo == true && cursorPosNo == true && this.gamepadState.Buttons.A == ButtonState.Pressed)
         {
+            menuValidate.Play();
             fadeQuit.SetActive(false);
             fadeMainMenu.SetActive(false);
             fadeMainMenu.SetActive(true);

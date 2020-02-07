@@ -72,11 +72,16 @@ public class OptionMenuManager : MonoBehaviour
     [SerializeField]
     public GameObject Fade;
 
-
+    [SerializeField]
+    private AudioSource menuBack;
+    [SerializeField]
+    private AudioSource menuSelect;
+    [SerializeField]
+    private AudioSource menuValidate;
 
 
     // Start is called before the first frame update
-   void Start()
+    void Start()
     {
         
         easy.SetActive(true);
@@ -86,6 +91,7 @@ public class OptionMenuManager : MonoBehaviour
     {
         if (this.gamepadState.DPad.Down == ButtonState.Pressed && downReleased == true)
         {
+            menuSelect.Play();
             downReleased = false;
             switch(actualVertical)
             {
@@ -108,6 +114,7 @@ public class OptionMenuManager : MonoBehaviour
     {
         if (this.gamepadState.DPad.Up == ButtonState.Pressed && upReleased == true)
         {
+            menuSelect.Play();
             upReleased = false;
             switch (actualVertical)
             {
@@ -130,6 +137,7 @@ public class OptionMenuManager : MonoBehaviour
     {
         if (this.gamepadState.Buttons.Back == ButtonState.Pressed && backReleased == true)
         {
+            menuBack.Play();
             Fade.SetActive(false);
             Fade.SetActive(true);
             StartCoroutine(WaitMainMenu());
@@ -156,6 +164,7 @@ public class OptionMenuManager : MonoBehaviour
     {
         if (this.gamepadState.Buttons.A == ButtonState.Pressed && aReleased == true)
         {
+            menuValidate.Play();
             aReleased = false;
             switch (actualVertical)
             {

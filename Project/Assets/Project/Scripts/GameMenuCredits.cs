@@ -22,6 +22,9 @@ public class GameMenuCredits : MonoBehaviour
     [SerializeField]
     public GameObject FadeTextCredits;
 
+    [SerializeField]
+    private AudioSource menuBack;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -32,6 +35,7 @@ public class GameMenuCredits : MonoBehaviour
     {
         if (this.gamepadState.Buttons.Back == ButtonState.Pressed && backReleased == true)
         {
+            menuBack.Play();
             Fade.SetActive(false);
             Fade.SetActive(true);
             StartCoroutine(WaitIOptionMenu());

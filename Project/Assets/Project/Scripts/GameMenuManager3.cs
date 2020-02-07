@@ -82,6 +82,9 @@ public class GameMenuManager3 : BaseViewModel {
     [SerializeField]
     private GameObject fade;
 
+    [SerializeField]
+    private AudioSource menuBack;
+
     private bool dpadUp;
 
     private bool dpadDown;
@@ -228,6 +231,7 @@ public class GameMenuManager3 : BaseViewModel {
             this.RaisePropertyChanged(nameof(this.TitlePreview));
 
             if(this.gamepadState.Buttons.Back == ButtonState.Pressed) {
+                menuBack.Play();
                 canvas.SetActive(false);
                 fade.SetActive(false);
                 fade.SetActive(true);

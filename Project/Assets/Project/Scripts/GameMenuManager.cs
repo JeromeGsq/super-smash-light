@@ -94,6 +94,14 @@ public class GameMenuManager : MonoBehaviour {
     [SerializeField]
     public GameObject returnWindows;
 
+    [SerializeField]
+    public AudioSource menuValidate;
+    [SerializeField]
+    public AudioSource menuSelect;
+    [SerializeField]
+    public AudioSource menuBack;
+    
+
     // Start is called before the first frame update
     void Awake() {
         GameParameter.Language = (LanguageEnum)PlayerPrefs.GetInt("Language", (int)LanguageEnum.English);
@@ -139,6 +147,7 @@ public class GameMenuManager : MonoBehaviour {
                 GameObject.Find("patern4").GetComponent<SpriteRenderer>().sprite = paternPartie;
                 if(this.gamepadState.Buttons.A == ButtonState.Pressed && pressedA == false) {
                 pressedA = true;
+                    menuValidate.Play();
                     BoutonPartie.GetComponent<Animator>().Play(Animator.StringToHash("PartieRapideMenu"));
                     StartCoroutine(CoroutineUtils.DelaySeconds(() => {
                         AnimatedBandeau.SetActive(false);
@@ -165,7 +174,8 @@ public class GameMenuManager : MonoBehaviour {
             //Menu d'options
             if (this.gamepadState.Buttons.A == ButtonState.Pressed && pressedA == false) {
 
-                    BoutonOption.GetComponent<Animator>().Play(Animator.StringToHash("OptionMenu"));
+                menuValidate.Play();
+                BoutonOption.GetComponent<Animator>().Play(Animator.StringToHash("OptionMenu"));
 
                 StartCoroutine(CoroutineUtils.DelaySeconds(() => {
                     AnimatedBandeau.SetActive(false);
@@ -195,6 +205,7 @@ public class GameMenuManager : MonoBehaviour {
             //Quitter le jeu
             if (gamepadState.Buttons.A == ButtonState.Pressed && pressedA == false)
             {
+                menuValidate.Play();
                 pressedA = true;
                 BoutonQuitter.GetComponent<Animator>().Play(Animator.StringToHash("QuitMenu"));
 
@@ -235,24 +246,29 @@ public class GameMenuManager : MonoBehaviour {
             if(positions == 1 && this.gamepadState.DPad.Down == ButtonState.Pressed && pressedDown == false) {
                 pressedDown = true;
                 positions = 2;
-                
-            }
-            if(positions == 2 && this.gamepadState.DPad.Up == ButtonState.Pressed && pressedUp == false) {
+                menuSelect.Play();
+
+
+        }
+        if (positions == 2 && this.gamepadState.DPad.Up == ButtonState.Pressed && pressedUp == false) {
                 pressedUp = true;
                 positions = 1;
+                menuSelect.Play();
 
-            }
-            if(positions == 2 && this.gamepadState.DPad.Down == ButtonState.Pressed && pressedDown == false) {
+        }
+        if (positions == 2 && this.gamepadState.DPad.Down == ButtonState.Pressed && pressedDown == false) {
                 pressedDown = true;
-                positions = 3;
+                positions = 3; 
+                menuSelect.Play();
 
-            }
-            if(positions == 3 && this.gamepadState.DPad.Up == ButtonState.Pressed && pressedUp == false) {
+        }
+        if (positions == 3 && this.gamepadState.DPad.Up == ButtonState.Pressed && pressedUp == false) {
                 pressedUp = true;
                 positions = 2;
+             menuSelect.Play();
 
-            }
-            if(pressedUp == true && this.gamepadState.DPad.Up == ButtonState.Released) {
+        }
+        if (pressedUp == true && this.gamepadState.DPad.Up == ButtonState.Released) {
                 pressedUp = false;
             }
             if(pressedDown == true && this.gamepadState.DPad.Down == ButtonState.Released) {

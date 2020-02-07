@@ -83,6 +83,12 @@ public class GameMenuManager3 : BaseViewModel {
     private GameObject fade;
 
     [SerializeField]
+    private AudioSource menuSelect;
+    [SerializeField]
+    private AudioSource startValidate;
+    [SerializeField]
+    private AudioSource selectLVL;
+    [SerializeField]
     private AudioSource menuBack;
 
     private bool dpadUp;

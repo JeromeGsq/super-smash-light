@@ -92,6 +92,19 @@ public class GameMenuManager2 : MonoBehaviour {
 
     [SerializeField]
     private AudioSource menuBack;
+    [SerializeField]
+    private AudioSource menuSelect;
+    [SerializeField]
+    private AudioSource colorSelect;
+    [SerializeField]
+    private AudioSource colorValidate;
+    [SerializeField]
+    private AudioSource colorReturn;
+    [SerializeField]
+    private AudioSource startValidate;
+    [SerializeField]
+    private AudioSource startError;
+
 
     private bool dpad1Up; 
     private bool dpad2Up; 
@@ -203,7 +216,6 @@ public class GameMenuManager2 : MonoBehaviour {
         }
 
 
-
         if(this.gamepadState1.DPad.Right == ButtonState.Released) {
             dpad1R = false;
         }
@@ -289,6 +301,7 @@ public class GameMenuManager2 : MonoBehaviour {
         if(this.gamepad1Validated == false) {
 
             if(this.gamepadState1.DPad.Right == ButtonState.Pressed && dpad1R == false) {
+                menuSelect.Play();
                 gamepad1team = 2;
                 if(gamepad1color >= 20) {
                     gamepad1color -= 20;
@@ -297,6 +310,7 @@ public class GameMenuManager2 : MonoBehaviour {
                 dpad1R = true;
             }
             if(this.gamepadState1.DPad.Left == ButtonState.Pressed && dpad1L == false) {
+                menuSelect.Play();
                 gamepad1team = 1;
                 if(gamepad1color <= 21) {
                     gamepad1color += 20;
@@ -308,12 +322,14 @@ public class GameMenuManager2 : MonoBehaviour {
         if(gamepad1team != 0 && this.gamepad1Validated == false) {
 
             if(this.gamepadState1.DPad.Up == ButtonState.Pressed && dpad1Up == false) {
+                colorSelect.Play();
                 gamepad1color += 1;
                 dpad1Up = true;
             }
             if(gamepad1team == 2) {
 
                 if(this.gamepadState1.Buttons.A == ButtonState.Pressed && btn1A == false && gamepad1color != 0) {
+                    colorValidate.Play();
                     gamepad1Validated = true;
                     GameObject.Find("gamepad1").GetComponent<SpriteRenderer>().sprite = whiteGamepad;
                     btn1A = true;
@@ -326,6 +342,7 @@ public class GameMenuManager2 : MonoBehaviour {
             if(gamepad1team == 1) {
 
                 if(this.gamepadState1.Buttons.A == ButtonState.Pressed && btn1A == false && gamepad1color != 20) {
+                    colorValidate.Play();
                     gamepad1Validated = true;
                     GameObject.Find("gamepad1").GetComponent<SpriteRenderer>().sprite = whiteGamepad;
                     btn1A = true;
@@ -378,6 +395,7 @@ public class GameMenuManager2 : MonoBehaviour {
         }
         if(this.gamepad1Validated == true) {
             if(this.gamepadState1.Buttons.A == ButtonState.Pressed && btn1A == false) {
+                colorReturn.Play();
                 GameObject.Find("gamepad1").GetComponent<SpriteRenderer>().sprite = greyGamepad;
                 this.gamepad1Validated = false;
                 btn1A = true;
@@ -388,6 +406,7 @@ public class GameMenuManager2 : MonoBehaviour {
         if(this.gamepad2Validated == false) {
 
             if(this.gamepadState2.DPad.Right == ButtonState.Pressed && dpad2R == false) {
+                menuSelect.Play();
                 gamepad2team = 2;
                 if(gamepad2color >= 20) {
                     gamepad2color -= 20;
@@ -396,6 +415,7 @@ public class GameMenuManager2 : MonoBehaviour {
                 dpad2R = true;
             }
             if(this.gamepadState2.DPad.Left == ButtonState.Pressed && dpad2L == false) {
+                menuSelect.Play();
                 gamepad2team = 1;
                 if(gamepad2color <= 21) {
                     gamepad2color += 20;
@@ -408,12 +428,14 @@ public class GameMenuManager2 : MonoBehaviour {
 
 
             if(this.gamepadState2.DPad.Up == ButtonState.Pressed && dpad2Up == false) {
+                colorSelect.Play();
                 gamepad2color += 1;
                 dpad2Up = true;
             }
             if(gamepad2team == 2) {
 
                 if(this.gamepadState2.Buttons.A == ButtonState.Pressed && btn2A == false && gamepad2color != 0) {
+                    colorValidate.Play();
                     gamepad2Validated = true;
                     GameObject.Find("gamepad2").GetComponent<SpriteRenderer>().sprite = whiteGamepad;
                     btn2A = true;
@@ -427,6 +449,7 @@ public class GameMenuManager2 : MonoBehaviour {
             if(gamepad2team == 1) {
 
                 if(this.gamepadState2.Buttons.A == ButtonState.Pressed && btn2A == false && gamepad2color != 20) {
+                    colorValidate.Play();
                     gamepad2Validated = true;
                     GameObject.Find("gamepad2").GetComponent<SpriteRenderer>().sprite = whiteGamepad;
                     btn2A = true;
@@ -479,6 +502,7 @@ public class GameMenuManager2 : MonoBehaviour {
         }
         if(this.gamepad2Validated == true) {
             if(this.gamepadState2.Buttons.A == ButtonState.Pressed && btn2A == false) {
+                colorReturn.Play();
                 GameObject.Find("gamepad2").GetComponent<SpriteRenderer>().sprite = greyGamepad;
                 this.gamepad2Validated = false;
                 btn2A = true;
@@ -489,6 +513,7 @@ public class GameMenuManager2 : MonoBehaviour {
         if(this.gamepad3Validated == false) {
 
             if(this.gamepadState3.DPad.Right == ButtonState.Pressed && dpad3R == false) {
+                menuSelect.Play();
                 gamepad3team = 2;
                 if(gamepad3color >= 20) {
                     gamepad3color -= 20;
@@ -497,6 +522,7 @@ public class GameMenuManager2 : MonoBehaviour {
                 dpad3R = true;
             }
             if(this.gamepadState3.DPad.Left == ButtonState.Pressed && dpad3L == false) {
+                menuSelect.Play();
                 gamepad3team = 1;
                 if(gamepad3color <= 21) {
                     gamepad3color += 20;
@@ -508,12 +534,14 @@ public class GameMenuManager2 : MonoBehaviour {
         if(gamepad3team != 0 && this.gamepad3Validated == false) {
 
             if(this.gamepadState3.DPad.Up == ButtonState.Pressed && dpad3Up == false) {
+                colorSelect.Play();
                 gamepad3color += 1;
                 dpad3Up = true;
             }
             if(gamepad3team == 2) {
 
                 if(this.gamepadState3.Buttons.A == ButtonState.Pressed && btn3A == false && gamepad3color != 0) {
+                    colorValidate.Play();
                     gamepad3Validated = true;
                     GameObject.Find("gamepad3").GetComponent<SpriteRenderer>().sprite = whiteGamepad;
                     btn3A = true;
@@ -527,6 +555,7 @@ public class GameMenuManager2 : MonoBehaviour {
             if(gamepad3team == 1) {
 
                 if(this.gamepadState3.Buttons.A == ButtonState.Pressed && btn3A == false && gamepad3color != 20) {
+                    colorValidate.Play();
                     gamepad3Validated = true;
                     GameObject.Find("gamepad3").GetComponent<SpriteRenderer>().sprite = whiteGamepad;
                     btn3A = true;
@@ -581,6 +610,7 @@ public class GameMenuManager2 : MonoBehaviour {
         }
         if(this.gamepad3Validated == true) {
             if(this.gamepadState3.Buttons.A == ButtonState.Pressed && btn3A == false) {
+                colorReturn.Play();
                 GameObject.Find("gamepad3").GetComponent<SpriteRenderer>().sprite = greyGamepad;
                 this.gamepad3Validated = false;
                 btn3A = true;
@@ -591,6 +621,7 @@ public class GameMenuManager2 : MonoBehaviour {
         if(this.gamepad4Validated == false) {
 
             if(this.gamepadState4.DPad.Right == ButtonState.Pressed && dpad4R == false) {
+                menuSelect.Play();
                 gamepad4team = 2;
                 if(gamepad4color >= 20) {
                     gamepad4color -= 20;
@@ -599,6 +630,7 @@ public class GameMenuManager2 : MonoBehaviour {
                 dpad4R = true;
             }
             if(this.gamepadState4.DPad.Left == ButtonState.Pressed && dpad4L == false) {
+                menuSelect.Play();
                 gamepad4team = 1;
                 if(gamepad4color <= 21) {
                     gamepad4color += 20;
@@ -610,6 +642,7 @@ public class GameMenuManager2 : MonoBehaviour {
         if(gamepad4team != 0 && this.gamepad4Validated == false) {
 
             if(this.gamepadState4.DPad.Up == ButtonState.Pressed && dpad4Up == false) {
+                colorSelect.Play();
                 gamepad4color += 1;
                 dpad4Up = true;
             }
@@ -617,6 +650,7 @@ public class GameMenuManager2 : MonoBehaviour {
             if(gamepad4team == 2) {
 
                 if(this.gamepadState4.Buttons.A == ButtonState.Pressed && btn4A == false && gamepad4color != 0) {
+                    colorValidate.Play();
                     gamepad4Validated = true;
                     GameObject.Find("gamepad4").GetComponent<SpriteRenderer>().sprite = whiteGamepad;
                     btn4A = true;
@@ -629,6 +663,7 @@ public class GameMenuManager2 : MonoBehaviour {
             if(gamepad4team == 1) {
 
                 if(this.gamepadState4.Buttons.A == ButtonState.Pressed && btn4A == false && gamepad4color != 20) {
+                    colorValidate.Play();
                     gamepad4Validated = true;
                     GameObject.Find("gamepad4").GetComponent<SpriteRenderer>().sprite = whiteGamepad;
                     btn4A = true;
@@ -681,6 +716,7 @@ public class GameMenuManager2 : MonoBehaviour {
         }
         if(this.gamepad4Validated == true) {
             if(this.gamepadState4.Buttons.A == ButtonState.Pressed && btn4A == false) {
+                colorReturn.Play();
                 GameObject.Find("gamepad4").GetComponent<SpriteRenderer>().sprite = greyGamepad;
                 this.gamepad4Validated = false;
                 btn4A = true;
@@ -694,12 +730,17 @@ public class GameMenuManager2 : MonoBehaviour {
                 if((gamepad1team + gamepad2team + gamepad3team + gamepad4team) == 6) {
                     continueMessage.SetActive(true);
                     if(this.gamepadState.Buttons.Start == ButtonState.Pressed) {
+                        startValidate.Play();
                         this.gameObject.SetActive(false);
                         Menu3.SetActive(true);
                     }
                 }
                 if((gamepad1team + gamepad2team + gamepad3team + gamepad4team) != 6) {
-                    alerteMessage.SetActive(true);
+                    if (this.gamepadState.Buttons.Start == ButtonState.Pressed)
+                    {
+                        startError.Play();
+                        alerteMessage.SetActive(true);
+                    }
                 }
             } else {
                 continueMessage.SetActive(false);

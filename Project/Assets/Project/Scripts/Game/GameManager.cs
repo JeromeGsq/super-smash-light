@@ -45,7 +45,11 @@ public class GameManager : BaseViewModel
     [SerializeField]
     public AudioSource chargedBar;
     [SerializeField]
-    public AudioSource startTimer;
+    public AudioSource startTimer; 
+    [SerializeField]
+    public AudioSource powerLoss;
+    [SerializeField]
+    public AudioSource heartBeat;
 
 
     public Team team1;
@@ -251,18 +255,19 @@ public class GameManager : BaseViewModel
 
 	public void AddPoint(int teamIndex)
 	{
-        addPoint.Play();
 		switch(teamIndex)
 		{
             
 			case 1:
 				this.Team1.Score++;
+                addPoint.Play();
                 Debug.Log("Teamadd1");
 
                 break;
 
 			case 2:
 				this.Team2.Score++;
+                addPoint.Play();
                 Debug.Log("Teamadd1");
                 break;
 		}
@@ -276,13 +281,15 @@ public class GameManager : BaseViewModel
 		if(teamIndex == 1)
 		{
 			this.Team1.BarLevel = 0;
+            powerLoss.Play();
 		}
 		else
 		{
 			this.Team2.BarLevel = 0;
-		}
+            powerLoss.Play();
+        }
 
-		this.RaisePropertyChanged(nameof(this.Team1BarLevel));
+        this.RaisePropertyChanged(nameof(this.Team1BarLevel));
 		this.RaisePropertyChanged(nameof(this.Team2BarLevel));
 	}
 
@@ -290,10 +297,12 @@ public class GameManager : BaseViewModel
 	{
 		if(teamIndex == 1)
 		{
+            heartBeat.Play();
 			return this.Team1.BarLevel == 1;
 		}
 		else
 		{
+            heartBeat.Play();
 			return this.Team2.BarLevel == 1;
 		}
 	}

@@ -62,7 +62,9 @@ public class PlayerMovementHandler : MonoBehaviour
     private AudioSource dash;
     private AudioSource shoot;
     private AudioSource jump;
-    private AudioSource runningDirt;
+    private AudioSource hit;
+    private AudioSource exploding;
+   // private AudioSource runningDirt;
 
     [Space(20)]
 
@@ -357,7 +359,9 @@ public class PlayerMovementHandler : MonoBehaviour
         dash = audioData.transform.GetChild(5).GetComponent<AudioSource>();
         shoot = audioData.transform.GetChild(2).GetComponent<AudioSource>();
         jump = audioData.transform.GetChild(6).GetComponent<AudioSource>();
-        runningDirt = audioData.transform.GetChild(7).GetComponent<AudioSource>();
+        //runningDirt = audioData.transform.GetChild(7).GetComponent<AudioSource>();
+        hit = audioData.transform.GetChild(9).GetComponent<AudioSource>();
+        exploding = audioData.transform.GetChild(13).GetComponent<AudioSource>();
 
     }
 
@@ -423,6 +427,7 @@ public class PlayerMovementHandler : MonoBehaviour
         if(BallHandler.Get.isGrabbed && BallHandler.Get.Index == this.index) {
             // Pass controlset
             if(this.RBreleased || this.RTreleased) {
+                shoot.Play();
                 if(this.RBreleased && RBtime > 3f) {
                     BallHandler.Get.Shoot(this.sight, this.passPower, ShootType.Pass);
                 } else if(this.RTreleased && RTtime > 3f) {
@@ -504,7 +509,6 @@ public class PlayerMovementHandler : MonoBehaviour
             }
             if(this.player.transform.localScale.x < 0f) {
                 this.player.transform.localScale = new Vector3(-this.player.transform.localScale.x, this.player.transform.localScale.y, this.player.transform.localScale.z);
-                runningDirt.Play();
             }
         } 
         
@@ -515,12 +519,10 @@ public class PlayerMovementHandler : MonoBehaviour
             }
             if(this.player.transform.localScale.x > 0f) {
                 this.player.transform.localScale = new Vector3(-this.player.transform.localScale.x, this.player.transform.localScale.y, this.player.transform.localScale.z);
-            runningDirt.Play();
             }
         }
         
         else {
-            runningDirt.Stop();
             this.normalizedHorizontalSpeed = 0;
             if(this.controller.isGrounded) {
                 this.animator.Play(Animator.StringToHash("Idle"));
@@ -591,6 +593,7 @@ public class PlayerMovementHandler : MonoBehaviour
         // Is Pushed
         if (this.isPushed == true && this.pushSender != null)
         {
+            hit.Play();
             var direction = (this.transform.position - this.pushSender.position).normalized;
 
             this.velocity.y = Mathf.Sqrt(2f * 2 * -this.gravity);
@@ -659,6 +662,7 @@ public class PlayerMovementHandler : MonoBehaviour
     private void SetDestroyed()
     {
         BallHandler.Get.EngageShoot = false;
+        exploding.Play();
         this.isDestroyed = false;
 
         CameraHandler.Get.Rumble();

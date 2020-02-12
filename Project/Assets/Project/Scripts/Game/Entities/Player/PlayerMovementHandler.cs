@@ -556,7 +556,7 @@ public class PlayerMovementHandler : MonoBehaviour
                 this.canDash = false;
                 this.isDashing = true;
 
-                var direction = new Vector2(this.gamepadState.ThumbSticks.Left.X, this.gamepadState.ThumbSticks.Left.Y);
+            var direction = new Vector2(this.gamepadState.ThumbSticks.Left.X, this.gamepadState.ThumbSticks.Left.Y);
                 this.velocity = (direction.normalized * this.dashDirectionOverdrive) * this.dashSpeed;
 
                 this.savedGravity = this.gravity;

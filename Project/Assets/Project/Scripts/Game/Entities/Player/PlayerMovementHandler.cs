@@ -52,6 +52,8 @@ public class PlayerMovementHandler : MonoBehaviour
     public bool oldpadForJump;
     public int myteam;
 
+    public GameObject dashFxPrefab;
+
     private GamePadState gamepadState;
 
     [SerializeField]
@@ -575,6 +577,7 @@ public class PlayerMovementHandler : MonoBehaviour
                         && this.canDash == false
                         && this.isDashing == false) {
                         // Allow to do a dash
+                        Instantiate(dashFxPrefab, transform.position, transform.rotation);
                         this.canDash = true;
                     }
                     this.dashCoroutine = null;

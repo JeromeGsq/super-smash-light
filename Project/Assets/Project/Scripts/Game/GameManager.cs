@@ -297,12 +297,12 @@ public class GameManager : BaseViewModel
 	{
 		if(teamIndex == 1)
 		{
-            heartBeat.Play();
+            //heartBeat.Play();
 			return this.Team1.BarLevel == 1;
 		}
 		else
 		{
-            heartBeat.Play();
+            //heartBeat.Play();
 			return this.Team2.BarLevel == 1;
 		}
 	}

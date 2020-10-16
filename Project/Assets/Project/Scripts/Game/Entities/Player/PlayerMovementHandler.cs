@@ -577,7 +577,8 @@ public class PlayerMovementHandler : MonoBehaviour
                         && this.canDash == false
                         && this.isDashing == false) {
                         // Allow to do a dash
-                        Instantiate(dashFxPrefab, transform.position, transform.rotation);
+                        var thePrefab = Instantiate(dashFxPrefab, transform.position, transform.rotation);
+                        thePrefab.transform.parent = gameObject.transform;
                         this.canDash = true;
                     }
                     this.dashCoroutine = null;
@@ -590,6 +591,8 @@ public class PlayerMovementHandler : MonoBehaviour
             && this.isDashing == false
             && this.dashCoroutine == null)
         {
+            var thePrefab = Instantiate(dashFxPrefab, transform.position, transform.rotation);
+            thePrefab.transform.parent = gameObject.transform;
             this.canDash = true;
         }
 
